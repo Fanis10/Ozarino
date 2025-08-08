@@ -174,15 +174,15 @@
 							<span class="circle"></span>
 						</button>
 						<div class="main__items">
-							<div class="main__item" data-background="img/main-img2.webp">
+							<div class="main__item" data-image="img/main-img2.webp">
 								<div class="main__item-number"><span>22</span> минуты</div>
 								<div class="main__item-text">От центра Казани <br> до вашего нового дома</div>
 							</div>
-							<div class="main__item" data-background="img/main-img3.webp">
+							<div class="main__item" data-image="img/main-img3.webp">
 								<div class="main__item-number"><span>365</span> дней</div>
 								<div class="main__item-text">мы отвечаем за ваш <br> комфорт</div>
 							</div>
-							<div class="main__item" data-background="img/main-img4.webp">
+							<div class="main__item" data-image="img/main-img4.webp">
 								<div class="main__item-number"><span>484</span> участка</div>
 								<div class="main__item-text">у озера, в лесу или <br>  на залитом солнцем поле</div>
 							</div>
@@ -220,16 +220,6 @@
 							<div class="main__item-number"><span>484</span> участка</div>
 							<div class="main__item-text">у озера, в лесу или <br>  на залитом солнцем поле</div>
 						</div>
-					</div>
-				</div>
-				<div class="main__mob2">
-					<div class="swiper mySwiper">
-						<div class="swiper-wrapper">
-							<div class="swiper-slide">Slide 1</div>
-							<div class="swiper-slide">Slide 2</div>
-							<div class="swiper-slide">Slide 3</div>
-						</div>
-						<div class="swiper-pagination"></div>
 					</div>
 				</div>
 			</section>
@@ -1108,10 +1098,7 @@
 			const rect = main.getBoundingClientRect();
 			const windowHeight = window.innerHeight;
 
-			// Проверяем, что высота .main примерно равна высоте окна (±5px)
 			const heightMatches = Math.abs(rect.height - windowHeight) < 5;
-
-			// Проверяем, что верхняя граница .main находится в пределах 0–5px от верха окна
 			const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
 
 			return heightMatches && topIsAtWindowTop;
@@ -1124,7 +1111,6 @@
 			}
 
 			if (!isMainFullScreen()) {
-				// Если секция не на всю высоту или не вверху окна — анимация не запускается
 				return;
 			}
 
@@ -1133,7 +1119,6 @@
 			if (scrollDirection === 'down' && !animationDone) {
 				isAnimating = true;
 
-				// Блокируем прокрутку на .main
 				main.style.overflow = 'hidden';
 
 				title.classList.add('hidden');
@@ -1165,7 +1150,25 @@
 				event.preventDefault();
 			}
 		}, { passive: false });
+
+		// --- Добавляем обработчики для смены фона при наведении ---
+		const itemElements = main.querySelectorAll('.main__item');
+		const defaultBackground = getComputedStyle(main).backgroundImage;
+
+		itemElements.forEach(item => {
+			item.addEventListener('mouseover', () => {
+				const imageUrl = item.getAttribute('data-image');
+				if (imageUrl) {
+					main.style.backgroundImage = `url(${imageUrl})`;
+				}
+			});
+
+			item.addEventListener('mouseout', () => {
+				main.style.backgroundImage = defaultBackground;
+			});
+		});
 	});
+
 
 
 
