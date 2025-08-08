@@ -19,12 +19,116 @@
 					<ul class="navigation__list">
 						<li><a href="index.html">Главная</a></li>
 						<li><a href="plan.html">Генплан</a></li>
-
+						<li>
+							<button class="btn btn-animation btn-orange" data-modal="contactModal">
+								<span class="btn-text">Озарино</span>
+								<span class="circle"></span>
+							</button>
+						</li>
+						<li>
+							<button class="btn btn-animation btn-orange" data-modal="contactModal--music">
+								<span class="btn-text">Звуки  Озарино</span>
+								<span class="circle"></span>
+							</button>
+						</li>
+						<li>
+							<button class="btn btn-animation btn-orange" data-modal="contactModal--music">
+								<span class="btn-text">Видео  Озарино</span>
+								<span class="circle"></span>
+							</button>
+						</li>
 					</ul>
 				</div>
 			</section>
 		</main>
 	</div>
+
+	<div class="modal modal--1" id="contactModal">
+		<div class="modal__dialog">
+			<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
+				</svg>
+				<span class="circle"></span>
+			</button>
+			<div class="modal__content">
+				<div class="modal__img">
+					<img src="img/modal-img.webp" alt="">
+				</div>
+				<div class="modal__desc">
+					<div class="modal__title">Получите персональную подборку участков с ценами и планами</div>
+					<div class="modal__text">
+						<p>Вместо изучения сайтов, файл с фото, ценами, плюсами и планом поселка.</p>
+						<p>Наш менеджер подберет участок, который подходит именно вам. </p>
+					</div>
+					<form class="form">
+						<div class="form-grid">
+							<div class="form-group">
+								<input type="tel" placeholder="Номер телефона">
+								<span class="input-info">
+                           			<span class="input-info__icon">
+                               		<img src="img/info.svg" alt="">
+                           		</span>
+                           			<span class="input-info__text">Заполните поле</span>
+                      			 </span>
+							</div>
+							<button class="form-btn btn-animation btn btn-orange">
+								<span class="btn-text">Получить презентацию с ценами</span>
+								<span class="circle"></span>
+							</button>
+						</div>
+						<div class="form-check">
+							<input type="checkbox">
+							<label>
+								Я даю согласие на обработку
+								<a href="">персональных данных</a>
+								в соответствии с
+								<a href="">политикой конфиденциальности</a>
+							</label>
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal modal-music" id="contactModal--music">
+		<div class="modal__dialog">
+			<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
+				</svg>
+				<span class="circle"></span>
+			</button>
+			<div class="modal__content">
+				<div class="modal__title">Проникнитесь атмосферой Озарино</div>
+				<div class="modal-music__items">
+					<div class="modal-music__item">
+						<img src="img/vk-music.svg" alt="">
+					</div>
+					<div class="modal-music__item">
+						<img src="img/apple-music.svg" alt="">
+					</div>
+					<div class="modal-music__item">
+						<img src="img/yandex-music.svg" alt="">
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<div class="modal modal-video" id="contactModal--video">
+		<div class="modal__dialog">
+			<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
+				<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
+				</svg>
+				<span class="circle"></span>
+			</button>
+			<div class="modal__video">
+				<iframe src="https://rutube.ru/play/embed/e4c0b0b1840d1c8cb3b014753b00fb6e" frameborder="0" allowfullscreen></iframe>
+			</div>
+		</div>
+	</div>
+
 	<script src="js/libs.min.js"></script>
 <script src="js/main.min.js"></script>
 
@@ -48,5 +152,13 @@
 	}
 	.navigation__list li a:hover {
 		opacity: 0.7;
+	}
+	.navigation__list button {
+		height: 54px;
+		padding: 5px 60px;
+	}
+	.navigation__list button .btn-text {
+		font-size: 13px;
+		letter-spacing: 1.3px;
 	}
 </style>

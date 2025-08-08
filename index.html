@@ -159,11 +159,11 @@
     </div>
 </header>
 		<main class="content">
-			<section class="main" style="background-image: url(img/main-img.webp)">
+			<section class="main">
 				<div class="container">
 					<div class="main__inner">
 						<h1 class="main__title">Озарино. <br>  Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span></h1>
-						<button class="main__btn btn-animation btn btn-orange">
+						<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
 							<span class="btn-text">загляните</span>
 							<span class="btn-icon">
 								<img src="img/btn-icon.svg" alt="">
@@ -192,7 +192,7 @@
 				<div class="main__mob">
 					<div class="main__mob-group main__mob-group--1">
 						<h1 class="main__title">Озарино. <br>  Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span></h1>
-						<button class="main__btn btn-animation btn btn-orange">
+						<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
 							<span class="btn-text">загляните</span>
 							<span class="btn-icon">
 								<img src="img/btn-icon.svg" alt="">
@@ -220,6 +220,16 @@
 							<div class="main__item-number"><span>484</span> участка</div>
 							<div class="main__item-text">у озера, в лесу или <br>  на залитом солнцем поле</div>
 						</div>
+					</div>
+				</div>
+				<div class="main__mob2">
+					<div class="swiper mySwiper">
+						<div class="swiper-wrapper">
+							<div class="swiper-slide">Slide 1</div>
+							<div class="swiper-slide">Slide 2</div>
+							<div class="swiper-slide">Slide 3</div>
+						</div>
+						<div class="swiper-pagination"></div>
 					</div>
 				</div>
 			</section>
@@ -309,7 +319,7 @@
 					</div>
 					<div class="container">
 						<div class="gallery__text">Меняешь этаж — на пространство,  шум — на тишину, и вдруг понимаешь — О, так вот как бывает!</div>
-						<button class="music">
+						<button class="music" data-modal="contactModal--music">
 							<span class="music-icon">
 								<img src="img/music-icon.svg" alt="">
 							</span>
@@ -989,8 +999,8 @@
 		<div class="modal modal--1" id="contactModal">
 			<div class="modal__dialog">
 				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
-					<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M0 10.7692L0 9.23077H9.23077V0L10.7692 0V9.23077L20 9.23077V10.7692L10.7692 10.7692L10.7692 20H9.23077L9.23077 10.7692H0Z" fill="#637057"/>
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
 					</svg>
 					<span class="circle"></span>
 				</button>
@@ -1034,7 +1044,43 @@
 				</div>
 			</div>
 		</div>
-
+		<div class="modal modal-music" id="contactModal--music">
+			<div class="modal__dialog">
+				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
+					</svg>
+					<span class="circle"></span>
+				</button>
+				<div class="modal__content">
+					<div class="modal__title">Проникнитесь атмосферой Озарино</div>
+					<div class="modal-music__items">
+						<a href="" class="modal-music__item">
+							<img src="img/vk-music.svg" alt="">
+						</a>
+						<a href="" class="modal-music__item">
+							<img src="img/apple-music.svg" alt="">
+						</a>
+						<a href="" class="modal-music__item">
+							<img src="img/yandex-music.svg" alt="">
+						</a>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal modal-video" id="contactModal--video">
+			<div class="modal__dialog">
+				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
+					</svg>
+					<span class="circle"></span>
+				</button>
+				<div class="modal__video">
+					<iframe src="https://rutube.ru/play/embed/e4c0b0b1840d1c8cb3b014753b00fb6e" frameborder="0" allowfullscreen></iframe>
+				</div>
+			</div>
+		</div>
 	</div>
 	<script src="js/libs.min.js"></script>
 <script src="js/main.min.js"></script>
@@ -1049,6 +1095,79 @@
 	gsap.registerPlugin(ScrollTrigger);
 
 	// Main
+	document.addEventListener('DOMContentLoaded', () => {
+		const main = document.querySelector('.main');
+		const title = main.querySelector('.main__title');
+		const button = main.querySelector('.main__btn');
+		const items = main.querySelector('.main__items');
+
+		let isAnimating = false;
+		let animationDone = false;
+
+		function isMainFullScreen() {
+			const rect = main.getBoundingClientRect();
+			const windowHeight = window.innerHeight;
+
+			// Проверяем, что высота .main примерно равна высоте окна (±5px)
+			const heightMatches = Math.abs(rect.height - windowHeight) < 5;
+
+			// Проверяем, что верхняя граница .main находится в пределах 0–5px от верха окна
+			const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
+
+			return heightMatches && topIsAtWindowTop;
+		}
+
+		window.addEventListener('wheel', (event) => {
+			if (isAnimating) {
+				event.preventDefault();
+				return;
+			}
+
+			if (!isMainFullScreen()) {
+				// Если секция не на всю высоту или не вверху окна — анимация не запускается
+				return;
+			}
+
+			const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+
+			if (scrollDirection === 'down' && !animationDone) {
+				isAnimating = true;
+
+				// Блокируем прокрутку на .main
+				main.style.overflow = 'hidden';
+
+				title.classList.add('hidden');
+				button.classList.add('hidden');
+				items.classList.add('scale-up');
+
+				setTimeout(() => {
+					main.style.overflow = '';
+					isAnimating = false;
+					animationDone = true;
+				}, 500);
+
+				event.preventDefault();
+			} else if (scrollDirection === 'up' && animationDone) {
+				isAnimating = true;
+
+				main.style.overflow = 'hidden';
+
+				title.classList.remove('hidden');
+				button.classList.remove('hidden');
+				items.classList.remove('scale-up');
+
+				setTimeout(() => {
+					main.style.overflow = '';
+					isAnimating = false;
+					animationDone = false;
+				}, 500);
+
+				event.preventDefault();
+			}
+		}, { passive: false });
+	});
+
+
 
 
 	// Main-mob
