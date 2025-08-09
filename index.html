@@ -1178,7 +1178,8 @@
 	// Main-mob
 	document.addEventListener('DOMContentLoaded', () => {
 		const main = document.querySelector('.main');
-		const mobGroups = main.querySelectorAll('.main__mob-group');
+		const mainMo = document.querySelector('.main__mob'); // фиксируем именно этот блок
+		const mobGroups = mainMo.querySelectorAll('.main__mob-group');
 		let activeIndex = 0;
 		let isAnimating = false;
 		let sliderActive = false;
@@ -1190,8 +1191,57 @@
 			});
 		}
 
+		function disablePageScroll() {
+			document.body.style.overflow = 'hidden';
+		}
+
+		function enablePageScroll() {
+			document.body.style.overflow = '';
+		}
+
+		function fixSection() {
+			if (!mainMo) return;
+			mainMo.style.position = 'fixed';
+			mainMo.style.top = '0';
+			mainMo.style.left = '0';
+			mainMo.style.width = '100%';
+			mainMo.style.height = '100vh';
+			mainMo.style.zIndex = '9999';
+		}
+
+		function unfixSection() {
+			if (!mainMo) return;
+			mainMo.style.position = '';
+			mainMo.style.top = '';
+			mainMo.style.left = '';
+			mainMo.style.width = '';
+			mainMo.style.height = '';
+			mainMo.style.zIndex = '';
+		}
+
+		function activateSlider() {
+			if (sliderActive) return;
+			sliderActive = true;
+			fixSection();
+			disablePageScroll();
+			showActiveGroup(activeIndex);
+			window.addEventListener('wheel', handleWheel, { passive: false });
+			window.addEventListener('touchstart', handleTouchStart, { passive: false });
+			window.addEventListener('touchmove', handleTouchMove, { passive: false });
+		}
+
+		function deactivateSlider() {
+			if (!sliderActive) return;
+			sliderActive = false;
+			unfixSection();
+			enablePageScroll();
+			window.removeEventListener('wheel', handleWheel);
+			window.removeEventListener('touchstart', handleTouchStart);
+			window.removeEventListener('touchmove', handleTouchMove);
+		}
+
 		function handleWheel(event) {
-			if (!sliderActive) return; // Если слайдер не активен — не блокируем скролл
+			if (!sliderActive) return;
 			if (isAnimating) {
 				event.preventDefault();
 				return;
@@ -1209,6 +1259,8 @@
 						isAnimating = false;
 					}, 300);
 					event.preventDefault();
+				} else {
+					deactivateSlider();
 				}
 			} else if (scrollUp) {
 				if (activeIndex > 0) {
@@ -1219,12 +1271,14 @@
 						isAnimating = false;
 					}, 300);
 					event.preventDefault();
+				} else {
+					deactivateSlider();
 				}
 			}
 		}
 
 		function handleTouchStart(event) {
-			touchStartY = event.touches[0].clientY; // Получаем начальную позицию касания
+			touchStartY = event.touches[0].clientY;
 		}
 
 		function handleTouchMove(event) {
@@ -1234,9 +1288,8 @@
 			const touchCurrentY = event.touches[0].clientY;
 			const touchDiff = touchCurrentY - touchStartY;
 
-			if (Math.abs(touchDiff) > 30) { // Условие для определения жеста
+			if (Math.abs(touchDiff) > 30) {
 				if (touchDiff < 0) {
-					// Листаем вниз
 					if (activeIndex < mobGroups.length - 1) {
 						isAnimating = true;
 						activeIndex++;
@@ -1244,9 +1297,10 @@
 						setTimeout(() => {
 							isAnimating = false;
 						}, 300);
+					} else {
+						deactivateSlider();
 					}
 				} else {
-					// Листаем вверх
 					if (activeIndex > 0) {
 						isAnimating = true;
 						activeIndex--;
@@ -1254,53 +1308,34 @@
 						setTimeout(() => {
 							isAnimating = false;
 						}, 300);
+					} else {
+						deactivateSlider();
 					}
 				}
-				touchStartY = null; // Сбрасываем начальную позицию
+				touchStartY = null;
+				event.preventDefault();
 			}
 		}
 
 		function checkSectionVisibility() {
-			const rect = main.getBoundingClientRect();
+			if (!mainMo) return;
+			const rect = mainMo.getBoundingClientRect();
 			const viewportHeight = window.innerHeight;
-
-			// Проверяем, что секция занимает весь экран (с небольшим допуском)
 			const fullyVisible = rect.top <= 0 && rect.bottom >= viewportHeight;
-
-			// Проверяем ширину окна
 			const isMobileView = window.innerWidth <= 992;
 
-			if (isMobileView) {
-				if (fullyVisible && !sliderActive) {
-					// Активируем слайдер
-					sliderActive = true;
-					window.addEventListener('wheel', handleWheel, { passive: false });
-					window.addEventListener('touchstart', handleTouchStart, { passive: false });
-					window.addEventListener('touchmove', handleTouchMove, { passive: false });
-					showActiveGroup(activeIndex);
-				} else if (!fullyVisible && sliderActive) {
-					// Деактивируем слайдер, но не сбрасываем индекс
-					sliderActive = false;
-					window.removeEventListener('wheel', handleWheel);
-					window.removeEventListener('touchstart', handleTouchStart);
-					window.removeEventListener('touchmove', handleTouchMove);
-				}
+			if (isMobileView && fullyVisible) {
+				activateSlider();
 			} else {
-				// Если ширина больше 992px, отключаем слайдер
-				if (sliderActive) {
-					sliderActive = false;
-					window.removeEventListener('wheel', handleWheel);
-					window.removeEventListener('touchstart', handleTouchStart);
-					window.removeEventListener('touchmove', handleTouchMove);
-				}
+				deactivateSlider();
 			}
 		}
 
-		// Проверяем при загрузке и при скролле и ресайзе
 		checkSectionVisibility();
 		window.addEventListener('scroll', checkSectionVisibility);
 		window.addEventListener('resize', checkSectionVisibility);
 	});
+
 
 
 
