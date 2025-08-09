@@ -1186,30 +1186,24 @@
 		let sliderActive = false;
 		let touchStartY = null;
 
+		// Показываем активный слайд, скрывая остальные
 		function showActiveGroup(index) {
 			mobGroups.forEach((group, i) => {
 				group.classList.toggle('active', i === index);
 			});
 		}
 
-		function disablePageScroll() {
-			document.body.style.overflow = 'hidden';
-		}
-
-		function enablePageScroll() {
-			document.body.style.overflow = '';
-		}
-
+		// Фиксируем секцию, чтобы она занимала экран и не скроллилась
 		function fixSection() {
 			mainMo.style.position = 'fixed';
 			mainMo.style.top = '0';
 			mainMo.style.left = '0';
 			mainMo.style.width = '100%';
 			mainMo.style.height = '100vh';
-			mainMo.style.zIndex = '9999';
 			mainMo.style.background = mainMo.style.background || 'inherit';
 		}
 
+		// Снимаем фиксацию секции
 		function unfixSection() {
 			mainMo.style.position = '';
 			mainMo.style.top = '';
@@ -1220,6 +1214,17 @@
 			mainMo.style.background = '';
 		}
 
+		// Запрещаем прокрутку страницы
+		function disablePageScroll() {
+			document.body.style.overflow = 'hidden';
+		}
+
+		// Разрешаем прокрутку страницы
+		function enablePageScroll() {
+			document.body.style.overflow = '';
+		}
+
+		// Активируем слайдер: фиксируем секцию и блокируем прокрутку страницы
 		function activateSlider() {
 			if (sliderActive) return;
 			sliderActive = true;
@@ -1231,6 +1236,7 @@
 			window.addEventListener('touchmove', handleTouchMove, { passive: false });
 		}
 
+		// Деактивируем слайдер: снимаем фиксацию и разрешаем прокрутку
 		function deactivateSlider() {
 			if (!sliderActive) return;
 			sliderActive = false;
@@ -1241,8 +1247,10 @@
 			window.removeEventListener('touchmove', handleTouchMove);
 		}
 
+		// Обработчик прокрутки колесом мыши
 		function handleWheel(event) {
 			if (!sliderActive) return;
+
 			if (isAnimating) {
 				event.preventDefault();
 				return;
@@ -1261,9 +1269,14 @@
 					}, 300);
 					event.preventDefault();
 				} else {
-					// На последнем слайде — немедленно деактивируем слайдер
+					// На последнем слайде — снимаем фиксацию сразу и даём странице прокрутиться
 					deactivateSlider();
-					// Не preventDefault, чтобы страница прокрутилась дальше
+
+					// Сбрасываем индекс на последний слайд для согласованности
+					activeIndex = mobGroups.length - 1;
+					showActiveGroup(activeIndex);
+
+					// НЕ вызываем event.preventDefault(), чтобы страница прокрутилась дальше
 				}
 			} else if (scrollUp) {
 				if (activeIndex > 0) {
@@ -1275,16 +1288,18 @@
 					}, 300);
 					event.preventDefault();
 				} else {
-					// На первом слайде — игнорируем прокрутку вверх
+					// На первом слайде блокируем прокрутку вверх
 					event.preventDefault();
 				}
 			}
 		}
 
+		// Обработчик начала касания (для мобильных)
 		function handleTouchStart(event) {
 			touchStartY = event.touches[0].clientY;
 		}
 
+		// Обработчик движения пальцем (для мобильных)
 		function handleTouchMove(event) {
 			if (!sliderActive) return;
 			if (touchStartY === null) return;
@@ -1294,6 +1309,7 @@
 
 			if (Math.abs(touchDiff) > 30) {
 				if (touchDiff < 0) {
+					// Свайп вверх — прокрутка вниз по слайдам
 					if (activeIndex < mobGroups.length - 1) {
 						isAnimating = true;
 						activeIndex++;
@@ -1303,11 +1319,16 @@
 						}, 300);
 						event.preventDefault();
 					} else {
-						// На последнем слайде — немедленно деактивируем слайдер
+						// На последнем слайде — снимаем фиксацию
 						deactivateSlider();
-						// Не preventDefault, чтобы свайп дальше работал
+
+						activeIndex = mobGroups.length - 1;
+						showActiveGroup(activeIndex);
+
+						// НЕ вызываем event.preventDefault(), чтобы страница прокрутилась дальше
 					}
 				} else {
+					// Свайп вниз — прокрутка вверх по слайдам
 					if (activeIndex > 0) {
 						isAnimating = true;
 						activeIndex--;
@@ -1317,7 +1338,7 @@
 						}, 300);
 						event.preventDefault();
 					} else {
-						// На первом слайде — игнорируем свайп вверх
+						// На первом слайде блокируем прокрутку вниз
 						event.preventDefault();
 					}
 				}
@@ -1325,7 +1346,7 @@
 			}
 		}
 
-		// IntersectionObserver для отслеживания видимости main-mo
+		// Отслеживаем видимость секции и ширину экрана для активации слайдера
 		const observerOptions = {
 			root: null,
 			threshold: 1.0 // элемент должен быть полностью виден
@@ -1344,7 +1365,7 @@
 
 		observer.observe(mainMo);
 
-		// Обновлять состояние при ресайзе (например, переключение между мобильным и десктопом)
+		// При изменении размера окна проверяем, нужно ли отключить слайдер
 		window.addEventListener('resize', () => {
 			const isMobile = window.innerWidth <= 992;
 			if (!isMobile && sliderActive) {
@@ -1352,9 +1373,12 @@
 			}
 		});
 
-		// Инициализируем первый показ
+		// Инициализация — показываем первый слайд
 		showActiveGroup(activeIndex);
 	});
+
+
+
 
 
 
