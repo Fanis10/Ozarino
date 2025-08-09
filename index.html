@@ -1190,10 +1190,6 @@
 			mobGroups.forEach((group, i) => {
 				group.classList.toggle('active', i === index);
 			});
-			// Если последний слайд, снимаем фиксацию и деактивируем слайдер
-			if (index === mobGroups.length - 1) {
-				deactivateSlider();
-			}
 		}
 
 		function disablePageScroll() {
@@ -1210,6 +1206,7 @@
 			mainMo.style.left = '0';
 			mainMo.style.width = '100%';
 			mainMo.style.height = '100vh';
+			mainMo.style.zIndex = '9999';
 			mainMo.style.background = mainMo.style.background || 'inherit';
 		}
 
@@ -1355,10 +1352,9 @@
 			}
 		});
 
-		// Инициализация первого показа
+		// Инициализируем первый показ
 		showActiveGroup(activeIndex);
 	});
-
 
 
 
