@@ -1178,179 +1178,101 @@
 	// Main-mob
 	document.addEventListener('DOMContentLoaded', () => {
 		const mainMo = document.querySelector('.main__mob');
-		if (!mainMo) return;
-
 		const mobGroups = mainMo.querySelectorAll('.main__mob-group');
 		let activeIndex = 0;
 		let isAnimating = false;
 		let sliderActive = false;
-		let touchStartY = null;
 
-		// Показываем активный слайд, скрывая остальные
 		function showActiveGroup(index) {
 			mobGroups.forEach((group, i) => {
 				group.classList.toggle('active', i === index);
 			});
 		}
 
-		// Фиксируем секцию на весь экран
-		function fixSection() {
-			mainMo.style.position = 'fixed';
-			mainMo.style.top = '0';
-			mainMo.style.left = '0';
-			mainMo.style.width = '100%';
-			mainMo.style.height = '100vh';
-			mainMo.style.zIndex = '9999';
-			// Чтобы фон не мерцал, можно задать background, если нужно
-			if (!mainMo.style.background) {
-				mainMo.style.background = window.getComputedStyle(mainMo).backgroundColor || 'white';
-			}
-		}
-
-		// Снимаем фиксацию
-		function unfixSection() {
-			mainMo.style.position = '';
-			mainMo.style.top = '';
-			mainMo.style.left = '';
-			mainMo.style.width = '';
-			mainMo.style.height = '';
-			mainMo.style.zIndex = '';
-			mainMo.style.background = '';
-		}
-
-		// Запрет прокрутки страницы
-		function disablePageScroll() {
-			document.body.style.overflow = 'hidden';
-		}
-
-		// Разрешение прокрутки страницы
-		function enablePageScroll() {
-			document.body.style.overflow = '';
-		}
-
-		// Активируем слайдер
 		function activateSlider() {
 			if (sliderActive) return;
 			sliderActive = true;
-			fixSection();
-			disablePageScroll();
-			showActiveGroup(activeIndex);
+
 			window.addEventListener('wheel', handleWheel, { passive: false });
-			window.addEventListener('touchstart', handleTouchStart, { passive: false });
-			window.addEventListener('touchmove', handleTouchMove, { passive: false });
+			mainMo.addEventListener('touchstart', handleTouchStart, { passive: false });
+			mainMo.addEventListener('touchmove', handleTouchMove, { passive: false });
 		}
 
-		// Деактивируем слайдер
 		function deactivateSlider() {
 			if (!sliderActive) return;
 			sliderActive = false;
-			unfixSection();
-			enablePageScroll();
+
 			window.removeEventListener('wheel', handleWheel);
-			window.removeEventListener('touchstart', handleTouchStart);
-			window.removeEventListener('touchmove', handleTouchMove);
+			mainMo.removeEventListener('touchstart', handleTouchStart);
+			mainMo.removeEventListener('touchmove', handleTouchMove);
 		}
 
-		// Обработка прокрутки колесом мыши
 		function handleWheel(event) {
-			if (!sliderActive) return;
-
-			if (isAnimating) {
-				event.preventDefault();
-				return;
-			}
+			if (isAnimating) return;
 
 			const scrollDown = event.deltaY > 0;
 			const scrollUp = event.deltaY < 0;
 
-			if (scrollDown) {
-				if (activeIndex < mobGroups.length - 1) {
-					isAnimating = true;
-					activeIndex++;
-					showActiveGroup(activeIndex);
-					setTimeout(() => {
-						isAnimating = false;
-					}, 300);
-					event.preventDefault();
-				} else {
-					// На последнем слайде снимаем фиксацию и даём странице прокрутиться
-					deactivateSlider();
-					// НЕ вызываем event.preventDefault() — чтобы страница прокрутилась дальше
-				}
-			} else if (scrollUp) {
-				if (activeIndex > 0) {
-					isAnimating = true;
-					activeIndex--;
-					showActiveGroup(activeIndex);
-					setTimeout(() => {
-						isAnimating = false;
-					}, 300);
-					event.preventDefault();
-				} else {
-					// На первом слайде блокируем прокрутку вверх
-					event.preventDefault();
-				}
+			if (scrollDown && activeIndex < mobGroups.length - 1) {
+				isAnimating = true;
+				activeIndex++;
+				showActiveGroup(activeIndex);
+				setTimeout(() => {
+					isAnimating = false;
+				}, 500);
+				event.preventDefault();
+			} else if (scrollUp && activeIndex > 0) {
+				isAnimating = true;
+				activeIndex--;
+				showActiveGroup(activeIndex);
+				setTimeout(() => {
+					isAnimating = false;
+				}, 500);
+				event.preventDefault();
 			}
 		}
 
-		// Обработка начала касания
+		let touchStartY = null;
+
 		function handleTouchStart(event) {
 			touchStartY = event.touches[0].clientY;
 		}
 
-		// Обработка движения пальцем
 		function handleTouchMove(event) {
-			if (!sliderActive) return;
-			if (touchStartY === null) return;
+			if (isAnimating) return;
 
 			const touchCurrentY = event.touches[0].clientY;
 			const touchDiff = touchCurrentY - touchStartY;
 
 			if (Math.abs(touchDiff) > 30) {
-				if (touchDiff < 0) {
-					// Свайп вверх — прокрутка вниз по слайдам
-					if (activeIndex < mobGroups.length - 1) {
-						isAnimating = true;
-						activeIndex++;
-						showActiveGroup(activeIndex);
-						setTimeout(() => {
-							isAnimating = false;
-						}, 300);
-						event.preventDefault();
-					} else {
-						// На последнем слайде снимаем фиксацию и разрешаем скролл страницы
-						deactivateSlider();
-						// НЕ вызываем event.preventDefault()
-					}
-				} else {
-					// Свайп вниз — прокрутка вверх по слайдам
-					if (activeIndex > 0) {
-						isAnimating = true;
-						activeIndex--;
-						showActiveGroup(activeIndex);
-						setTimeout(() => {
-							isAnimating = false;
-						}, 300);
-						event.preventDefault();
-					} else {
-						// На первом слайде блокируем прокрутку вниз
-						event.preventDefault();
-					}
+				if (touchDiff < 0 && activeIndex < mobGroups.length - 1) {
+					isAnimating = true;
+					activeIndex++;
+					showActiveGroup(activeIndex);
+					setTimeout(() => {
+						isAnimating = false;
+					}, 500);
+					event.preventDefault();
+				} else if (touchDiff > 0 && activeIndex > 0) {
+					isAnimating = true;
+					activeIndex--;
+					showActiveGroup(activeIndex);
+					setTimeout(() => {
+						isAnimating = false;
+					}, 500);
+					event.preventDefault();
 				}
-				touchStartY = null;
 			}
 		}
 
-		// Отслеживаем видимость секции и ширину экрана
 		const observerOptions = {
 			root: null,
-			threshold: 1.0, // элемент должен быть полностью виден
+			threshold: 1.0, // 100% видимости
 		};
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry) => {
-				const isMobile = window.innerWidth <= 992;
-				if (entry.isIntersecting && isMobile) {
+		const observer = new IntersectionObserver(entries => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
 					activateSlider();
 				} else {
 					deactivateSlider();
@@ -1359,25 +1281,8 @@
 		}, observerOptions);
 
 		observer.observe(mainMo);
-
-		// При изменении размера окна
-		window.addEventListener('resize', () => {
-			const isMobile = window.innerWidth <= 992;
-			if (!isMobile && sliderActive) {
-				deactivateSlider();
-			}
-		});
-
-		// Инициализация — показываем первый слайд
 		showActiveGroup(activeIndex);
 	});
-
-
-
-
-
-
-
 
 
 
