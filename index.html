@@ -191,7 +191,11 @@
 				</div>
 				<div class="main__mob">
 					<div class="main__mob-group main__mob-group--1 active">
-						<h1 class="main__title">Озарино. <br>  Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span></h1>
+						<h1 class="main__title">
+							Озарино <br>
+							Невиртуальная реальность <br>
+							<span>Приезжайте. Убедитесь.</span>
+						</h1>
 						<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
 							<span class="btn-text">загляните</span>
 							<span class="btn-icon">
@@ -1175,53 +1179,84 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		const main = document.querySelector('.main');
 		const mobGroups = main.querySelectorAll('.main__mob-group');
-		let activeIndex = 0; // Индекс активной группы
+		let activeIndex = 0;
 		let isAnimating = false;
+		let sliderActive = false;
 
 		function showActiveGroup(index) {
 			mobGroups.forEach((group, i) => {
-				if (i === index) {
-					group.classList.add('active');
-				} else {
-					group.classList.remove('active');
-				}
+				group.classList.toggle('active', i === index);
 			});
 		}
 
 		function handleWheel(event) {
+			if (!sliderActive) return; // Если слайдер не активен — не блокируем скролл
 			if (isAnimating) {
 				event.preventDefault();
 				return;
 			}
 
-			const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+			const scrollDown = event.deltaY > 0;
+			const scrollUp = event.deltaY < 0;
 
-			if (scrollDirection === 'down' && activeIndex < mobGroups.length - 1) {
-				isAnimating = true;
-				activeIndex++;
-				showActiveGroup(activeIndex);
-				setTimeout(() => {
-					isAnimating = false;
-				}, 300); // Длительность анимации
-			} else if (scrollDirection === 'up' && activeIndex > 0) {
-				isAnimating = true;
-				activeIndex--;
-				showActiveGroup(activeIndex);
-				setTimeout(() => {
-					isAnimating = false;
-				}, 300); // Длительность анимации
+			if (scrollDown) {
+				if (activeIndex < mobGroups.length - 1) {
+					isAnimating = true;
+					activeIndex++;
+					showActiveGroup(activeIndex);
+					setTimeout(() => {
+						isAnimating = false;
+					}, 300);
+					event.preventDefault();
+				}
+			} else if (scrollUp) {
+				if (activeIndex > 0) {
+					isAnimating = true;
+					activeIndex--;
+					showActiveGroup(activeIndex);
+					setTimeout(() => {
+						isAnimating = false;
+					}, 300);
+					event.preventDefault();
+				}
 			}
-
-			event.preventDefault();
 		}
 
-		// Проверяем ширину окна и добавляем обработчик события только для мобильной версии
-		if (window.innerWidth <= 992) {
-			window.addEventListener('wheel', handleWheel, { passive: false });
-			showActiveGroup(activeIndex); // Показать первую группу по умолчанию
+		function checkSectionVisibility() {
+			const rect = main.getBoundingClientRect();
+			const viewportHeight = window.innerHeight;
+
+			// Проверяем, что секция занимает весь экран (с небольшим допуском)
+			const fullyVisible = rect.top <= 0 && rect.bottom >= viewportHeight;
+
+			// Проверяем ширину окна
+			const isMobileView = window.innerWidth <= 992;
+
+			if (isMobileView) {
+				if (fullyVisible && !sliderActive) {
+					// Активируем слайдер
+					sliderActive = true;
+					window.addEventListener('wheel', handleWheel, { passive: false });
+					showActiveGroup(activeIndex);
+				} else if (!fullyVisible && sliderActive) {
+					// Деактивируем слайдер, но не сбрасываем индекс
+					sliderActive = false;
+					window.removeEventListener('wheel', handleWheel);
+				}
+			} else {
+				// Если ширина больше 992px, отключаем слайдер
+				if (sliderActive) {
+					sliderActive = false;
+					window.removeEventListener('wheel', handleWheel);
+				}
+			}
 		}
+
+		// Проверяем при загрузке и при скролле и ресайзе
+		checkSectionVisibility();
+		window.addEventListener('scroll', checkSectionVisibility);
+		window.addEventListener('resize', checkSectionVisibility);
 	});
-
 
 
 
