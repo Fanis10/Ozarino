@@ -190,7 +190,7 @@
 					</div>
 				</div>
 				<div class="main__mob">
-					<div class="main__mob-group main__mob-group--1">
+					<div class="main__mob-group main__mob-group--1 active">
 						<h1 class="main__title">Озарино. <br>  Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span></h1>
 						<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
 							<span class="btn-text">загляните</span>
@@ -1104,76 +1104,125 @@
 			return heightMatches && topIsAtWindowTop;
 		}
 
-		window.addEventListener('wheel', (event) => {
+		// Проверяем ширину окна
+		if (window.innerWidth > 992) {
+			window.addEventListener('wheel', (event) => {
+				if (isAnimating) {
+					event.preventDefault();
+					return;
+				}
+
+				if (!isMainFullScreen()) {
+					return;
+				}
+
+				const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+
+				if (scrollDirection === 'down' && !animationDone) {
+					isAnimating = true;
+
+					main.style.overflow = 'hidden';
+
+					title.classList.add('hidden');
+					button.classList.add('hidden');
+					items.classList.add('scale-up');
+
+					setTimeout(() => {
+						main.style.overflow = '';
+						isAnimating = false;
+						animationDone = true;
+					}, 500);
+
+					event.preventDefault();
+				} else if (scrollDirection === 'up' && animationDone) {
+					isAnimating = true;
+
+					main.style.overflow = 'hidden';
+
+					title.classList.remove('hidden');
+					button.classList.remove('hidden');
+					items.classList.remove('scale-up');
+
+					setTimeout(() => {
+						main.style.overflow = '';
+						isAnimating = false;
+						animationDone = false;
+					}, 500);
+
+					event.preventDefault();
+				}
+			}, { passive: false });
+
+			const itemElements = main.querySelectorAll('.main__item');
+			const defaultBackground = getComputedStyle(main).backgroundImage;
+
+			itemElements.forEach(item => {
+				item.addEventListener('mouseover', () => {
+					const imageUrl = item.getAttribute('data-image');
+					if (imageUrl) {
+						main.style.backgroundImage = `url(${imageUrl})`;
+					}
+				});
+
+				item.addEventListener('mouseout', () => {
+					main.style.backgroundImage = defaultBackground;
+				});
+			});
+		}
+	});
+
+	// Main-mob
+	document.addEventListener('DOMContentLoaded', () => {
+		const main = document.querySelector('.main');
+		const mobGroups = main.querySelectorAll('.main__mob-group');
+		let activeIndex = 0; // Индекс активной группы
+		let isAnimating = false;
+
+		function showActiveGroup(index) {
+			mobGroups.forEach((group, i) => {
+				if (i === index) {
+					group.classList.add('active');
+				} else {
+					group.classList.remove('active');
+				}
+			});
+		}
+
+		function handleWheel(event) {
 			if (isAnimating) {
 				event.preventDefault();
 				return;
 			}
 
-			if (!isMainFullScreen()) {
-				return;
-			}
-
 			const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
 
-			if (scrollDirection === 'down' && !animationDone) {
+			if (scrollDirection === 'down' && activeIndex < mobGroups.length - 1) {
 				isAnimating = true;
-
-				main.style.overflow = 'hidden';
-
-				title.classList.add('hidden');
-				button.classList.add('hidden');
-				items.classList.add('scale-up');
-
+				activeIndex++;
+				showActiveGroup(activeIndex);
 				setTimeout(() => {
-					main.style.overflow = '';
 					isAnimating = false;
-					animationDone = true;
-				}, 500);
-
-				event.preventDefault();
-			} else if (scrollDirection === 'up' && animationDone) {
+				}, 300); // Длительность анимации
+			} else if (scrollDirection === 'up' && activeIndex > 0) {
 				isAnimating = true;
-
-				main.style.overflow = 'hidden';
-
-				title.classList.remove('hidden');
-				button.classList.remove('hidden');
-				items.classList.remove('scale-up');
-
+				activeIndex--;
+				showActiveGroup(activeIndex);
 				setTimeout(() => {
-					main.style.overflow = '';
 					isAnimating = false;
-					animationDone = false;
-				}, 500);
-
-				event.preventDefault();
+				}, 300); // Длительность анимации
 			}
-		}, { passive: false });
 
-		// --- Добавляем обработчики для смены фона при наведении ---
-		const itemElements = main.querySelectorAll('.main__item');
-		const defaultBackground = getComputedStyle(main).backgroundImage;
+			event.preventDefault();
+		}
 
-		itemElements.forEach(item => {
-			item.addEventListener('mouseover', () => {
-				const imageUrl = item.getAttribute('data-image');
-				if (imageUrl) {
-					main.style.backgroundImage = `url(${imageUrl})`;
-				}
-			});
-
-			item.addEventListener('mouseout', () => {
-				main.style.backgroundImage = defaultBackground;
-			});
-		});
+		// Проверяем ширину окна и добавляем обработчик события только для мобильной версии
+		if (window.innerWidth <= 992) {
+			window.addEventListener('wheel', handleWheel, { passive: false });
+			showActiveGroup(activeIndex); // Показать первую группу по умолчанию
+		}
 	});
 
 
-
-
-
-	// Main-mob
 
 
 	// Gallery
