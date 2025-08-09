@@ -1182,6 +1182,7 @@
 		let activeIndex = 0;
 		let isAnimating = false;
 		let sliderActive = false;
+		let touchStartY = null;
 
 		function showActiveGroup(index) {
 			mobGroups.forEach((group, i) => {
@@ -1222,6 +1223,43 @@
 			}
 		}
 
+		function handleTouchStart(event) {
+			touchStartY = event.touches[0].clientY; // Получаем начальную позицию касания
+		}
+
+		function handleTouchMove(event) {
+			if (!sliderActive) return;
+			if (touchStartY === null) return;
+
+			const touchCurrentY = event.touches[0].clientY;
+			const touchDiff = touchCurrentY - touchStartY;
+
+			if (Math.abs(touchDiff) > 30) { // Условие для определения жеста
+				if (touchDiff < 0) {
+					// Листаем вниз
+					if (activeIndex < mobGroups.length - 1) {
+						isAnimating = true;
+						activeIndex++;
+						showActiveGroup(activeIndex);
+						setTimeout(() => {
+							isAnimating = false;
+						}, 300);
+					}
+				} else {
+					// Листаем вверх
+					if (activeIndex > 0) {
+						isAnimating = true;
+						activeIndex--;
+						showActiveGroup(activeIndex);
+						setTimeout(() => {
+							isAnimating = false;
+						}, 300);
+					}
+				}
+				touchStartY = null; // Сбрасываем начальную позицию
+			}
+		}
+
 		function checkSectionVisibility() {
 			const rect = main.getBoundingClientRect();
 			const viewportHeight = window.innerHeight;
@@ -1237,17 +1275,23 @@
 					// Активируем слайдер
 					sliderActive = true;
 					window.addEventListener('wheel', handleWheel, { passive: false });
+					window.addEventListener('touchstart', handleTouchStart, { passive: false });
+					window.addEventListener('touchmove', handleTouchMove, { passive: false });
 					showActiveGroup(activeIndex);
 				} else if (!fullyVisible && sliderActive) {
 					// Деактивируем слайдер, но не сбрасываем индекс
 					sliderActive = false;
 					window.removeEventListener('wheel', handleWheel);
+					window.removeEventListener('touchstart', handleTouchStart);
+					window.removeEventListener('touchmove', handleTouchMove);
 				}
 			} else {
 				// Если ширина больше 992px, отключаем слайдер
 				if (sliderActive) {
 					sliderActive = false;
 					window.removeEventListener('wheel', handleWheel);
+					window.removeEventListener('touchstart', handleTouchStart);
+					window.removeEventListener('touchmove', handleTouchMove);
 				}
 			}
 		}
@@ -1257,6 +1301,7 @@
 		window.addEventListener('scroll', checkSectionVisibility);
 		window.addEventListener('resize', checkSectionVisibility);
 	});
+
 
 
 
