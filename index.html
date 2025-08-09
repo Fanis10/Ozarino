@@ -1193,17 +1193,21 @@
 			});
 		}
 
-		// Фиксируем секцию, чтобы она занимала экран и не скроллилась
+		// Фиксируем секцию на весь экран
 		function fixSection() {
 			mainMo.style.position = 'fixed';
 			mainMo.style.top = '0';
 			mainMo.style.left = '0';
 			mainMo.style.width = '100%';
 			mainMo.style.height = '100vh';
-			mainMo.style.background = mainMo.style.background || 'inherit';
+			mainMo.style.zIndex = '9999';
+			// Чтобы фон не мерцал, можно задать background, если нужно
+			if (!mainMo.style.background) {
+				mainMo.style.background = window.getComputedStyle(mainMo).backgroundColor || 'white';
+			}
 		}
 
-		// Снимаем фиксацию секции
+		// Снимаем фиксацию
 		function unfixSection() {
 			mainMo.style.position = '';
 			mainMo.style.top = '';
@@ -1214,17 +1218,17 @@
 			mainMo.style.background = '';
 		}
 
-		// Запрещаем прокрутку страницы
+		// Запрет прокрутки страницы
 		function disablePageScroll() {
 			document.body.style.overflow = 'hidden';
 		}
 
-		// Разрешаем прокрутку страницы
+		// Разрешение прокрутки страницы
 		function enablePageScroll() {
 			document.body.style.overflow = '';
 		}
 
-		// Активируем слайдер: фиксируем секцию и блокируем прокрутку страницы
+		// Активируем слайдер
 		function activateSlider() {
 			if (sliderActive) return;
 			sliderActive = true;
@@ -1236,7 +1240,7 @@
 			window.addEventListener('touchmove', handleTouchMove, { passive: false });
 		}
 
-		// Деактивируем слайдер: снимаем фиксацию и разрешаем прокрутку
+		// Деактивируем слайдер
 		function deactivateSlider() {
 			if (!sliderActive) return;
 			sliderActive = false;
@@ -1247,7 +1251,7 @@
 			window.removeEventListener('touchmove', handleTouchMove);
 		}
 
-		// Обработчик прокрутки колесом мыши
+		// Обработка прокрутки колесом мыши
 		function handleWheel(event) {
 			if (!sliderActive) return;
 
@@ -1269,14 +1273,9 @@
 					}, 300);
 					event.preventDefault();
 				} else {
-					// На последнем слайде — снимаем фиксацию сразу и даём странице прокрутиться
+					// На последнем слайде снимаем фиксацию и даём странице прокрутиться
 					deactivateSlider();
-
-					// Сбрасываем индекс на последний слайд для согласованности
-					activeIndex = mobGroups.length - 1;
-					showActiveGroup(activeIndex);
-
-					// НЕ вызываем event.preventDefault(), чтобы страница прокрутилась дальше
+					// НЕ вызываем event.preventDefault() — чтобы страница прокрутилась дальше
 				}
 			} else if (scrollUp) {
 				if (activeIndex > 0) {
@@ -1294,12 +1293,12 @@
 			}
 		}
 
-		// Обработчик начала касания (для мобильных)
+		// Обработка начала касания
 		function handleTouchStart(event) {
 			touchStartY = event.touches[0].clientY;
 		}
 
-		// Обработчик движения пальцем (для мобильных)
+		// Обработка движения пальцем
 		function handleTouchMove(event) {
 			if (!sliderActive) return;
 			if (touchStartY === null) return;
@@ -1319,13 +1318,9 @@
 						}, 300);
 						event.preventDefault();
 					} else {
-						// На последнем слайде — снимаем фиксацию
+						// На последнем слайде снимаем фиксацию и разрешаем скролл страницы
 						deactivateSlider();
-
-						activeIndex = mobGroups.length - 1;
-						showActiveGroup(activeIndex);
-
-						// НЕ вызываем event.preventDefault(), чтобы страница прокрутилась дальше
+						// НЕ вызываем event.preventDefault()
 					}
 				} else {
 					// Свайп вниз — прокрутка вверх по слайдам
@@ -1346,14 +1341,14 @@
 			}
 		}
 
-		// Отслеживаем видимость секции и ширину экрана для активации слайдера
+		// Отслеживаем видимость секции и ширину экрана
 		const observerOptions = {
 			root: null,
-			threshold: 1.0 // элемент должен быть полностью виден
+			threshold: 1.0, // элемент должен быть полностью виден
 		};
 
 		const observer = new IntersectionObserver((entries) => {
-			entries.forEach(entry => {
+			entries.forEach((entry) => {
 				const isMobile = window.innerWidth <= 992;
 				if (entry.isIntersecting && isMobile) {
 					activateSlider();
@@ -1365,7 +1360,7 @@
 
 		observer.observe(mainMo);
 
-		// При изменении размера окна проверяем, нужно ли отключить слайдер
+		// При изменении размера окна
 		window.addEventListener('resize', () => {
 			const isMobile = window.innerWidth <= 992;
 			if (!isMobile && sliderActive) {
@@ -1376,6 +1371,7 @@
 		// Инициализация — показываем первый слайд
 		showActiveGroup(activeIndex);
 	});
+
 
 
 
