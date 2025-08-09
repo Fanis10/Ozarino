@@ -1177,8 +1177,9 @@
 
 	// Main-mob
 	document.addEventListener('DOMContentLoaded', () => {
-		const main = document.querySelector('.main');
-		const mainMo = document.querySelector('.main__mob'); // фиксируем именно этот блок
+		const mainMo = document.querySelector('.main__mob');
+		if (!mainMo) return;
+
 		const mobGroups = mainMo.querySelectorAll('.main__mob-group');
 		let activeIndex = 0;
 		let isAnimating = false;
@@ -1189,6 +1190,10 @@
 			mobGroups.forEach((group, i) => {
 				group.classList.toggle('active', i === index);
 			});
+			// Если последний слайд, снимаем фиксацию и деактивируем слайдер
+			if (index === mobGroups.length - 1) {
+				deactivateSlider();
+			}
 		}
 
 		function disablePageScroll() {
@@ -1200,23 +1205,22 @@
 		}
 
 		function fixSection() {
-			if (!mainMo) return;
 			mainMo.style.position = 'fixed';
 			mainMo.style.top = '0';
 			mainMo.style.left = '0';
 			mainMo.style.width = '100%';
 			mainMo.style.height = '100vh';
-			mainMo.style.zIndex = '9999';
+			mainMo.style.background = mainMo.style.background || 'inherit';
 		}
 
 		function unfixSection() {
-			if (!mainMo) return;
 			mainMo.style.position = '';
 			mainMo.style.top = '';
 			mainMo.style.left = '';
 			mainMo.style.width = '';
 			mainMo.style.height = '';
 			mainMo.style.zIndex = '';
+			mainMo.style.background = '';
 		}
 
 		function activateSlider() {
@@ -1260,7 +1264,9 @@
 					}, 300);
 					event.preventDefault();
 				} else {
+					// На последнем слайде — немедленно деактивируем слайдер
 					deactivateSlider();
+					// Не preventDefault, чтобы страница прокрутилась дальше
 				}
 			} else if (scrollUp) {
 				if (activeIndex > 0) {
@@ -1272,7 +1278,8 @@
 					}, 300);
 					event.preventDefault();
 				} else {
-					deactivateSlider();
+					// На первом слайде — игнорируем прокрутку вверх
+					event.preventDefault();
 				}
 			}
 		}
@@ -1297,8 +1304,11 @@
 						setTimeout(() => {
 							isAnimating = false;
 						}, 300);
+						event.preventDefault();
 					} else {
+						// На последнем слайде — немедленно деактивируем слайдер
 						deactivateSlider();
+						// Не preventDefault, чтобы свайп дальше работал
 					}
 				} else {
 					if (activeIndex > 0) {
@@ -1308,33 +1318,51 @@
 						setTimeout(() => {
 							isAnimating = false;
 						}, 300);
+						event.preventDefault();
 					} else {
-						deactivateSlider();
+						// На первом слайде — игнорируем свайп вверх
+						event.preventDefault();
 					}
 				}
 				touchStartY = null;
-				event.preventDefault();
 			}
 		}
 
-		function checkSectionVisibility() {
-			if (!mainMo) return;
-			const rect = mainMo.getBoundingClientRect();
-			const viewportHeight = window.innerHeight;
-			const fullyVisible = rect.top <= 0 && rect.bottom >= viewportHeight;
-			const isMobileView = window.innerWidth <= 992;
+		// IntersectionObserver для отслеживания видимости main-mo
+		const observerOptions = {
+			root: null,
+			threshold: 1.0 // элемент должен быть полностью виден
+		};
 
-			if (isMobileView && fullyVisible) {
-				activateSlider();
-			} else {
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach(entry => {
+				const isMobile = window.innerWidth <= 992;
+				if (entry.isIntersecting && isMobile) {
+					activateSlider();
+				} else {
+					deactivateSlider();
+				}
+			});
+		}, observerOptions);
+
+		observer.observe(mainMo);
+
+		// Обновлять состояние при ресайзе (например, переключение между мобильным и десктопом)
+		window.addEventListener('resize', () => {
+			const isMobile = window.innerWidth <= 992;
+			if (!isMobile && sliderActive) {
 				deactivateSlider();
 			}
-		}
+		});
 
-		checkSectionVisibility();
-		window.addEventListener('scroll', checkSectionVisibility);
-		window.addEventListener('resize', checkSectionVisibility);
+		// Инициализация первого показа
+		showActiveGroup(activeIndex);
 	});
+
+
+
+
+
 
 
 
