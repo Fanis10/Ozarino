@@ -2089,3 +2089,154 @@
 </body>
 
 </html>
+
+<script>
+     // Plan
+    $('.path-btn').on('click', function(e) {
+        e.stopPropagation();
+
+        var $btn = $(this);
+        var id = $btn.data('id');
+
+        var rect = this.getBoundingClientRect();
+        var top = rect.top + $(window).scrollTop();
+        var left = rect.left + $(window).scrollLeft();
+
+        var $card = $('.service-card').filter('[data-id="' + id + '"]');
+        var cardWidth = $card.outerWidth();
+        var windowWidth = $(window).width();
+
+        if (left + cardWidth > windowWidth + $(window).scrollLeft()) {
+            left = windowWidth + $(window).scrollLeft() - cardWidth - 10;
+        }
+
+        $('.service-card').hide();
+
+        $card.css({
+            'top': (top - 80) + 'px',
+            'left': left + 'px',
+            'display': 'block'
+        });
+
+        if ($(window).width() <= 576) {
+            $('.section-bg').addClass('section-bg--active');
+            $card.css({
+                'transform': 'translate(0)'
+            });
+        }
+    });
+
+    $(document).on('click', function(e) {
+        if (!$(e.target).closest('.path-btn, .service-card').length) {
+            $('.service-card').hide();
+            $('.section-bg').removeClass('section-bg--active');
+        }
+    });
+
+    //
+    $(".path-btn").mouseover(function () {
+        let path = $(this).attr("data-info-path");
+        $(this).siblings(".path-btn").removeClass("path-btn--active");
+        $(this).addClass("path-btn--active");
+
+        $(this).parents(".plan__inner").find(".plan-info").removeClass("plan-info--active");
+        $(this).parents(".plan__inner").find(`.plan-info[data-content-path="${path}"]`).addClass("plan-info--active");
+    });
+
+    $(".path-btn").mouseout(function () {
+        $(this).removeClass("path-btn--active");
+        $(this).parents(".plan__inner").find(".plan-info").removeClass("plan-info--active");
+    });
+
+    //
+    $('.plan__btn').click(function () {
+        $('.plan__images').addClass('plan__images--active')
+    })
+
+    $('.plan__images-close').click(function () {
+        $('.plan__images').removeClass('plan__images--active')
+    })
+
+    //
+    $('.section-bg').click(function () {
+        $(this).removeClass('section-bg--active')
+    })
+
+    //
+    if ($('.plan').length) {
+        const $plan = $('.plan');
+        const $planMob = $plan.find('.plan-mob');
+        const $img2 = $planMob.find('.plan__img2');
+        const $scrollBtn = $planMob.find('.scroll-btn');
+        const $body = $('body');
+
+        $body.addClass('fixed-body');
+
+        let step = 0;
+        let lastTouchY = null;
+        const scrollThreshold = 20;
+        let scrollTimeout;
+
+        function hideImg2() {
+            $img2.addClass('hidden');
+        }
+
+        function hidePlanMob() {
+            $planMob.addClass('hidden');
+            $body.removeClass('fixed-body');
+            $(window).off('touchmove', onTouchMove);
+            $(window).off('wheel', onWheel);
+            $scrollBtn.off('click', onClick);
+        }
+
+        function handleScrollDown() {
+            if (step === 0) {
+                hideImg2();
+                step = 1;
+            } else if (step === 1) {
+                clearTimeout(scrollTimeout);
+                scrollTimeout = setTimeout(() => {
+                    hidePlanMob();
+                    step = 2;
+                }, 300);
+            }
+        }
+
+        function onTouchMove(e) {
+            if (e.originalEvent.touches.length === 0) return;
+
+            const touch = e.originalEvent.touches[0];
+            const currentY = touch.clientY;
+
+            if (lastTouchY === null) {
+                lastTouchY = currentY;
+                return;
+            }
+
+            const deltaY = lastTouchY - currentY;
+
+            if (deltaY > scrollThreshold) {
+                handleScrollDown();
+                e.preventDefault();
+            }
+
+            lastTouchY = currentY;
+        }
+
+        function onWheel(e) {
+            if (e.originalEvent.deltaY > scrollThreshold) {
+                handleScrollDown();
+                e.preventDefault();
+            }
+        }
+
+        function onClick(e) {
+            handleScrollDown();
+            e.preventDefault();
+        }
+
+        $(window).on('touchmove', onTouchMove);
+        $(window).on('wheel', onWheel);
+        $scrollBtn.on('click', onClick);
+    }
+</script>
