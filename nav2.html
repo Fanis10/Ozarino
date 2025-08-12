@@ -36,18 +36,6 @@
 							<span class="circle"></span>
 						</button>
 					</li>
-					<li>
-						<button class="btn btn-animation btn-orange" data-modal="contactModal--sent">
-							<span class="btn-text">Заявка отправлена!</span>
-							<span class="circle"></span>
-						</button>
-					</li>
-					<li>
-						<button class="btn btn-animation btn-orange" data-modal="contactModal2">
-							<span class="btn-text">Заявка отправлена!</span>
-							<span class="circle"></span>
-						</button>
-					</li>
 				</ul>
 			</div>
 		</section>
@@ -63,12 +51,12 @@
 				<div class="modal__content">
 					<div class="modal__img">
 						<img src="img/modal-img.webp" alt="">
-						<img src="img/modal-img2.webp" alt="">
 					</div>
 					<div class="modal__desc">
-						<div class="modal__title">Получите персональную подборку участков</div>
+						<div class="modal__title">Получите персональную подборку участков с ценами и планами</div>
 						<div class="modal__text">
-							Наш менеджер подберет участок, который подходит именно вам.
+							<p>Вместо изучения сайтов, файл с фото, ценами, плюсами и планом поселка.</p>
+							<p>Наш менеджер подберет участок, который подходит именно вам. </p>
 						</div>
 						<form class="form">
 							<div class="form-grid">
@@ -137,74 +125,6 @@
 				</div>
 			</div>
 		</div>
-		<div class="modal modal-sent" id="contactModal--sent">
-			<div class="modal__dialog">
-				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
-					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
-					</svg>
-					<span class="circle"></span>
-				</button>
-				<div class="modal__content">
-					<div class="modal__title">Ваша заявка успешно отправлена!</div>
-					<div class="modal__text">В ближайшее время наш менеджер с вами свяжется</div>
-					<div class="modal__img">
-						<img src="img/modal-img2.webp" alt="">
-					</div>
-				</div>
-			</div>
-		</div>
-		<div class="modal modal--2" id="contactModal2">
-			<div class="modal__dialog">
-				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal" aria-label="Close">
-					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
-						<path d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z" fill="#637057"/>
-					</svg>
-					<span class="circle"></span>
-				</button>
-				<div class="modal__content">
-					<div class="modal__img">
-						<img src="img/modal-img3.webp" alt="">
-					</div>
-					<div class="modal__desc">
-						<div class="modal__title">Запишитесь на экскурсию по поселку</div>
-						<div class="modal__text">Оставьте ваши контакты и наш менеджер свяжется с вами.</div>
-						<form class="form">
-							<div class="form-group">
-								<input type="text" placeholder="Ваше имя">
-								<span class="input-info">
-                            		<span class="input-info__icon">
-                                		<img src="img/info.svg" alt="">
-                            		</span>
-                            		<span class="input-info__text">Заполните поле</span>
-                       			 </span>
-							</div>
-							<div class="form-group">
-								<input type="tel" placeholder="Ваш номер телефона">
-								<span class="input-info">
-									<span class="input-info__icon">
-                               			<img src="img/info.svg" alt="">
-                           			</span>
-                           		<span class="input-info__text">Заполните поле</span>
-                       		</span>
-							</div>
-							<button class="form-btn btn-animation btn btn-orange">
-								<span class="btn-text">записаться на экскурсию</span>
-								<span class="circle"></span>
-							</button>
-							<div class="form-check">
-								<input type="checkbox">
-								<label>
-									Я даю согласие на обработку <a href="">персональных данных</a> в соответствии с <a
-										href="">политикой конфиденциальности</a>
-								</label>
-							</div>
-						</form>
-					</div>
-				</div>
-			</div>
-		</div>
-
 	</div>
 	<script src="js/libs.min.js"></script>
 <script src="js/main.min.js"></script>
