@@ -334,7 +334,7 @@
 					</div>
 				</div>
             </section>
-            <section class="area">
+			<section class="area">
 				<div class="container">
 					<div class="area__inner">
 						<div class="area__desc">
@@ -1248,7 +1248,7 @@
 		'img/area-img21.webp',
 		'img/area-img22.webp',
 	];
-	images.forEach((src, i) => {
+	images.forEach((src) => {
 		const div = document.createElement('div');
 		div.style.backgroundImage = `url(${src})`;
 		div.style.position = 'absolute';
@@ -1258,27 +1258,33 @@
 		div.style.height = '100%';
 		div.style.backgroundSize = 'cover';
 		div.style.backgroundPosition = 'center center';
-		div.style.opacity = i === 0 ? '1' : '0';
+		div.style.opacity = 0;
 		div.style.pointerEvents = 'none';
 		div.classList.add('bg-slide');
 		area.appendChild(div);
 	});
 	const bgSlides = gsap.utils.toArray('.bg-slide');
 	const slideCount = bgSlides.length;
-	const scrollLength = slideCount * 120;
+	const scrollLength = slideCount * 150;
+	gsap.set(bgSlides[0], { opacity: 1 });
 	ScrollTrigger.create({
 		trigger: area,
 		start: "top top",
 		end: "+=" + scrollLength,
 		scrub: true,
 		pin: true,
+		pinSpacing: true,
 		onUpdate: self => {
-			const progress = self.progress;
-			let index = Math.floor(progress * slideCount);
-			if (index >= slideCount) index = slideCount - 1;
+			const progress = self.progress * (slideCount - 1);
+			const index = Math.floor(progress);
+			const frac = progress - index;
 
 			bgSlides.forEach((slide, i) => {
-				slide.style.opacity = i === index ? '1' : '0';
+				gsap.to(slide, {
+					opacity: (i === index) ? 1 - frac : (i === index + 1) ? frac : 0,
+					overwrite: 'auto',
+					duration: 0.1
+				});
 			});
 		}
 	});
@@ -1323,94 +1329,130 @@
 	const img1DisappearLength = 150;
 	const img2AppearLength = 300;
 	const pinExtra = 200;
-	let scrollTriggers = [];
-	function clearTriggers() {
-		scrollTriggers.forEach(st => st.kill && st.kill());
-		scrollTriggers = [];
-	}
 	function animateMap() {
-		clearTriggers();
+		ScrollTrigger.matchMedia({
+			"(min-width: 992px)": function() {
+				const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
+				const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
+				const startPoint = img1Bottom - window.innerHeight;
+				const endPointImg1 = startPoint + img1DisappearLength;
+				const startPointImg2 = endPointImg1;
+				const endPointImg2 = startPointImg2 + img2AppearLength;
+				const pinEnd = endPointImg2 + pinExtra;
+				gsap.to(img1, {
+					scale: 0.4,
+					display: 'none',
+					pointerEvents: 'none',
+					ease: 'none',
+					scrollTrigger: {
+						trigger: mapSection,
+						start: startPoint,
+						end: endPointImg1,
+						scrub: true,
+					}
+				});
 
-		const isWide = window.innerWidth >= 992;
+				gsap.fromTo(img2,
+						{ opacity: 0.6, display: 'none', pointerEvents: 'none' },
+						{
+							top: 0,
+							right: 0,
+							width: '100%',
+							display: 'block',
+							opacity: 1,
+							pointerEvents: 'auto',
+							ease: 'none',
+							scrollTrigger: {
+								trigger: mapSection,
+								start: startPointImg2,
+								end: endPointImg2,
+								scrub: true,
+								onEnter: () => {
+									mapSection.classList.add('map--active');
+								},
+								onLeaveBack: () => {
+									mapSection.classList.remove('map--active');
+								}
+							}
+						}
+				);
 
-		const img1Bottom = () => img1.getBoundingClientRect().bottom + window.pageYOffset;
-		const mapTop = () => mapSection.getBoundingClientRect().top + window.pageYOffset;
+				ScrollTrigger.create({
+					trigger: mapSection,
+					start: startPoint,
+					end: pinEnd,
+					pin: true,
+					pinSpacing: true,
+					anticipatePin: 1,
+				});
 
-		const startPoint = isWide ? () => img1Bottom() - window.innerHeight : () => mapTop();
+			},
+			"(max-width: 991px)": function() {
+				const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
+				const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
 
-		const endPointImg1 = () => startPoint() + img1DisappearLength;
+				const startPoint = mapTop;
+				const endPointImg1 = startPoint + img1DisappearLength;
+				const startPointImg2 = endPointImg1;
+				const endPointImg2 = startPointImg2 + img2AppearLength;
+				const pinEnd = endPointImg2 + pinExtra;
 
-		const startPointImg2 = () => endPointImg1();
-		const endPointImg2 = () => startPointImg2() + img2AppearLength;
+				gsap.to(img1, {
+					scale: 0.4,
+					display: 'none',
+					pointerEvents: 'none',
+					ease: 'none',
+					scrollTrigger: {
+						trigger: mapSection,
+						start: startPoint,
+						end: endPointImg1,
+						scrub: true,
+					}
+				});
 
-		const pinEnd = () => endPointImg2() + pinExtra;
+				gsap.fromTo(img2,
+						{ opacity: 0.6, display: 'none', pointerEvents: 'none' },
+						{
+							top: 0,
+							right: 0,
+							width: '100%',
+							display: 'block',
+							opacity: 1,
+							pointerEvents: 'auto',
+							ease: 'none',
+							scrollTrigger: {
+								trigger: mapSection,
+								start: startPointImg2,
+								end: endPointImg2,
+								scrub: true,
+								onEnter: () => {
+									mapSection.classList.add('map--active');
+								},
+								onLeaveBack: () => {
+									mapSection.classList.remove('map--active');
+								}
+							}
+						}
+				);
 
-		scrollTriggers.push(ScrollTrigger.create({
-			trigger: mapSection,
-			start: startPoint,
-			end: endPointImg1,
-			onUpdate: self => {
-				if (self.progress === 1) {
-					mapSection.classList.add('map--active');
-				} else {
-					mapSection.classList.remove('map--active');
-				}
-			}
-		}));
-
-		scrollTriggers.push(gsap.to(img1, {
-			scale: 0.4,
-			display: 'none',
-			pointerEvents: 'none',
-			ease: 'none',
-			scrollTrigger: {
-				trigger: mapSection,
-				start: startPoint,
-				end: endPointImg1,
-				scrub: true,
-			}
-		}));
-
-		scrollTriggers.push(gsap.to(img2, {
-			display: 'block',
-			opacity: 1,
-			top: 0,
-			right: 0,
-			width: '100%',
-			pointerEvents: 'auto',
-			ease: 'none',
-			scrollTrigger: {
-				trigger: mapSection,
-				start: startPointImg2,
-				end: endPointImg2,
-				scrub: true,
-			}
-		}));
-
-		scrollTriggers.push(ScrollTrigger.create({
-			trigger: mapSection,
-			start: startPoint,
-			end: pinEnd,
-			pin: true,
-			pinSpacing: true,
-			anticipatePin: 1,
-		}));
-	}
-	const observerMap = new IntersectionObserver((entries, observer) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-				animateMap();
-				observer.disconnect();
+				ScrollTrigger.create({
+					trigger: mapSection,
+					start: startPoint,
+					end: pinEnd,
+					pin: true,
+					pinSpacing: true,
+					anticipatePin: 1,
+				});
 			}
 		});
-	}, { threshold: 0.5 });
-	if (mapSection) {
-		observerMap.observe(mapSection);
 	}
-	window.addEventListener('resize', () => {
-		if (ScrollTrigger.getAll().length) {
+	window.addEventListener('load', () => {
+		if (mapSection) {
 			animateMap();
 		}
+	});
+	window.addEventListener('resize', () => {
+		ScrollTrigger.refresh();
 	});
 
 	// House
