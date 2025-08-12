@@ -1265,8 +1265,11 @@
 	});
 	const bgSlides = gsap.utils.toArray('.bg-slide');
 	const slideCount = bgSlides.length;
-	const scrollLength = slideCount * 150;
+	const scrollLength = slideCount * 300; // Увеличение длины прокрутки
 	gsap.set(bgSlides[0], { opacity: 1 });
+	let lastProgress = 0; // Для отслеживания предыдущего прогресса
+	const speedLimit = 0.2; // Минимальная скорость прокрутки
+
 	ScrollTrigger.create({
 		trigger: area,
 		start: "top top",
@@ -1276,6 +1279,14 @@
 		pinSpacing: true,
 		onUpdate: self => {
 			const progress = self.progress * (slideCount - 1);
+
+			// Ограничение скорости прокрутки
+			if (Math.abs(progress - lastProgress) < speedLimit) {
+				return; // Прекращаем выполнение, если скорость слишком мала
+			}
+
+			lastProgress = progress; // Обновляем последний прогресс
+
 			const index = Math.floor(progress);
 			const frac = progress - index;
 
