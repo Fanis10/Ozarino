@@ -3432,26 +3432,5 @@
     })
 
     //
-    const svg = document.getElementById('plan-svg');
-    const areaNumbers = document.querySelectorAll('.plan-info__number');
-    const priceElement = document.querySelector('.plan-info__price');
 
-    const areaNumbers2 = document.querySelectorAll('.service-card__item-number');
-    const priceElements2 = document.querySelector('.plan-info__price');
-
-    svg.querySelectorAll('g[data-area-m2]').forEach(g => {
-        g.addEventListener('mouseenter', () => {
-            const areaM2 = g.getAttribute('data-area-m2');
-            const areaSotki = g.getAttribute('data-area-sotki');
-            const areaPrice = g.getAttribute('data-area-price');
-
-            areaNumbers[0].textContent = areaM2;
-            areaNumbers[1].textContent = areaSotki;
-            priceElement.textContent = areaPrice;
-
-            areaNumbers2[0].textContent = areaM2;
-            areaNumbers2[1].textContent = areaSotki;
-            priceElements2.textContent = areaPrice;
-        });
-    });
 </script>
