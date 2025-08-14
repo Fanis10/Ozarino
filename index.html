@@ -16,7 +16,7 @@
 		<header class="header">
     <div class="container">
         <div class="header__inner">
-            <a class="header__logo" href="">
+            <a class="header__logo" href="index.html">
                 <img src="img/logo.svg" alt="">
                 <img src="img/logo2.svg" alt="">
             </a>
@@ -139,9 +139,9 @@
                             <div class="menu__phone-wrap">
                                 <div class="menu__phone-text">Офис продаж</div>
                                 <a class="menu__phone" href="tel:74950000000">+7 495 000-00-00</a>
-                                <button class="menu__phone-btn">
+                                <!-- <button class="menu__phone-btn">
                                     <span>Заказать звонок</span>
-                                </button>
+                                </button> -->
                             </div>
                             <div class="menu__location">Республика Татарстан, <br>поселок Озарино</div>
                             <div class="menu__time">Ежедневно с 09:00 до 18:00</div>
@@ -322,8 +322,9 @@
 						</div>
 					</div>
 					<div class="container">
-						<div class="gallery__text">Меняешь этаж — на пространство, шум — на тишину, и вдруг понимаешь — О, так вот
-							как бывает!</div>
+						<div class="gallery__text">Меняешь этаж — на пространство,
+							шум — на тишину, и вдруг понимаешь: <br>
+							«О, так вот как бывает!»</div>
 						<button class="music" data-modal="contactModal--music">
 							<span class="music-icon">
 								<img src="img/music-icon.svg" alt="">
@@ -342,12 +343,19 @@
 				</div>
 			</section>
 			<section class="area">
+				<div class="swiper mySwiper">
+					<div class="swiper-wrapper">
+						<div class="swiper-slide" style="background-image: url(img/area-img.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img2.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img5.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img7.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img9.webp);"></div>
+					</div>
+				</div>
 				<div class="container">
-					<div class="area__inner">
-						<div class="area__desc">
-							<div class="area__number">77<span>га</span></div>
-							<div class="area__title">Общая площадь</div>
-						</div>
+					<div class="area__desc">
+						<div class="area__number">77<span>га</span></div>
+						<div class="area__title">Общая площадь</div>
 					</div>
 				</div>
 			</section>
@@ -466,7 +474,7 @@
 						</span>
 						<span class="hint hint--3">
 							<span class="hint-icon"></span>
-							<span class="hint-text">Участок рядом с лесом</span>
+							<span class="hint-text">Участки рядом с лесом</span>
 						</span>
 						<span class="hint hint--4">
 							<span class="hint-icon"></span>
@@ -515,7 +523,7 @@
 					<div class="house__inner">
 						<div class="section-top">
 							<div class="section-top__subtitle">О, как будто построен для нас</div>
-							<h2 class="section-top__title h2">Каждый дом в Озарино — с заботой о комфорте и чувством меры</h2>
+							<h2 class="section-top__title h2">Каждый дом в Озарино с заботой о комфорте и чувством меры</h2>
 						</div>
 						<div class="house__text">Ничего лишнего. Всё — по делу. Простая архитектура, приятные фасады, уют внутри.
 						</div>
@@ -862,7 +870,7 @@
 						<h2 class="area2__title h2">Пора увидеть Озарино</h2>
 						<div class="area2__subtitle">
 							Следующий раздел <br>
-							О поселке
+							«О поселке»
 						</div>
 					</div>
 				</div>
@@ -890,9 +898,9 @@
                     <div class="footer__phone-wrap">
                         <div class="footer__phone-text">Офис продаж</div>
                         <a class="footer__phone" href="tel:74950000000">+7 495 000-00-00</a>
-                        <button class="footer__phone-btn">
+                        <!-- <button class="footer__phone-btn">
                             <span>Заказать звонок</span>
-                        </button>
+                        </button> -->
                     </div>
                     <div class="footer__location">
                         Республика Татарстан,
@@ -925,7 +933,7 @@
                             </svg>
                         </a>
                     </div>
-                    <a class="footer__logo" href="">
+                    <a class="footer__logo" href="index.html">
                         <img src="img/logo.svg" alt="">
                     </a>
                     <button class="footer__btn btn-animation btn btn-orange">
@@ -1089,7 +1097,7 @@
 					<span class="circle"></span>
 				</button>
 				<div class="modal__content">
-					<div class="modal__title">Проникнитесь атмосферой Озарино</div>
+					<div class="modal__title">Погрузитесь в атмосферу Озарино</div>
 					<div class="modal-music__items">
 						<a href="" class="modal-music__item">
 							<img src="img/vk-music.svg" alt="">
@@ -1099,6 +1107,9 @@
 						</a>
 						<a href="" class="modal-music__item">
 							<img src="img/yandex-music.svg" alt="">
+						</a>
+						<a href="" class="modal-music__item">
+							<img src="img/spotify.svg" alt="">
 						</a>
 					</div>
 				</div>
@@ -1384,6 +1395,87 @@
 	});
 
 	// Area
+	(function () {
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			init();
+		}
+
+		function init() {
+			try {
+				if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
+					console.warn('GSAP или ScrollTrigger не найден(ы).');
+					return;
+				}
+				if (typeof Swiper === 'undefined') {
+					console.warn('Swiper не найден.');
+					return;
+				}
+
+				gsap.registerPlugin(ScrollTrigger);
+
+				const area = document.querySelector('.area');
+				if (!area) {
+					console.warn('.area не найден.');
+					return;
+				}
+
+				const areaSwiper = new Swiper('.area .mySwiper', {
+					slidesPerView: 1,
+					effect: 'fade',
+					allowTouchMove: false,
+					simulateTouch: true
+				});
+
+				const slidesCount = areaSwiper.slides ? areaSwiper.slides.length : 0;
+				if (slidesCount <= 1) {
+					return;
+				}
+
+				ScrollTrigger.getAll().forEach(st => {
+					if (st.trigger === area) st.kill();
+				});
+
+				const extraScreens = slidesCount - 1;
+				const scrollLength = window.innerHeight * extraScreens;
+
+				const st = ScrollTrigger.create({
+					trigger: area,
+					start: "top top",
+					end: () => `+=${scrollLength}`,
+					pin: true,
+					pinSpacing: true,
+					anticipatePin: 1,
+					scrub: 0,
+					invalidateOnRefresh: true,
+					onUpdate(self) {
+						const idx = Math.round(self.progress * (slidesCount - 1));
+						if (idx !== areaSwiper.activeIndex) {
+							areaSwiper.slideTo(idx, 400, false);
+						}
+					}
+				});
+
+				areaSwiper.on('slideChange', () => {
+					const targetProgress = areaSwiper.activeIndex / (slidesCount - 1);
+					const targetScroll = st.start + (st.end - st.start) * targetProgress;
+					gsap.to(window, { scrollTo: targetScroll, duration: 0.35, overwrite: true });
+				});
+
+				window.addEventListener('resize', () => {
+					st.end = st.start + (window.innerHeight * extraScreens);
+					ScrollTrigger.refresh();
+				});
+
+			} catch (err) {
+				console.error('Ошибка инициализации area scroll:', err);
+			}
+		}
+	})();
+
+
+
 	// const area = document.querySelector('.area');
 	// const images = [
 	// 	'img/area-img.webp',
@@ -1565,8 +1657,8 @@
 					{ opacity: 1, display: 'none', pointerEvents: 'none' },
 					{
 						top: 0,
-						right: 0,
-						width: '100%',
+						right: -30,
+						width: 'calc(100% + 60px)',
 						display: 'block',
 						opacity: 1,
 						pointerEvents: 'auto',
