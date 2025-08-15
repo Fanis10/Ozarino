@@ -350,6 +350,13 @@
 						<div class="swiper-slide" style="background-image: url(img/area-img5.webp);"></div>
 						<div class="swiper-slide" style="background-image: url(img/area-img7.webp);"></div>
 						<div class="swiper-slide" style="background-image: url(img/area-img9.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img12.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img15.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img17.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img19.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img21.webp);"></div>
+						<div class="swiper-slide" style="background-image: url(img/area-img22.webp);"></div>
 					</div>
 				</div>
 				<div class="container">
@@ -1421,17 +1428,20 @@
 					return;
 				}
 
+				const SWIPER_SPEED_MS = 0;
+				const SLIDE_TO_MS = 0;
+				const GSAP_SCROLL_S = 0;
+
 				const areaSwiper = new Swiper('.area .mySwiper', {
 					slidesPerView: 1,
 					effect: 'fade',
 					allowTouchMove: false,
-					simulateTouch: true
+					simulateTouch: true,
+					speed: SWIPER_SPEED_MS
 				});
 
 				const slidesCount = areaSwiper.slides ? areaSwiper.slides.length : 0;
-				if (slidesCount <= 1) {
-					return;
-				}
+				if (slidesCount <= 1) return;
 
 				ScrollTrigger.getAll().forEach(st => {
 					if (st.trigger === area) st.kill();
@@ -1452,15 +1462,34 @@
 					onUpdate(self) {
 						const idx = Math.round(self.progress * (slidesCount - 1));
 						if (idx !== areaSwiper.activeIndex) {
-							areaSwiper.slideTo(idx, 400, false);
+							areaSwiper.slideTo(idx, SLIDE_TO_MS, false);
 						}
 					}
 				});
 
+				function safeScrollTo(y, durationSeconds) {
+					const el = document.scrollingElement || document.documentElement || document.body;
+					const target = Math.round(y);
+
+					gsap.killTweensOf(el, { scrollTop: true });
+
+					if (!durationSeconds || durationSeconds <= 0) {
+						el.scrollTop = target;
+						return;
+					}
+
+					gsap.to(el, {
+						scrollTop: target,
+						duration: durationSeconds,
+						ease: "power1.out",
+						overwrite: true
+					});
+				}
+
 				areaSwiper.on('slideChange', () => {
 					const targetProgress = areaSwiper.activeIndex / (slidesCount - 1);
 					const targetScroll = st.start + (st.end - st.start) * targetProgress;
-					gsap.to(window, { scrollTo: targetScroll, duration: 0.35, overwrite: true });
+					safeScrollTo(targetScroll, GSAP_SCROLL_S);
 				});
 
 				window.addEventListener('resize', () => {
@@ -1469,11 +1498,25 @@
 				});
 
 			} catch (err) {
-				console.error('Ошибка инициализации area scroll:', err);
+				console.error('slider init error:', err);
 			}
 		}
 	})();
 
+
+
+	// function sliderArea() {
+	// 	var swiper = new Swiper('.area .mySwiper', {
+	// 		direction: "vertical",
+	// 		slidesPerView: 1,
+	// 		spaceBetween: 30,
+	// 		effect: "fade",
+	// 		mousewheel: false,
+	// 		touchStartPreventDefault: false,
+	// 		simulateTouch: true,
+	// 	});
+	// }
+	// sliderArea();
 
 
 	// const area = document.querySelector('.area');
