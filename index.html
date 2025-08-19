@@ -375,7 +375,7 @@
 						</div>
 						<div class="advantages__overflow">
 							<div class="advantages__items">
-								<div class="advantages__item">
+								<div class="advantages__item" data-duration="0.4">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">23,4 <span>км</span></div>
@@ -389,7 +389,7 @@
 										<div class="advantages__item-text">Прокрути выходные на велосипеде</div>
 									</div>
 								</div>
-								<div class="advantages__item">
+								<div class="advantages__item" data-duration="0.4">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">1,1 <span>км</span></div>
@@ -403,7 +403,7 @@
 										<div class="advantages__item-text">Где шаги неспешны, а мысли свободны</div>
 									</div>
 								</div>
-								<div class="advantages__item">
+								<div class="advantages__item" data-duration="0.8">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">7,4 <span>га</span></div>
@@ -417,7 +417,7 @@
 										<div class="advantages__item-text">Плавай, катайся на сапе, встречай рассвет на берегу</div>
 									</div>
 								</div>
-								<div class="advantages__item">
+								<div class="advantages__item" data-duration="1.2">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">2</div>
@@ -434,7 +434,7 @@
 										<div class="advantages__item-text">Лети за мечтой, играй с ветерком</div>
 									</div>
 								</div>
-								<div class="advantages__item">
+								<div class="advantages__item" data-duration="1.2">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">24<span>/7</span></div>
@@ -1321,124 +1321,6 @@
 	});
 
 	// Area
-	// function sliderArea() {
-	// 	var swiper = new Swiper('.area .mySwiper', {
-	// 		direction: "vertical",
-	// 		slidesPerView: 1,
-	// 		spaceBetween: 30,
-	// 		effect: "fade",
-	// 		mousewheel: false,
-	// 		touchStartPreventDefault: false,
-	// 		simulateTouch: true,
-	// 	});
-	// }
-	// sliderArea();
-
-
-
-
-	(function () {
-		if (document.readyState === 'loading') {
-			document.addEventListener('DOMContentLoaded', init);
-		} else {
-			init();
-		}
-
-		function init() {
-			try {
-				if (typeof gsap === 'undefined' || typeof ScrollTrigger === 'undefined') {
-					console.warn('GSAP или ScrollTrigger не найден(ы).');
-					return;
-				}
-				if (typeof Swiper === 'undefined') {
-					console.warn('Swiper не найден.');
-					return;
-				}
-
-				gsap.registerPlugin(ScrollTrigger);
-
-				const area = document.querySelector('.area');
-				if (!area) {
-					console.warn('.area не найден.');
-					return;
-				}
-
-				const SWIPER_SPEED_MS = 150;
-				const SLIDE_TO_MS = 20;
-				const GSAP_SCROLL_S = 0.01;
-
-				const areaSwiper = new Swiper('.area .mySwiper', {
-					slidesPerView: 1,
-					effect: 'fade',
-					allowTouchMove: false,
-					simulateTouch: true,
-					speed: SWIPER_SPEED_MS
-				});
-
-				const slidesCount = areaSwiper.slides ? areaSwiper.slides.length : 0;
-				if (slidesCount <= 1) return;
-
-				ScrollTrigger.getAll().forEach(st => {
-					if (st.trigger === area) st.kill();
-				});
-
-				const extraScreens = slidesCount - 1;
-				const scrollLength = window.innerHeight * extraScreens;
-
-				const st = ScrollTrigger.create({
-					trigger: area,
-					start: "top top",
-					end: () => `+=${scrollLength}`,
-					pin: true,
-					pinSpacing: true,
-					anticipatePin: 1,
-					scrub: 0,
-					invalidateOnRefresh: true,
-					onUpdate(self) {
-						const idx = Math.round(self.progress * (slidesCount - 1));
-						if (idx !== areaSwiper.activeIndex) {
-							areaSwiper.slideTo(idx, SLIDE_TO_MS, false);
-						}
-					}
-				});
-
-				function safeScrollTo(y, durationSeconds) {
-					const el = document.scrollingElement || document.documentElement || document.body;
-					const target = Math.round(y);
-
-					gsap.killTweensOf(el, { scrollTop: true });
-
-					if (!durationSeconds || durationSeconds <= 0) {
-						el.scrollTop = target;
-						return;
-					}
-
-					gsap.to(el, {
-						scrollTop: target,
-						duration: durationSeconds,
-						ease: "power1.out",
-						overwrite: true
-					});
-				}
-
-				areaSwiper.on('slideChange', () => {
-					const targetProgress = areaSwiper.activeIndex / (slidesCount - 1);
-					const targetScroll = st.start + (st.end - st.start) * targetProgress;
-					safeScrollTo(targetScroll, GSAP_SCROLL_S);
-				});
-
-				window.addEventListener('resize', () => {
-					st.end = st.start + (window.innerHeight * extraScreens);
-					ScrollTrigger.refresh();
-				});
-
-			} catch (err) {
-				console.error('slider init error:', err);
-			}
-		}
-	})();
-
-
 
 	// const area = document.querySelector('.area');
 	// const images = [
@@ -1497,37 +1379,49 @@
 	// });
 
 	// Advantages
-	const advantagesTimeline = gsap.timeline({ paused: true });
-	function animateAdvantagesItems() {
-		const items = document.querySelectorAll('.advantages__item');
+	(() => {
+		const advantagesTimeline = gsap.timeline({ paused: true });
 
-		advantagesTimeline.clear();
+		function animateAdvantagesItems() {
+			const itemsNodeList = document.querySelectorAll('.advantages__item');
 
-		Array.from(items).reverse().forEach((item) => {
-			advantagesTimeline.to(item, {
-				opacity: 1,
-				y: 0,
-				duration: 0.6,
-				ease: 'power2.out'
-			}, '+=0');
+			if (!itemsNodeList.length) return;
+
+			const items = Array.from(itemsNodeList);
+
+			advantagesTimeline.clear();
+
+			items.reverse().forEach((item) => {
+				const duration = parseFloat(item.dataset.duration);
+				const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0.6;
+
+				advantagesTimeline.to(item, {
+					opacity: 1,
+					y: 0,
+					duration: safeDuration,
+					ease: 'power2.out'
+				}, '+=0');
+			});
+
+			advantagesTimeline.play();
+		}
+
+		const observerAdvantages = new IntersectionObserver((entries, observer) => {
+			entries.forEach(entry => {
+				if (entry.isIntersecting) {
+					animateAdvantagesItems();
+					observer.disconnect();
+				}
+			});
+		}, {
+			threshold: 0.5
 		});
 
-		advantagesTimeline.play();
-	}
-	const observerAdvantages = new IntersectionObserver((entries, observer) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-				animateAdvantagesItems();
-				observer.disconnect();
-			}
-		});
-	}, {
-		threshold: 0.5
-	});
-	const advantagesSection = document.querySelector('.advantages__items');
-	if (advantagesSection) {
-		observerAdvantages.observe(advantagesSection);
-	}
+		const advantagesSection = document.querySelector('.advantages__items');
+		if (advantagesSection) {
+			observerAdvantages.observe(advantagesSection);
+		}
+	})();
 
 	// Map
 	const mapSection = document.querySelector('.map');
