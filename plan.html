@@ -4346,7 +4346,7 @@
                             </svg>
                         </div>
                         <div data-slider-path="1" class="plan__btn plan__btn--1">
-                            <img src="img/plan-icon.svg" alt="">
+                            <img src="img/plan-icon.png" alt="">
                             <span class=circle></span>
                             <span class=circle2></span>
                             <span class=circle3></span>
@@ -4370,7 +4370,7 @@
                             <span class=circle3></span>
                         </div>
                         <div data-slider-path="5" class="plan__btn plan__btn--6">
-                            <img src="img/plan-icon6.svg" alt="">
+                            <img src="img/plan-icon.png" alt="">
                             <span class=circle></span>
                             <span class=circle2></span>
                             <span class=circle3></span>
@@ -4543,7 +4543,7 @@
                             <div class="plan__images-big swiper mySwiper2">
                                 <div class=swiper-wrapper>
                                     <div class="swiper-slide">
-                                        <img src="img/office-img.webp" alt="">
+                                        <img src="img/childrens-img2.webp" alt="">
                                     </div>
                                 </div>
                                 <dib class="plan__images-close btn">
@@ -4575,7 +4575,7 @@
                                 <div thumbsslider="" class="plan__images-small swiper mySwiper">
                                     <div class=swiper-wrapper>
                                         <div class="swiper-slide">
-                                            <img src="img/office-img.webp" alt="">
+                                            <img src="img/childrens-img2.webp" alt="">
                                         </div>
                                     </div>
                                 </div>
@@ -4827,6 +4827,20 @@
                                 </div>
                             </div>
                         </div>
+                        <div class="plan-info2">
+                            <div class="plan-info2__item">
+                                <span class="plan-info2__icon brown"></span>
+                                <span class="plan-info2__text">продано</span>
+                            </div>
+                            <div class="plan-info2__item">
+                                <span class="plan-info2__icon green"></span>
+                                <span class="plan-info2__text">готовый дом</span>
+                            </div>
+                            <div class="plan-info2__item">
+                                <span class="plan-info2__icon gray"></span>
+                                <span class="plan-info2__text">продажа с 2027г.</span>
+                            </div>
+                        </div>
                         <div class="section-bg"></div>
                     </div>
                 </div>
@@ -4854,8 +4868,8 @@
                         </button> -->
                     </div>
                     <div class="footer__location">
-                        Республика Татарстан,
-                        <br>поселок Озарино
+                        Республика Татарстан, <br> Пестречинский район, <br>
+                        поселок Озарино
                     </div>
                     <div class="footer__time">Ежедневно с 09:00 до 18:00</div>
                     <div class="footer__socials">
@@ -4967,18 +4981,11 @@
                         <p>© 2025, АО «ТАРГЕТ»</p>
                     </div>
                 </div>
-                <div class="footer__group5">
-                    <div class="footer__text">
-                        <p><a href="">Политика конфиденциальности</a></p>
-                        <p><a href="">Политика обработки данных</a></p>
-                        <p><a href="">Условия использования</a></p>
-                    </div>
-                    <div class="footer__logo2">
-                        <span>Mark weber</span>
-                        <i>
-                            <img src="img/logo3.svg" alt="">
-                        </i>
-                    </div>
+                <div class="footer__logo2">
+                    <span>Mark weber</span>
+                    <i>
+                        <img src="img/logo3.svg" alt="">
+                    </i>
                 </div>
             </div>
         </div>
@@ -5001,6 +5008,7 @@
         let path = $(this).attr("data-slider-path");
         $(this).siblings(".plan__btn").removeClass("plan__btn--active");
         $(this).addClass("plan__btn--active");
+        $('body').addClass('fixed-body')
 
         $(this).parents(".plan").find(".plan__images").removeClass("plan__images--active");
         $(this).parents(".plan").find(`.plan__images[data-content2-path="${path}"]`).addClass("plan__images--active");
@@ -5008,6 +5016,7 @@
 
     $('.plan__images-close').click(function () {
         $('.plan__images').removeClass('plan__images--active')
+        $('body').removeClass('fixed-body')
     })
 
     //
@@ -5021,6 +5030,7 @@
         const planCards = document.querySelectorAll('.service-card.plan-card, .service-card.plan-card2');
         const planInfo1 = document.querySelector('.plan-info--1');
         const planInfo2 = document.querySelector('.plan-info--2');
+        const planSection = document.querySelector('.plan');
 
         svg.querySelectorAll('g[data-status="sold"]').forEach(group => {
             group.style.pointerEvents = 'none';
@@ -5032,17 +5042,16 @@
                 const area2 = group.getAttribute('data-area2');
                 const price = group.getAttribute('data-price');
 
-                // Проверяем наличие атрибута data-area
                 if (area) {
                     planInfo1.querySelector('.item-number').textContent = area;
                     planInfo1.querySelector('.item-number2').textContent = area2;
                     planInfo1.querySelector('.item-price').textContent = price;
 
                     planInfo1.classList.add('plan-info--active');
-                    planInfo2.classList.remove('plan-info--active'); // Убираем активный класс у второго элемента
+                    planInfo2.classList.remove('plan-info--active');
                 } else {
                     planInfo2.classList.add('plan-info--active');
-                    planInfo1.classList.remove('plan-info--active'); // Убираем активный класс у первого элемента
+                    planInfo1.classList.remove('plan-info--active');
                 }
             });
 
@@ -5065,31 +5074,43 @@
                     card.classList.remove('plan-card--active', 'plan-card2--active');
                 });
 
+                let cardToShow;
                 if (status === 'free') {
-                    const cardToShow = document.querySelector('.service-card.plan-card2');
+                    cardToShow = document.querySelector('.service-card.plan-card2');
                     cardToShow.classList.add('plan-card2--active');
-                    cardToShow.style.position = 'absolute';
-                    cardToShow.style.left = rect.left + 'px';
-                    cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
-
-                    cardToShow.querySelector('.id-number').textContent = id;
                 } else if (status === 'home') {
-                    const cardToShow = document.querySelector('.service-card.plan-card');
+                    cardToShow = document.querySelector('.service-card.plan-card');
                     cardToShow.classList.add('plan-card--active');
-                    cardToShow.style.position = 'absolute';
-                    cardToShow.style.left = rect.left + 'px';
-                    cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
-                    cardToShow.querySelector('.id-number').textContent = id;
                 }
 
-                planCards.forEach(card => {
-                    card.querySelector('.item-number').textContent = area;
-                    card.querySelector('.item-number2').textContent = area2;
-                    card.querySelector('.item-price').textContent = price;
-                });
+                if (cardToShow) {
+                    const cardHeight = cardToShow.offsetHeight;
+                    const cardWidth = cardToShow.offsetWidth;
+                    const planRect = planSection.getBoundingClientRect();
 
-                planInfo1.classList.add('plan-info--active');
-                planInfo2.classList.remove('plan-info--active');
+                    const spaceBelow = (planRect.bottom - rect.bottom);
+                    const spaceAbove = (rect.top - planRect.top - cardHeight);
+
+                    cardToShow.style.position = 'absolute';
+                    cardToShow.style.left = (rect.left - planRect.left) + 'px';
+
+                    if (spaceBelow >= cardHeight) {
+                        cardToShow.style.top = (rect.bottom - planRect.top + window.scrollY) + 'px';
+                    } else if (spaceAbove >= 0) {
+                        cardToShow.style.top = (rect.top - planRect.top - cardHeight) + 'px';
+                    } else {
+                        cardToShow.style.top = (rect.bottom - planRect.top + window.scrollY) + 'px';
+                    }
+
+                    planCards.forEach(card => {
+                        card.querySelector('.item-number').textContent = area;
+                        card.querySelector('.item-number2').textContent = area2;
+                        card.querySelector('.item-price').textContent = price;
+                    });
+
+                    planInfo1.classList.add('plan-info--active');
+                    planInfo2.classList.remove('plan-info--active');
+                }
             });
         });
 
@@ -5109,6 +5130,101 @@
             }
         });
     });
+
+
+    // document.addEventListener("DOMContentLoaded", function () {
+    //     const svg = document.getElementById('plan-svg');
+    //     const planCards = document.querySelectorAll('.service-card.plan-card, .service-card.plan-card2');
+    //     const planInfo1 = document.querySelector('.plan-info--1');
+    //     const planInfo2 = document.querySelector('.plan-info--2');
+
+    //     svg.querySelectorAll('g[data-status="sold"]').forEach(group => {
+    //         group.style.pointerEvents = 'none';
+    //     });
+
+    //     svg.querySelectorAll('g g').forEach(group => {
+    //         group.addEventListener('mouseenter', function () {
+    //             const area = group.getAttribute('data-area');
+    //             const area2 = group.getAttribute('data-area2');
+    //             const price = group.getAttribute('data-price');
+
+    //             // Проверяем наличие атрибута data-area
+    //             if (area) {
+    //                 planInfo1.querySelector('.item-number').textContent = area;
+    //                 planInfo1.querySelector('.item-number2').textContent = area2;
+    //                 planInfo1.querySelector('.item-price').textContent = price;
+
+    //                 planInfo1.classList.add('plan-info--active');
+    //                 planInfo2.classList.remove('plan-info--active'); // Убираем активный класс у второго элемента
+    //             } else {
+    //                 planInfo2.classList.add('plan-info--active');
+    //                 planInfo1.classList.remove('plan-info--active'); // Убираем активный класс у первого элемента
+    //             }
+    //         });
+
+    //         group.addEventListener('mouseleave', function () {
+    //             planInfo1.classList.remove('plan-info--active');
+    //             planInfo2.classList.remove('plan-info--active');
+    //         });
+
+    //         group.addEventListener('click', function (event) {
+    //             event.stopPropagation();
+
+    //             const status = group.getAttribute('data-status');
+    //             const area = group.getAttribute('data-area');
+    //             const area2 = group.getAttribute('data-area2');
+    //             const price = group.getAttribute('data-price');
+    //             const rect = group.getBoundingClientRect();
+    //             const id = group.getAttribute('id');
+
+    //             planCards.forEach(card => {
+    //                 card.classList.remove('plan-card--active', 'plan-card2--active');
+    //             });
+
+    //             if (status === 'free') {
+    //                 const cardToShow = document.querySelector('.service-card.plan-card2');
+    //                 cardToShow.classList.add('plan-card2--active');
+    //                 cardToShow.style.position = 'absolute';
+    //                 cardToShow.style.left = rect.left + 'px';
+    //                 cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
+
+    //                 cardToShow.querySelector('.id-number').textContent = id;
+    //             } else if (status === 'home') {
+    //                 const cardToShow = document.querySelector('.service-card.plan-card');
+    //                 cardToShow.classList.add('plan-card--active');
+    //                 cardToShow.style.position = 'absolute';
+    //                 cardToShow.style.left = rect.left + 'px';
+    //                 cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
+    //                 cardToShow.querySelector('.id-number').textContent = id;
+    //             }
+
+    //             planCards.forEach(card => {
+    //                 card.querySelector('.item-number').textContent = area;
+    //                 card.querySelector('.item-number2').textContent = area2;
+    //                 card.querySelector('.item-price').textContent = price;
+    //             });
+
+    //             planInfo1.classList.add('plan-info--active');
+    //             planInfo2.classList.remove('plan-info--active');
+    //         });
+    //     });
+
+    //     planCards.forEach(card => {
+    //         card.addEventListener('click', function (event) {
+    //             event.stopPropagation();
+    //         });
+    //     });
+
+    //     document.addEventListener('click', function (event) {
+    //         if (!event.target.closest('.service-card')) {
+    //             planCards.forEach(card => {
+    //                 card.classList.remove('plan-card--active', 'plan-card2--active');
+    //             });
+    //             planInfo1.classList.remove('plan-info--active');
+    //             planInfo2.classList.remove('plan-info--active');
+    //         }
+    //     });
+    // });
 
 
 
