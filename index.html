@@ -1319,87 +1319,268 @@
 	});
 
 	// Area
-	(function initAreaBackgroundSequence() {
+	(function () {
 		const area = document.querySelector('.area');
 		if (!area) return;
 
-		const imgs = Array.from(area.querySelectorAll('.area-images img'));
-		const total = imgs.length;
-		if (total <= 1) return;
+		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+		if (allImgs.length === 0) return;
 
-		// Настройка: скорость. Меньше 1 = быстрее смена (уменьшает длину pin).
-		// Попробуй 0.6, 0.5, 0.4 и выбери комфортное значение.
-		const speedFactor = 0.3;
+		// Настройки — можно подкорректировать
+		const MAX_MOBILE_FRAMES = 6;     // макс кадров на слабых/мобильных
+		const PRELOAD_PARALLEL = 3;      // сколько загрузок одновременно
+		const SPEED_FACTOR = 0.6;        // как раньше — уменьшает длину pin (0 < speed <= 1)
+		const MIN_PIN_PIXELS = 200;      // минимальная длина pin в px (без отрисовки уезжания совсем)
 
-		// Инициализация начальных состояний
-		imgs.forEach((img, i) => {
-			gsap.set(img, { opacity: i === 0 ? 1 : 0, pointerEvents: "none" });
-			// убираем CSS transition, если он есть, чтобы избежать конфликтов
-			img.style.transition = "none";
+		// Определение устройства/производительности
+		const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+		const deviceMemory = navigator.deviceMemory || 4; // примерная память в GB (если неизвестно, считаем 4)
+		const isLowMemory = deviceMemory <= 1.5; // очень слабые устройства
+		const isMobileLike = isTouch && window.innerWidth <= 900;
+
+		// Решения для слабых устройств: если reduced-motion или низкая память — показываем только 1 картинку и не пиним
+		const disableHeavy = isReducedMotion || isLowMemory;
+
+		// Выбор набора изображений (сэмплирование для мобильных)
+		let imgsToUse = allImgs.slice(); // копия nodes
+		if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
+			// Возьмём равномерно распределённые кадры (sampling)
+			const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
+			imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
+		} else if (disableHeavy) {
+			imgsToUse = [imgsToUse[0]]; // только первая картинка
+		}
+
+		// Пометим исходные img как display none — будем рендерить только используемые
+		allImgs.forEach(img => {
+			img.style.transition = 'none';
+			img.style.willChange = 'opacity';
+			// Скрыть все, будем показывать лишь те, которые используются
+			img.style.opacity = '0';
+			img.dataset.areaImg = '1';
 		});
 
-		// Вычисляем pinLength и создаём ScrollTrigger
-		let pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
-
-		// Создаём ScrollTrigger (discrete смена кадров в onUpdate)
-		let st = ScrollTrigger.create({
-			trigger: area,
-			start: "top top",
-			end: `+=${pinLength}`,
-			pin: true,
-			pinSpacing: true,   // важно: создаст отступы, чтобы остальной контент не смещался
-			scrub: false,       // без плавного привязки
-			anticipatePin: 1,
-			onUpdate(self) {
-				const p = self.progress; // 0..1
-				// Индекс кадра: дискретно от 0 до total-1
-				// Используем floor, чтобы смена происходила строго при достижении порога
-				const idx = Math.min(total - 1, Math.floor(p * total));
-				imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
-			},
-			// markers: true // включи для отладки
+		imgsToUse.forEach((img, i) => {
+			img.style.opacity = i === 0 ? '1' : '0';
+			img.dataset._area_index = i;
 		});
 
-		// При ресайзе пересчитываем длину и обновляем ScrollTrigger
-		const refreshHandler = () => {
-			// удаляем триггер и создаём заново с новой длиной, чтобы end был корректен
-			if (st) st.kill();
+		// Предзагрузка (с контролем параллелизма). Возвращает промис, который резолвится, когда все необходимы подготовлены.
+		function preloadImages(list) {
+			const toLoad = list.map(img => img.getAttribute('src'));
+			const results = [];
+			let idx = 0;
 
-			pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
+			return new Promise(resolve => {
+				let active = 0;
+				function next() {
+					if (idx >= toLoad.length && active === 0) {
+						resolve(results);
+						return;
+					}
+					while (active < PRELOAD_PARALLEL && idx < toLoad.length) {
+						const src = toLoad[idx++];
+						active++;
+						const image = new Image();
+						image.onload = () => {
+							results.push({ src, ok: true });
+							active--;
+							next();
+						};
+						image.onerror = () => {
+							results.push({ src, ok: false });
+							active--;
+							next();
+						};
+						// Если src — data-src/ lazy attributes, можно учитывать это здесь
+						image.src = src;
+					}
+				}
+				next();
+			});
+		}
 
+		// Обновление показанного кадра (через rAF — минимальная нагрузка)
+		let currentIndex = 0;
+		let rafId = null;
+		function showIndex(idx) {
+			if (idx === currentIndex) return;
+			currentIndex = idx;
+			// отменяем предыдущий rAF и ставим новый -> сглаженный, но быстрый переключатель
+			if (rafId) cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(() => {
+				imgsToUse.forEach((img, i) => {
+					img.style.opacity = i === idx ? '1' : '0';
+				});
+			});
+		}
+
+		// Создание ScrollTrigger — отдельно, после загрузки необходимых картинок
+		let st = null;
+		function createScrollTrigger() {
+			// Удаляем предыдущий, если есть
+			if (st) {
+				try { st.kill(); } catch (e) { }
+				st = null;
+			}
+
+			// Если heavy disabled — просто покажем первый кадр и не пиним
+			if (disableHeavy || imgsToUse.length <= 1) {
+				// показываем только первый
+				imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
+				ScrollTrigger.refresh();
+				return;
+			}
+
+			const total = imgsToUse.length;
+			let pinLength = Math.max(MIN_PIN_PIXELS, Math.round(window.innerHeight * (total - 1) * SPEED_FACTOR));
+
+			// Создаём ScrollTrigger локально (не трогаем глобальные настройки)
 			st = ScrollTrigger.create({
 				trigger: area,
 				start: "top top",
 				end: `+=${pinLength}`,
 				pin: true,
 				pinSpacing: true,
-				scrub: false,
+				scrub: false, // дискретная смена
 				anticipatePin: 1,
 				onUpdate(self) {
-					const p = self.progress;
+					// прогресс 0..1 -> индекс 0..total-1
+					const p = Math.max(0, Math.min(1, self.progress));
 					const idx = Math.min(total - 1, Math.floor(p * total));
-					imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
+					showIndex(idx);
 				},
-				// markers: true
+				onKill() {
+					// при уничтожении — отменим rAF
+					if (rafId) cancelAnimationFrame(rafId);
+				}
+				// markers: true // включи локально для дебага
 			});
 
 			ScrollTrigger.refresh();
-		};
+		}
 
-		// Debounce ресайза для производительности
-		let resizeTimeout;
-		const debouncedRefresh = () => {
+		// Основная последовательность: предзагрузка -> createScrollTrigger
+		preloadImages(imgsToUse).then(() => {
+			// После предзагрузки создаём ScrollTrigger
+			createScrollTrigger();
+		}).catch(() => {
+			// В случае проблем с загрузкой, просто показываем первый кадр
+			imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
+			createScrollTrigger();
+		});
+
+		// Пересоздавать при ресайзе — с дебаунсом
+		let resizeTimeout = null;
+		function handleResize() {
 			clearTimeout(resizeTimeout);
-			resizeTimeout = setTimeout(refreshHandler, 150);
-		};
-		window.addEventListener('resize', debouncedRefresh);
+			resizeTimeout = setTimeout(() => {
+				// возможна смена мобильного режима -> пересчитаем используемые кадры и пересоздадим логику
+				// Упрощённо: перезагружаем страницу логики (не узкий инкремент) — безопасно и надёжно
+				try { if (st) st.kill(); } catch (e) { }
+				// вернуть видимость всех исходных картинок в исходное состояние (вдруг ранее были скрыты)
+				allImgs.forEach(img => { img.style.opacity = '0'; });
+				// пересоздаём (простая стратегия — перезагрузить страницу скриптом).
+				// Для простоты — делаем location.reload() только если нужно радикально пересоздать;
+				// чаще достаточно пересоздать ScrollTrigger: recompute imgsToUse and recreate
+				// Реализация: просто пересоздаём страницу логики (можно заменить на более тонкую)
+				window.location.reload();
+			}, 200);
+		}
+		window.addEventListener('resize', handleResize);
 
-		// Очистка при выгрузке страницы (опционально)
-		window.addEventListener('unload', () => {
+		// Очистка при выгрузке
+		window.addEventListener('beforeunload', () => {
 			if (st) st.kill();
-			window.removeEventListener('resize', debouncedRefresh);
+			if (rafId) cancelAnimationFrame(rafId);
+			window.removeEventListener('resize', handleResize);
 		});
 	})();
+
+
+
+	// (function initAreaBackgroundSequence() {
+	// 	const area = document.querySelector('.area');
+	// 	if (!area) return;
+
+	// 	const imgs = Array.from(area.querySelectorAll('.area-images img'));
+	// 	const total = imgs.length;
+	// 	if (total <= 1) return;
+
+	// 	// Настройка: скорость. Меньше 1 = быстрее смена (уменьшает длину pin).
+	// 	// Попробуй 0.6, 0.5, 0.4 и выбери комфортное значение.
+	// 	const speedFactor = 0.3;
+
+	// 	// Инициализация начальных состояний
+	// 	imgs.forEach((img, i) => {
+	// 		gsap.set(img, { opacity: i === 0 ? 1 : 0, pointerEvents: "none" });
+	// 		// убираем CSS transition, если он есть, чтобы избежать конфликтов
+	// 		img.style.transition = "none";
+	// 	});
+
+	// 	// Вычисляем pinLength и создаём ScrollTrigger
+	// 	let pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
+
+	// 	// Создаём ScrollTrigger (discrete смена кадров в onUpdate)
+	// 	let st = ScrollTrigger.create({
+	// 		trigger: area,
+	// 		start: "top top",
+	// 		end: `+=${pinLength}`,
+	// 		pin: true,
+	// 		pinSpacing: true,   // важно: создаст отступы, чтобы остальной контент не смещался
+	// 		scrub: false,       // без плавного привязки
+	// 		anticipatePin: 1,
+	// 		onUpdate(self) {
+	// 			const p = self.progress; // 0..1
+	// 			// Индекс кадра: дискретно от 0 до total-1
+	// 			// Используем floor, чтобы смена происходила строго при достижении порога
+	// 			const idx = Math.min(total - 1, Math.floor(p * total));
+	// 			imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
+	// 		},
+	// 		// markers: true // включи для отладки
+	// 	});
+
+	// 	// При ресайзе пересчитываем длину и обновляем ScrollTrigger
+	// 	const refreshHandler = () => {
+	// 		// удаляем триггер и создаём заново с новой длиной, чтобы end был корректен
+	// 		if (st) st.kill();
+
+	// 		pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
+
+	// 		st = ScrollTrigger.create({
+	// 			trigger: area,
+	// 			start: "top top",
+	// 			end: `+=${pinLength}`,
+	// 			pin: true,
+	// 			pinSpacing: true,
+	// 			scrub: false,
+	// 			anticipatePin: 1,
+	// 			onUpdate(self) {
+	// 				const p = self.progress;
+	// 				const idx = Math.min(total - 1, Math.floor(p * total));
+	// 				imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
+	// 			},
+	// 			// markers: true
+	// 		});
+
+	// 		ScrollTrigger.refresh();
+	// 	};
+
+	// 	// Debounce ресайза для производительности
+	// 	let resizeTimeout;
+	// 	const debouncedRefresh = () => {
+	// 		clearTimeout(resizeTimeout);
+	// 		resizeTimeout = setTimeout(refreshHandler, 150);
+	// 	};
+	// 	window.addEventListener('resize', debouncedRefresh);
+
+	// 	// Очистка при выгрузке страницы (опционально)
+	// 	window.addEventListener('unload', () => {
+	// 		if (st) st.kill();
+	// 		window.removeEventListener('resize', debouncedRefresh);
+	// 	});
+	// })();
 
 
 
