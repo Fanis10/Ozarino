@@ -343,27 +343,25 @@
 				</div>
 			</section>
 			<section class="area">
-				<div class="swiper mySwiper">
-					<div class="swiper-wrapper">
-						<div class="swiper-slide" style="background-image: url(img/area-img.webp);"></div>
-						<div class="swiper-slide" style="background-image: url(img/area-img2.webp);"></div>
-						<div class="swiper-slide" style="background-image: url(img/area-img5.webp);"></div>
-						<!-- <div class="swiper-slide" style="background-image: url(img/area-img7.webp);"></div> -->
-						<div class="swiper-slide" style="background-image: url(img/area-img9.webp);"></div>
-						<!-- <div class="swiper-slide" style="background-image: url(img/area-img10.webp);"></div> -->
-						<!-- <div class="swiper-slide" style="background-image: url(img/area-img12.webp);"></div> -->
-						<div class="swiper-slide" style="background-image: url(img/area-img15.webp);"></div>
-						<div class="swiper-slide" style="background-image: url(img/area-img17.webp);"></div>
-						<!-- <div class="swiper-slide" style="background-image: url(img/area-img19.webp);"></div> -->
-						<div class="swiper-slide" style="background-image: url(img/area-img21.webp);"></div>
-						<div class="swiper-slide" style="background-image: url(img/area-img22.webp);"></div>
-					</div>
-				</div>
 				<div class="container">
 					<div class="area__desc">
 						<div class="area__number">77<span>га</span></div>
 						<div class="area__title">Общая площадь</div>
 					</div>
+				</div>
+				<div class="area-images" aria-hidden="true">
+					<img class="area-img" src="../img/area-img.webp" alt="">
+					<img class="area-img" src="../img/area-img2.webp" alt="">
+					<img class="area-img" src="../img/area-img5.webp" alt="">
+					<img class="area-img" src="../img/area-img7.webp" alt="">
+					<img class="area-img" src="../img/area-img9.webp" alt="">
+					<img class="area-img" src="../img/area-img10.webp" alt="">
+					<img class="area-img" src="../img/area-img12.webp" alt="">
+					<img class="area-img" src="../img/area-img15.webp" alt="">
+					<img class="area-img" src="../img/area-img17.webp" alt="">
+					<img class="area-img" src="../img/area-img19.webp" alt="">
+					<img class="area-img" src="../img/area-img21.webp" alt="">
+					<img class="area-img" src="../img/area-img22.webp" alt="">
 				</div>
 			</section>
 			<section class="advantages">
@@ -1321,6 +1319,90 @@
 	});
 
 	// Area
+	(function initAreaBackgroundSequence() {
+		const area = document.querySelector('.area');
+		if (!area) return;
+
+		const imgs = Array.from(area.querySelectorAll('.area-images img'));
+		const total = imgs.length;
+		if (total <= 1) return;
+
+		// Настройка: скорость. Меньше 1 = быстрее смена (уменьшает длину pin).
+		// Попробуй 0.6, 0.5, 0.4 и выбери комфортное значение.
+		const speedFactor = 0.3;
+
+		// Инициализация начальных состояний
+		imgs.forEach((img, i) => {
+			gsap.set(img, { opacity: i === 0 ? 1 : 0, pointerEvents: "none" });
+			// убираем CSS transition, если он есть, чтобы избежать конфликтов
+			img.style.transition = "none";
+		});
+
+		// Вычисляем pinLength и создаём ScrollTrigger
+		let pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
+
+		// Создаём ScrollTrigger (discrete смена кадров в onUpdate)
+		let st = ScrollTrigger.create({
+			trigger: area,
+			start: "top top",
+			end: `+=${pinLength}`,
+			pin: true,
+			pinSpacing: true,   // важно: создаст отступы, чтобы остальной контент не смещался
+			scrub: false,       // без плавного привязки
+			anticipatePin: 1,
+			onUpdate(self) {
+				const p = self.progress; // 0..1
+				// Индекс кадра: дискретно от 0 до total-1
+				// Используем floor, чтобы смена происходила строго при достижении порога
+				const idx = Math.min(total - 1, Math.floor(p * total));
+				imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
+			},
+			// markers: true // включи для отладки
+		});
+
+		// При ресайзе пересчитываем длину и обновляем ScrollTrigger
+		const refreshHandler = () => {
+			// удаляем триггер и создаём заново с новой длиной, чтобы end был корректен
+			if (st) st.kill();
+
+			pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
+
+			st = ScrollTrigger.create({
+				trigger: area,
+				start: "top top",
+				end: `+=${pinLength}`,
+				pin: true,
+				pinSpacing: true,
+				scrub: false,
+				anticipatePin: 1,
+				onUpdate(self) {
+					const p = self.progress;
+					const idx = Math.min(total - 1, Math.floor(p * total));
+					imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
+				},
+				// markers: true
+			});
+
+			ScrollTrigger.refresh();
+		};
+
+		// Debounce ресайза для производительности
+		let resizeTimeout;
+		const debouncedRefresh = () => {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(refreshHandler, 150);
+		};
+		window.addEventListener('resize', debouncedRefresh);
+
+		// Очистка при выгрузке страницы (опционально)
+		window.addEventListener('unload', () => {
+			if (st) st.kill();
+			window.removeEventListener('resize', debouncedRefresh);
+		});
+	})();
+
+
+
 
 	// const area = document.querySelector('.area');
 	// const images = [
