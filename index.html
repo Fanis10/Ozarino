@@ -1326,37 +1326,30 @@
 		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
 		if (allImgs.length === 0) return;
 
-		// Настройки — можно подкорректировать
-		const MAX_MOBILE_FRAMES = 6;     // макс кадров на слабых/мобильных
-		const PRELOAD_PARALLEL = 3;      // сколько загрузок одновременно
-		const SPEED_FACTOR = 0.4;        // как раньше — уменьшает длину pin (0 < speed <= 1)
-		const MIN_PIN_PIXELS = 200;      // минимальная длина pin в px (без отрисовки уезжания совсем)
+		const MAX_MOBILE_FRAMES = 6;
+		const PRELOAD_PARALLEL = 3;
+		const SPEED_FACTOR = 0.4;
+		const MIN_PIN_PIXELS = 200;
 
-		// Определение устройства/производительности
 		const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-		const deviceMemory = navigator.deviceMemory || 4; // примерная память в GB (если неизвестно, считаем 4)
-		const isLowMemory = deviceMemory <= 1.5; // очень слабые устройства
+		const deviceMemory = navigator.deviceMemory || 4;
+		const isLowMemory = deviceMemory <= 1.5;
 		const isMobileLike = isTouch && window.innerWidth <= 900;
 
-		// Решения для слабых устройств: если reduced-motion или низкая память — показываем только 1 картинку и не пиним
 		const disableHeavy = isReducedMotion || isLowMemory;
 
-		// Выбор набора изображений (сэмплирование для мобильных)
-		let imgsToUse = allImgs.slice(); // копия nodes
+		let imgsToUse = allImgs.slice();
 		if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
-			// Возьмём равномерно распределённые кадры (sampling)
 			const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
 			imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
 		} else if (disableHeavy) {
-			imgsToUse = [imgsToUse[0]]; // только первая картинка
+			imgsToUse = [imgsToUse[0]];
 		}
 
-		// Пометим исходные img как display none — будем рендерить только используемые
 		allImgs.forEach(img => {
 			img.style.transition = 'none';
 			img.style.willChange = 'opacity';
-			// Скрыть все, будем показывать лишь те, которые используются
 			img.style.opacity = '0';
 			img.dataset.areaImg = '1';
 		});
@@ -1366,7 +1359,6 @@
 			img.dataset._area_index = i;
 		});
 
-		// Предзагрузка (с контролем параллелизма). Возвращает промис, который резолвится, когда все необходимы подготовлены.
 		function preloadImages(list) {
 			const toLoad = list.map(img => img.getAttribute('src'));
 			const results = [];
@@ -1393,7 +1385,6 @@
 							active--;
 							next();
 						};
-						// Если src — data-src/ lazy attributes, можно учитывать это здесь
 						image.src = src;
 					}
 				}
@@ -1401,13 +1392,11 @@
 			});
 		}
 
-		// Обновление показанного кадра (через rAF — минимальная нагрузка)
 		let currentIndex = 0;
 		let rafId = null;
 		function showIndex(idx) {
 			if (idx === currentIndex) return;
 			currentIndex = idx;
-			// отменяем предыдущий rAF и ставим новый -> сглаженный, но быстрый переключатель
 			if (rafId) cancelAnimationFrame(rafId);
 			rafId = requestAnimationFrame(() => {
 				imgsToUse.forEach((img, i) => {
@@ -1416,18 +1405,14 @@
 			});
 		}
 
-		// Создание ScrollTrigger — отдельно, после загрузки необходимых картинок
 		let st = null;
 		function createScrollTrigger() {
-			// Удаляем предыдущий, если есть
 			if (st) {
 				try { st.kill(); } catch (e) { }
 				st = null;
 			}
 
-			// Если heavy disabled — просто покажем первый кадр и не пиним
 			if (disableHeavy || imgsToUse.length <= 1) {
-				// показываем только первый
 				imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
 				ScrollTrigger.refresh();
 				return;
@@ -1436,61 +1421,45 @@
 			const total = imgsToUse.length;
 			let pinLength = Math.max(MIN_PIN_PIXELS, Math.round(window.innerHeight * (total - 1) * SPEED_FACTOR));
 
-			// Создаём ScrollTrigger локально (не трогаем глобальные настройки)
 			st = ScrollTrigger.create({
 				trigger: area,
 				start: "top top",
 				end: `+=${pinLength}`,
 				pin: true,
 				pinSpacing: true,
-				scrub: false, // дискретная смена
+				scrub: false,
 				anticipatePin: 1,
 				onUpdate(self) {
-					// прогресс 0..1 -> индекс 0..total-1
 					const p = Math.max(0, Math.min(1, self.progress));
 					const idx = Math.min(total - 1, Math.floor(p * total));
 					showIndex(idx);
 				},
 				onKill() {
-					// при уничтожении — отменим rAF
 					if (rafId) cancelAnimationFrame(rafId);
 				}
-				// markers: true // включи локально для дебага
 			});
 
 			ScrollTrigger.refresh();
 		}
 
-		// Основная последовательность: предзагрузка -> createScrollTrigger
 		preloadImages(imgsToUse).then(() => {
-			// После предзагрузки создаём ScrollTrigger
 			createScrollTrigger();
 		}).catch(() => {
-			// В случае проблем с загрузкой, просто показываем первый кадр
 			imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
 			createScrollTrigger();
 		});
 
-		// Пересоздавать при ресайзе — с дебаунсом
 		let resizeTimeout = null;
 		function handleResize() {
 			clearTimeout(resizeTimeout);
 			resizeTimeout = setTimeout(() => {
-				// возможна смена мобильного режима -> пересчитаем используемые кадры и пересоздадим логику
-				// Упрощённо: перезагружаем страницу логики (не узкий инкремент) — безопасно и надёжно
 				try { if (st) st.kill(); } catch (e) { }
-				// вернуть видимость всех исходных картинок в исходное состояние (вдруг ранее были скрыты)
 				allImgs.forEach(img => { img.style.opacity = '0'; });
-				// пересоздаём (простая стратегия — перезагрузить страницу скриптом).
-				// Для простоты — делаем location.reload() только если нужно радикально пересоздать;
-				// чаще достаточно пересоздать ScrollTrigger: recompute imgsToUse and recreate
-				// Реализация: просто пересоздаём страницу логики (можно заменить на более тонкую)
 				window.location.reload();
 			}, 200);
 		}
 		window.addEventListener('resize', handleResize);
 
-		// Очистка при выгрузке
 		window.addEventListener('beforeunload', () => {
 			if (st) st.kill();
 			if (rafId) cancelAnimationFrame(rafId);
