@@ -4477,7 +4477,7 @@
                             <div class="plan-info__items">
                                 <div class="plan-info__item">
                                     <div class="plan-info__number">3 726 000₽</div>
-                                    <div class="plan-info__text">S дома общая, м2</div>
+                                    <div class="plan-info__text">стоимость участка</div>
                                 </div>
                                 <div class="plan-info__item">
                                     <div class="plan-info__number">8,28</div>
@@ -5025,12 +5025,13 @@
     })
 
     // Plan--Svg
+
+
     document.addEventListener("DOMContentLoaded", function () {
         const svg = document.getElementById('plan-svg');
         const planCards = document.querySelectorAll('.service-card.plan-card, .service-card.plan-card2');
         const planInfo1 = document.querySelector('.plan-info--1');
         const planInfo2 = document.querySelector('.plan-info--2');
-        const planSection = document.querySelector('.plan');
 
         svg.querySelectorAll('g[data-status="sold"]').forEach(group => {
             group.style.pointerEvents = 'none';
@@ -5042,16 +5043,17 @@
                 const area2 = group.getAttribute('data-area2');
                 const price = group.getAttribute('data-price');
 
+                // Проверяем наличие атрибута data-area
                 if (area) {
                     planInfo1.querySelector('.item-number').textContent = area;
                     planInfo1.querySelector('.item-number2').textContent = area2;
                     planInfo1.querySelector('.item-price').textContent = price;
 
                     planInfo1.classList.add('plan-info--active');
-                    planInfo2.classList.remove('plan-info--active');
+                    planInfo2.classList.remove('plan-info--active'); // Убираем активный класс у второго элемента
                 } else {
                     planInfo2.classList.add('plan-info--active');
-                    planInfo1.classList.remove('plan-info--active');
+                    planInfo1.classList.remove('plan-info--active'); // Убираем активный класс у первого элемента
                 }
             });
 
@@ -5074,43 +5076,31 @@
                     card.classList.remove('plan-card--active', 'plan-card2--active');
                 });
 
-                let cardToShow;
                 if (status === 'free') {
-                    cardToShow = document.querySelector('.service-card.plan-card2');
+                    const cardToShow = document.querySelector('.service-card.plan-card2');
                     cardToShow.classList.add('plan-card2--active');
-                } else if (status === 'home') {
-                    cardToShow = document.querySelector('.service-card.plan-card');
-                    cardToShow.classList.add('plan-card--active');
-                }
-
-                if (cardToShow) {
-                    const cardHeight = cardToShow.offsetHeight;
-                    const cardWidth = cardToShow.offsetWidth;
-                    const planRect = planSection.getBoundingClientRect();
-
-                    const spaceBelow = (planRect.bottom - rect.bottom);
-                    const spaceAbove = (rect.top - planRect.top - cardHeight);
-
                     cardToShow.style.position = 'absolute';
-                    cardToShow.style.left = (rect.left - planRect.left) + 'px';
+                    cardToShow.style.left = rect.left + 'px';
+                    cardToShow.style.top = (rect.bottom + window.scrollY - 20) + 'px';
 
-                    if (spaceBelow >= cardHeight) {
-                        cardToShow.style.top = (rect.bottom - planRect.top + window.scrollY) + 'px';
-                    } else if (spaceAbove >= 0) {
-                        cardToShow.style.top = (rect.top - planRect.top - cardHeight) + 'px';
-                    } else {
-                        cardToShow.style.top = (rect.bottom - planRect.top + window.scrollY) + 'px';
-                    }
-
-                    planCards.forEach(card => {
-                        card.querySelector('.item-number').textContent = area;
-                        card.querySelector('.item-number2').textContent = area2;
-                        card.querySelector('.item-price').textContent = price;
-                    });
-
-                    planInfo1.classList.add('plan-info--active');
-                    planInfo2.classList.remove('plan-info--active');
+                    cardToShow.querySelector('.id-number').textContent = id;
+                } else if (status === 'home') {
+                    const cardToShow = document.querySelector('.service-card.plan-card');
+                    cardToShow.classList.add('plan-card--active');
+                    cardToShow.style.position = 'absolute';
+                    cardToShow.style.left = rect.left + 'px';
+                    cardToShow.style.top = (rect.bottom + window.scrollY - 20) + 'px';
+                    cardToShow.querySelector('.id-number').textContent = id;
                 }
+
+                planCards.forEach(card => {
+                    card.querySelector('.item-number').textContent = area;
+                    card.querySelector('.item-number2').textContent = area2;
+                    card.querySelector('.item-price').textContent = price;
+                });
+
+                planInfo1.classList.add('plan-info--active');
+                planInfo2.classList.remove('plan-info--active');
             });
         });
 
@@ -5130,101 +5120,6 @@
             }
         });
     });
-
-
-    // document.addEventListener("DOMContentLoaded", function () {
-    //     const svg = document.getElementById('plan-svg');
-    //     const planCards = document.querySelectorAll('.service-card.plan-card, .service-card.plan-card2');
-    //     const planInfo1 = document.querySelector('.plan-info--1');
-    //     const planInfo2 = document.querySelector('.plan-info--2');
-
-    //     svg.querySelectorAll('g[data-status="sold"]').forEach(group => {
-    //         group.style.pointerEvents = 'none';
-    //     });
-
-    //     svg.querySelectorAll('g g').forEach(group => {
-    //         group.addEventListener('mouseenter', function () {
-    //             const area = group.getAttribute('data-area');
-    //             const area2 = group.getAttribute('data-area2');
-    //             const price = group.getAttribute('data-price');
-
-    //             // Проверяем наличие атрибута data-area
-    //             if (area) {
-    //                 planInfo1.querySelector('.item-number').textContent = area;
-    //                 planInfo1.querySelector('.item-number2').textContent = area2;
-    //                 planInfo1.querySelector('.item-price').textContent = price;
-
-    //                 planInfo1.classList.add('plan-info--active');
-    //                 planInfo2.classList.remove('plan-info--active'); // Убираем активный класс у второго элемента
-    //             } else {
-    //                 planInfo2.classList.add('plan-info--active');
-    //                 planInfo1.classList.remove('plan-info--active'); // Убираем активный класс у первого элемента
-    //             }
-    //         });
-
-    //         group.addEventListener('mouseleave', function () {
-    //             planInfo1.classList.remove('plan-info--active');
-    //             planInfo2.classList.remove('plan-info--active');
-    //         });
-
-    //         group.addEventListener('click', function (event) {
-    //             event.stopPropagation();
-
-    //             const status = group.getAttribute('data-status');
-    //             const area = group.getAttribute('data-area');
-    //             const area2 = group.getAttribute('data-area2');
-    //             const price = group.getAttribute('data-price');
-    //             const rect = group.getBoundingClientRect();
-    //             const id = group.getAttribute('id');
-
-    //             planCards.forEach(card => {
-    //                 card.classList.remove('plan-card--active', 'plan-card2--active');
-    //             });
-
-    //             if (status === 'free') {
-    //                 const cardToShow = document.querySelector('.service-card.plan-card2');
-    //                 cardToShow.classList.add('plan-card2--active');
-    //                 cardToShow.style.position = 'absolute';
-    //                 cardToShow.style.left = rect.left + 'px';
-    //                 cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
-
-    //                 cardToShow.querySelector('.id-number').textContent = id;
-    //             } else if (status === 'home') {
-    //                 const cardToShow = document.querySelector('.service-card.plan-card');
-    //                 cardToShow.classList.add('plan-card--active');
-    //                 cardToShow.style.position = 'absolute';
-    //                 cardToShow.style.left = rect.left + 'px';
-    //                 cardToShow.style.top = (rect.bottom + window.scrollY - 40) + 'px';
-    //                 cardToShow.querySelector('.id-number').textContent = id;
-    //             }
-
-    //             planCards.forEach(card => {
-    //                 card.querySelector('.item-number').textContent = area;
-    //                 card.querySelector('.item-number2').textContent = area2;
-    //                 card.querySelector('.item-price').textContent = price;
-    //             });
-
-    //             planInfo1.classList.add('plan-info--active');
-    //             planInfo2.classList.remove('plan-info--active');
-    //         });
-    //     });
-
-    //     planCards.forEach(card => {
-    //         card.addEventListener('click', function (event) {
-    //             event.stopPropagation();
-    //         });
-    //     });
-
-    //     document.addEventListener('click', function (event) {
-    //         if (!event.target.closest('.service-card')) {
-    //             planCards.forEach(card => {
-    //                 card.classList.remove('plan-card--active', 'plan-card2--active');
-    //             });
-    //             planInfo1.classList.remove('plan-info--active');
-    //             planInfo2.classList.remove('plan-info--active');
-    //         }
-    //     });
-    // });
 
 
 
