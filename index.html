@@ -1461,7 +1461,7 @@
 			resizeTimeout = setTimeout(() => {
 				try { if (st) st.kill(); } catch (e) { }
 				allImgs.forEach(img => { img.style.opacity = '0'; });
-				window.location.reload();
+				createScrollTrigger(); // Перезапускаем ScrollTrigger вместо перезагрузки страницы
 			}, 200);
 		}
 		window.addEventListener('resize', handleResize);
@@ -1835,4 +1835,25 @@
 	if (servicesSection) {
 		observerServices.observe(servicesSection);
 	}
+
+
+
+	// ScrollTop
+	if ('scrollRestoration' in history) {
+		try { history.scrollRestoration = 'manual'; } catch (e) { }
+	}
+
+	function forceScrollTop() {
+		const docEl = document.documentElement;
+		const prev = docEl.style.scrollBehavior;
+		docEl.style.scrollBehavior = 'auto';
+		window.scrollTo(0, 0);
+		setTimeout(() => { docEl.style.scrollBehavior = prev || ''; }, 0);
+	}
+
+	window.addEventListener('load', forceScrollTop, { passive: true });
+	window.addEventListener('pageshow', function () { forceScrollTop(); }, { passive: true });
+	window.addEventListener('DOMContentLoaded', function () {
+		if (window.pageYOffset !== 0) forceScrollTop();
+	}, { passive: true });    
 </script>
