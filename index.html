@@ -165,7 +165,7 @@
     </div>
 </header>
 		<main class="content">
-			<section class="main">
+			<!-- <section class="main">
 				<div class="container">
 					<div class="main__inner">
 						<h1 class="main__title">Озарино. <br> Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span>
@@ -237,7 +237,7 @@
 						</div>
 					</div>
 				</div>
-			</section>
+			</section> -->
 			<section class="gallery">
 				<div class="gallery__inner">
 					<div class="section-top">
@@ -1091,188 +1091,189 @@
 	gsap.registerPlugin(ScrollTrigger);
 
 	// Main
-	document.addEventListener('DOMContentLoaded', () => {
-		const main = document.querySelector('.main');
-		const title = main.querySelector('.main__title');
-		const button = main.querySelector('.main__btn');
-		const items = main.querySelector('.main__items');
+	// document.addEventListener('DOMContentLoaded', () => {
+	// 	const main = document.querySelector('.main');
+	// 	const title = main.querySelector('.main__title');
+	// 	const button = main.querySelector('.main__btn');
+	// 	const items = main.querySelector('.main__items');
 
-		let isAnimating = false;
-		let animationDone = false;
+	// 	let isAnimating = false;
+	// 	let animationDone = false;
 
-		function isMainFullScreen() {
-			const rect = main.getBoundingClientRect();
-			const windowHeight = window.innerHeight;
+	// 	function isMainFullScreen() {
+	// 		const rect = main.getBoundingClientRect();
+	// 		const windowHeight = window.innerHeight;
 
-			const heightMatches = Math.abs(rect.height - windowHeight) < 5;
-			const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
+	// 		const heightMatches = Math.abs(rect.height - windowHeight) < 5;
+	// 		const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
 
-			return heightMatches && topIsAtWindowTop;
-		}
+	// 		return heightMatches && topIsAtWindowTop;
+	// 	}
 
-		// Проверяем ширину окна
-		if (window.innerWidth > 992) {
-			window.addEventListener('wheel', (event) => {
-				if (isAnimating) {
-					event.preventDefault();
-					return;
-				}
+	// 	// Проверяем ширину окна
+	// 	if (window.innerWidth > 992) {
+	// 		window.addEventListener('wheel', (event) => {
+	// 			if (isAnimating) {
+	// 				event.preventDefault();
+	// 				return;
+	// 			}
 
-				if (!isMainFullScreen()) {
-					return;
-				}
+	// 			if (!isMainFullScreen()) {
+	// 				return;
+	// 			}
 
-				const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+	// 			const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
 
-				if (scrollDirection === 'down' && !animationDone) {
-					isAnimating = true;
+	// 			if (scrollDirection === 'down' && !animationDone) {
+	// 				isAnimating = true;
 
-					main.style.overflow = 'hidden';
+	// 				main.style.overflow = 'hidden';
 
-					title.classList.add('hidden');
-					button.classList.add('hidden');
-					items.classList.add('scale-up');
+	// 				title.classList.add('hidden');
+	// 				button.classList.add('hidden');
+	// 				items.classList.add('scale-up');
 
-					setTimeout(() => {
-						main.style.overflow = '';
-						isAnimating = false;
-						animationDone = true;
-					}, 500);
+	// 				setTimeout(() => {
+	// 					main.style.overflow = '';
+	// 					isAnimating = false;
+	// 					animationDone = true;
+	// 				}, 500);
 
-					event.preventDefault();
-				} else if (scrollDirection === 'up' && animationDone) {
-					isAnimating = true;
+	// 				event.preventDefault();
+	// 			} else if (scrollDirection === 'up' && animationDone) {
+	// 				isAnimating = true;
 
-					main.style.overflow = 'hidden';
+	// 				main.style.overflow = 'hidden';
 
-					title.classList.remove('hidden');
-					button.classList.remove('hidden');
-					items.classList.remove('scale-up');
+	// 				title.classList.remove('hidden');
+	// 				button.classList.remove('hidden');
+	// 				items.classList.remove('scale-up');
 
-					setTimeout(() => {
-						main.style.overflow = '';
-						isAnimating = false;
-						animationDone = false;
-					}, 500);
+	// 				setTimeout(() => {
+	// 					main.style.overflow = '';
+	// 					isAnimating = false;
+	// 					animationDone = false;
+	// 				}, 500);
 
-					event.preventDefault();
-				}
-			}, { passive: false });
+	// 				event.preventDefault();
+	// 			}
+	// 		}, { passive: false });
 
-			const itemElements = main.querySelectorAll('.main__item');
-			const defaultBackground = getComputedStyle(main).backgroundImage;
+	// 		const itemElements = main.querySelectorAll('.main__item');
+	// 		const defaultBackground = getComputedStyle(main).backgroundImage;
 
-			itemElements.forEach(item => {
-				item.addEventListener('mouseover', () => {
-					const imageUrl = item.getAttribute('data-image');
-					if (imageUrl) {
-						main.style.backgroundImage = `url(${imageUrl})`;
-					}
-				});
+	// 		itemElements.forEach(item => {
+	// 			item.addEventListener('mouseover', () => {
+	// 				const imageUrl = item.getAttribute('data-image');
+	// 				if (imageUrl) {
+	// 					main.style.backgroundImage = `url(${imageUrl})`;
+	// 				}
+	// 			});
 
-				item.addEventListener('mouseout', () => {
-					main.style.backgroundImage = defaultBackground;
-				});
-			});
-		}
-	});
+	// 			item.addEventListener('mouseout', () => {
+	// 				main.style.backgroundImage = defaultBackground;
+	// 			});
+	// 		});
+	// 	}
+	// });
 
 	// Main-mob
-	function sliderMain() {
-		const swiperContainer = document.querySelector('.main__mob');
-		const nextSection = document.querySelector('.next-section');
-		const swiper = new Swiper(".main__mob .mySwiper", {
-			direction: "vertical",
-			slidesPerView: 1,
-			spaceBetween: 30,
-			effect: "fade",
-			mousewheel: false,
-			touchStartPreventDefault: false,
-			simulateTouch: true,
-		});
+	// function sliderMain() {
+	// 	const swiperContainer = document.querySelector('.main__mob');
+	// 	const nextSection = document.querySelector('.next-section');
+	// 	const swiper = new Swiper(".main__mob .mySwiper", {
+	// 		direction: "vertical",
+	// 		slidesPerView: 1,
+	// 		spaceBetween: 30,
+	// 		effect: "fade",
+	// 		mousewheel: false,
+	// 		touchStartPreventDefault: false,
+	// 		simulateTouch: true,
+	// 	});
 
-		let wheelTimeout = null;
+	// 	let wheelTimeout = null;
 
-		swiperContainer.addEventListener('wheel', (e) => {
-			const activeSlide = swiper.slides[swiper.activeIndex];
-			const rect = activeSlide.getBoundingClientRect();
-			const viewportHeight = window.innerHeight;
+	// 	swiperContainer.addEventListener('wheel', (e) => {
+	// 		const activeSlide = swiper.slides[swiper.activeIndex];
+	// 		const rect = activeSlide.getBoundingClientRect();
+	// 		const viewportHeight = window.innerHeight;
 
-			const fullyVisible = Math.abs(rect.top) <= 2 && Math.abs(rect.bottom - viewportHeight) <= 2;
+	// 		const fullyVisible = Math.abs(rect.top) <= 2 && Math.abs(rect.bottom - viewportHeight) <= 2;
 
-			if (!fullyVisible) {
-				return;
-			}
+	// 		if (!fullyVisible) {
+	// 			return;
+	// 		}
 
-			if (wheelTimeout) {
-				e.preventDefault();
-				return;
-			}
+	// 		if (wheelTimeout) {
+	// 			e.preventDefault();
+	// 			return;
+	// 		}
 
-			const deltaY = e.deltaY;
+	// 		const deltaY = e.deltaY;
 
-			if (deltaY > 0) {
-				if (swiper.isEnd) {
-					if (nextSection) {
-						nextSection.scrollIntoView({ behavior: 'smooth' });
-						e.preventDefault();
-					}
-				} else {
-					swiper.slideNext();
-					e.preventDefault();
-					wheelTimeout = setTimeout(() => {
-						wheelTimeout = null;
-					}, 700);
-				}
-			} else if (deltaY < 0) {
-				if (swiper.isBeginning) {
-				} else {
-					swiper.slidePrev();
-					e.preventDefault();
-					wheelTimeout = setTimeout(() => {
-						wheelTimeout = null;
-					}, 700);
-				}
-			}
-		}, { passive: false });
+	// 		if (deltaY > 0) {
+	// 			if (swiper.isEnd) {
+	// 				if (nextSection) {
+	// 					nextSection.scrollIntoView({ behavior: 'smooth' });
+	// 					e.preventDefault();
+	// 				}
+	// 			} else {
+	// 				swiper.slideNext();
+	// 				e.preventDefault();
+	// 				wheelTimeout = setTimeout(() => {
+	// 					wheelTimeout = null;
+	// 				}, 700);
+	// 			}
+	// 		} else if (deltaY < 0) {
+	// 			if (swiper.isBeginning) {
+	// 			} else {
+	// 				swiper.slidePrev();
+	// 				e.preventDefault();
+	// 				wheelTimeout = setTimeout(() => {
+	// 					wheelTimeout = null;
+	// 				}, 700);
+	// 			}
+	// 		}
+	// 	}, { passive: false });
 
-		let startY = 0;
-		let isScrollingTouch = false;
+	// 	let startY = 0;
+	// 	let isScrollingTouch = false;
 
-		swiperContainer.addEventListener('touchstart', (e) => {
-			startY = e.touches[0].clientY;
-			isScrollingTouch = false;
-		}, { passive: true });
+	// 	swiperContainer.addEventListener('touchstart', (e) => {
+	// 		startY = e.touches[0].clientY;
+	// 		isScrollingTouch = false;
+	// 	}, { passive: true });
 
-		swiperContainer.addEventListener('touchmove', (e) => {
-			const currentY = e.touches[0].clientY;
-			const diffY = startY - currentY;
+	// 	swiperContainer.addEventListener('touchmove', (e) => {
+	// 		const currentY = e.touches[0].clientY;
+	// 		const diffY = startY - currentY;
 
-			if (swiper.isEnd) {
-				if (diffY > 0) {
-					swiper.allowTouchMove = false;
-					isScrollingTouch = true;
-				} else {
-					swiper.allowTouchMove = true;
-				}
-			} else {
-				swiper.allowTouchMove = true;
-			}
-		}, { passive: true });
+	// 		if (swiper.isEnd) {
+	// 			if (diffY > 0) {
+	// 				swiper.allowTouchMove = false;
+	// 				isScrollingTouch = true;
+	// 			} else {
+	// 				swiper.allowTouchMove = true;
+	// 			}
+	// 		} else {
+	// 			swiper.allowTouchMove = true;
+	// 		}
+	// 	}, { passive: true });
 
-		swiperContainer.addEventListener('touchend', () => {
-			if (isScrollingTouch) {
-				swiper.allowTouchMove = false;
-			} else {
-				swiper.allowTouchMove = true;
-			}
-		});
+	// 	swiperContainer.addEventListener('touchend', () => {
+	// 		if (isScrollingTouch) {
+	// 			swiper.allowTouchMove = false;
+	// 		} else {
+	// 			swiper.allowTouchMove = true;
+	// 		}
+	// 	});
 
-		swiper.on('slideChange', () => {
-			swiper.allowTouchMove = true;
-		});
-	}
-	sliderMain();
+	// 	swiper.on('slideChange', () => {
+	// 		swiper.allowTouchMove = true;
+	// 	});
+	// }
+	// sliderMain();
+
 
 	// Gallery
 	const section = document.querySelector('.gallery');
