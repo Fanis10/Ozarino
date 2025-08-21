@@ -1326,314 +1326,180 @@
 
 	// Area
 	if (window.innerWidth >= 993) {
-		(function () {
-			'use strict';
 
-			// Регистрируем плагин ScrollTrigger
-			gsap.registerPlugin(ScrollTrigger);
-
-			const area = document.querySelector('.area');
-			if (!area) return;
-
-			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-			if (allImgs.length === 0) return;
-
-			const fullscreenButton = area.querySelector('.fullscreen-button');
-			let currentIndex = 0;
-			let st = null;
-
-			// Функция для предзагрузки изображений
-			function preloadImages() {
-				allImgs.forEach(img => {
-					const src = img.getAttribute('src');
-					if (src) {
-						new Image().src = src;
-					}
-				});
-			}
-
-			// Инициализация изображений
-			function initImages() {
-				allImgs.forEach((img, i) => {
-					img.style.opacity = i === 0 ? '1' : '0';
-					img.classList.toggle('active', i === 0);
-				});
-			}
-
-			// Показ определенного индекса с оптимизацией
-			function showIndex(idx) {
-				if (idx === currentIndex) return;
-
-				currentIndex = idx;
-
-				// Используем requestAnimationFrame для плавности
-				requestAnimationFrame(() => {
-					allImgs.forEach((img, i) => {
-						const isActive = i === idx;
-						img.style.opacity = isActive ? '1' : '0';
-						img.classList.toggle('active', isActive);
-					});
-				});
-			}
-
-			// Создание ScrollTrigger
-			function createScrollTrigger() {
-				// Удаляем старый триггер если существует
-				if (st) {
-					st.kill();
-					st = null;
-				}
-
-				// Вычисляем длину пина (высота секции * количество изображений)
-				const pinLength = area.offsetHeight * allImgs.length;
-
-				st = ScrollTrigger.create({
-					trigger: area,
-					start: "top top",
-					end: `+=${pinLength / 1.8}`, // Уменьшите значение для более быстрой прокрутки
-					pin: true,
-					scrub: 0.1, // Оставьте это значение
-					markers: false, // Поставьте true для отладки
-					onEnter: () => {
-						console.log('Entered area section');
-					},
-					onUpdate: (self) => {
-						const progress = Math.min(1, Math.max(0, self.progress));
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-						showIndex(idx);
-					},
-					onLeave: () => {
-						console.log('Left area section');
-					}
-				});
-
-				// Обновляем ScrollTrigger после создания
-				ScrollTrigger.refresh();
-			}
-
-			// Обработчик полноэкранного режима
-			function setupFullscreen() {
-				if (!fullscreenButton) return;
-
-				fullscreenButton.addEventListener('click', function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					if (document.fullscreenElement) {
-						document.exitFullscreen().catch(err => {
-							console.error('Error exiting fullscreen:', err);
-						});
-					} else {
-						area.requestFullscreen().catch(err => {
-							console.error('Error entering fullscreen:', err);
-						});
-					}
-				});
-
-				// Обработчик изменения полноэкранного режима
-				document.addEventListener('fullscreenchange', function () {
-					if (document.fullscreenElement) {
-						fullscreenButton.textContent = 'Выйти из полноэкранного';
-					} else {
-						fullscreenButton.textContent = 'Полный экран';
-					}
-					// Обновляем ScrollTrigger при изменении размера
-					setTimeout(() => ScrollTrigger.refresh(), 100);
-				});
-			}
-
-			// Обработчик изменения размера окна
-			function setupResizeHandler() {
-				let resizeTimeout;
-				window.addEventListener('resize', function () {
-					clearTimeout(resizeTimeout);
-					resizeTimeout = setTimeout(() => {
-						createScrollTrigger();
-					}, 250);
-				});
-			}
-
-			// Основная функция инициализации
-			function init() {
-				preloadImages();
-				initImages();
-				setupFullscreen();
-				setupResizeHandler();
-
-				// Ждем загрузки всех ресурсов
-				window.addEventListener('load', function () {
-					createScrollTrigger();
-
-					// Дополнительное обновление после полной загрузки
-					setTimeout(() => ScrollTrigger.refresh(), 500);
-				});
-
-				// Также обновляем при полной загрузке DOM
-				if (document.readyState === 'complete') {
-					createScrollTrigger();
-				}
-			}
-
-			// Запускаем инициализацию
-			init();
-
-		})();
 	}
 
 	if (window.innerWidth <= 992) {
-		(function () {
-			'use strict';
 
-			// Регистрируем плагин ScrollTrigger
-			gsap.registerPlugin(ScrollTrigger);
-
-			const area = document.querySelector('.area');
-			if (!area) return;
-
-			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-			if (allImgs.length === 0) return;
-
-			const fullscreenButton = area.querySelector('.fullscreen-button');
-			let currentIndex = 0;
-			let st = null;
-
-			// Функция для предзагрузки изображений
-			function preloadImages() {
-				allImgs.forEach(img => {
-					const src = img.getAttribute('src');
-					if (src) {
-						new Image().src = src;
-					}
-				});
-			}
-
-			// Инициализация изображений
-			function initImages() {
-				allImgs.forEach((img, i) => {
-					img.style.opacity = i === 0 ? '1' : '0';
-					img.classList.toggle('active', i === 0);
-				});
-			}
-
-			// Показ определенного индекса с оптимизацией
-			function showIndex(idx) {
-				if (idx === currentIndex) return;
-
-				currentIndex = idx;
-
-				// Используем requestAnimationFrame для плавности
-				requestAnimationFrame(() => {
-					allImgs.forEach((img, i) => {
-						const isActive = i === idx;
-						img.style.opacity = isActive ? '1' : '0';
-						img.classList.toggle('active', isActive);
-					});
-				});
-			}
-
-			// Создание ScrollTrigger
-			function createScrollTrigger() {
-				// Удаляем старый триггер если существует
-				if (st) {
-					st.kill();
-					st = null;
-				}
-
-				// Вычисляем длину пина (высота секции * количество изображений)
-				const pinLength = area.offsetHeight * allImgs.length;
-
-				st = ScrollTrigger.create({
-					trigger: area,
-					start: "bottom bottom",
-					end: `+=${pinLength / 1.5}`, // Уменьшите значение для более быстрой прокрутки
-					pin: true,
-					scrub: 0.5, // Оставьте это значение
-					markers: false, // Поставьте true для отладки
-					onEnter: () => {
-						console.log('Entered area section');
-					},
-					onUpdate: (self) => {
-						const progress = Math.min(1, Math.max(0, self.progress));
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-						showIndex(idx);
-					},
-					onLeave: () => {
-						console.log('Left area section');
-					}
-				});
-
-				// Обновляем ScrollTrigger после создания
-				ScrollTrigger.refresh();
-			}
-
-			// Обработчик полноэкранного режима
-			function setupFullscreen() {
-				if (!fullscreenButton) return;
-
-				fullscreenButton.addEventListener('click', function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					if (document.fullscreenElement) {
-						document.exitFullscreen().catch(err => {
-							console.error('Error exiting fullscreen:', err);
-						});
-					} else {
-						area.requestFullscreen().catch(err => {
-							console.error('Error entering fullscreen:', err);
-						});
-					}
-				});
-
-				// Обработчик изменения полноэкранного режима
-				document.addEventListener('fullscreenchange', function () {
-					if (document.fullscreenElement) {
-						fullscreenButton.textContent = 'Выйти из полноэкранного';
-					} else {
-						fullscreenButton.textContent = 'Полный экран';
-					}
-					// Обновляем ScrollTrigger при изменении размера
-					setTimeout(() => ScrollTrigger.refresh(), 100);
-				});
-			}
-
-			// Обработчик изменения размера окна
-			function setupResizeHandler() {
-				let resizeTimeout;
-				window.addEventListener('resize', function () {
-					clearTimeout(resizeTimeout);
-					resizeTimeout = setTimeout(() => {
-						createScrollTrigger();
-					}, 250);
-				});
-			}
-
-			// Основная функция инициализации
-			function init() {
-				preloadImages();
-				initImages();
-				setupFullscreen();
-				setupResizeHandler();
-
-				// Ждем загрузки всех ресурсов
-				window.addEventListener('load', function () {
-					createScrollTrigger();
-
-					// Дополнительное обновление после полной загрузки
-					setTimeout(() => ScrollTrigger.refresh(), 500);
-				});
-
-				// Также обновляем при полной загрузке DOM
-				if (document.readyState === 'complete') {
-					createScrollTrigger();
-				}
-			}
-
-			// Запускаем инициализацию
-			init();
-
-		})();
 	}
+
+	(function () {
+		'use strict';
+
+		// Регистрируем плагин ScrollTrigger
+		gsap.registerPlugin(ScrollTrigger);
+
+		const area = document.querySelector('.area');
+		if (!area) return;
+
+		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+		if (allImgs.length === 0) return;
+
+		const fullscreenButton = area.querySelector('.fullscreen-button');
+		let currentIndex = 0;
+		let st = null;
+
+		// Функция для предзагрузки изображений
+		function preloadImages() {
+			allImgs.forEach(img => {
+				const src = img.getAttribute('src');
+				if (src) {
+					new Image().src = src;
+				}
+			});
+		}
+
+		// Инициализация изображений
+		function initImages() {
+			allImgs.forEach((img, i) => {
+				img.style.opacity = i === 0 ? '1' : '0';
+				img.classList.toggle('active', i === 0);
+			});
+		}
+
+		// Показ определенного индекса с оптимизацией
+		function showIndex(idx) {
+			if (idx === currentIndex) return;
+
+			currentIndex = idx;
+
+			// Используем will-change для оптимизации
+			allImgs.forEach(img => {
+				img.style.willChange = 'opacity';
+			});
+
+			requestAnimationFrame(() => {
+				allImgs.forEach((img, i) => {
+					const isActive = i === idx;
+					img.style.opacity = isActive ? '1' : '0';
+					img.classList.toggle('active', isActive);
+				});
+
+				// Убираем will-change после анимации
+				setTimeout(() => {
+					allImgs.forEach(img => {
+						img.style.willChange = 'auto';
+					});
+				}, 300);
+			});
+		}
+
+		// Создание ScrollTrigger
+		function createScrollTrigger() {
+			// Удаляем старый триггер если существует
+			if (st) {
+				st.kill();
+				st = null;
+			}
+
+			// Вычисляем длину пина (высота секции * количество изображений)
+			const pinLength = area.offsetHeight * allImgs.length;
+
+			st = ScrollTrigger.create({
+				trigger: area,
+				start: "top top",
+				end: `+=${pinLength / 1.8}`, // Уменьшите значение для более быстрой прокрутки
+				pin: true,
+				scrub: 0.1, // Оставьте это значение
+				markers: false, // Поставьте true для отладки
+				onEnter: () => {
+					console.log('Entered area section');
+				},
+				onUpdate: (self) => {
+					const progress = Math.min(1, Math.max(0, self.progress));
+					const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+					showIndex(idx);
+				},
+				onLeave: () => {
+					console.log('Left area section');
+				},
+				anticipatePin: 1,
+				fastScrollEnd: true
+			});
+
+			// Обновляем ScrollTrigger после создания
+			ScrollTrigger.refresh();
+		}
+
+		// Обработчик полноэкранного режима
+		function setupFullscreen() {
+			if (!fullscreenButton) return;
+
+			fullscreenButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
+
+				if (document.fullscreenElement) {
+					document.exitFullscreen().catch(err => {
+						console.error('Error exiting fullscreen:', err);
+					});
+				} else {
+					area.requestFullscreen().catch(err => {
+						console.error('Error entering fullscreen:', err);
+					});
+				}
+			});
+
+			// Обработчик изменения полноэкранного режима
+			document.addEventListener('fullscreenchange', function () {
+				if (document.fullscreenElement) {
+					fullscreenButton.textContent = 'Выйти из полноэкранного';
+				} else {
+					fullscreenButton.textContent = 'Полный экран';
+				}
+				// Обновляем ScrollTrigger при изменении размера
+				setTimeout(() => ScrollTrigger.refresh(), 100);
+			});
+		}
+
+		// Обработчик изменения размера окна
+		function setupResizeHandler() {
+			let resizeTimeout;
+			window.addEventListener('resize', function () {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(() => {
+					ScrollTrigger.getAll().forEach(trigger => trigger.kill());
+					createScrollTrigger();
+				}, 100);
+			});
+		}
+
+		// Основная функция инициализации
+		function init() {
+			preloadImages();
+			initImages();
+			setupFullscreen();
+			setupResizeHandler();
+
+			// Ждем загрузки всех ресурсов
+			window.addEventListener('load', function () {
+				createScrollTrigger();
+
+				// Дополнительное обновление после полной загрузки
+				setTimeout(() => ScrollTrigger.refresh(), 500);
+			});
+
+			// Также обновляем при полной загрузке DOM
+			if (document.readyState === 'complete') {
+				createScrollTrigger();
+			}
+		}
+
+		// Запускаем инициализацию
+		init();
+
+	})();
+
 
 
 
