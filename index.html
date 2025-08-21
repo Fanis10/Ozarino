@@ -1326,180 +1326,344 @@
 
 	// Area
 	if (window.innerWidth >= 993) {
+		(function () {
+			'use strict';
 
+			const area = document.querySelector('.area');
+			if (!area) return;
+
+			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+			if (allImgs.length === 0) return;
+
+			const fullscreenButton = area.querySelector('.fullscreen-button');
+			let currentIndex = 0;
+			let st = null;
+
+			function preloadImages() {
+				allImgs.forEach(img => {
+					const src = img.getAttribute('src');
+					if (src) {
+						new Image().src = src;
+					}
+				});
+			}
+
+			function initImages() {
+				allImgs.forEach((img, i) => {
+					img.style.opacity = i === 0 ? '1' : '0';
+					img.classList.toggle('active', i === 0);
+				});
+			}
+
+			function showIndex(idx) {
+				if (idx === currentIndex) return;
+
+				currentIndex = idx;
+
+				requestAnimationFrame(() => {
+					allImgs.forEach((img, i) => {
+						const isActive = i === idx;
+						img.style.opacity = isActive ? '1' : '0';
+						img.classList.toggle('active', isActive);
+					});
+				});
+			}
+
+			function createScrollTrigger() {
+				if (st) {
+					st.kill();
+					st = null;
+				}
+
+				const pinLength = area.offsetHeight * allImgs.length;
+
+				st = ScrollTrigger.create({
+					trigger: area,
+					start: "top top",
+					end: `+=${pinLength / 1.8}`,
+					pin: true,
+					scrub: 0.1,
+					markers: false,
+					onEnter: () => {
+						console.log('Entered area section');
+					},
+					onUpdate: (self) => {
+						const progress = Math.min(1, Math.max(0, self.progress));
+						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+						showIndex(idx);
+					},
+					onLeave: () => {
+						console.log('Left area section');
+					}
+				});
+
+				ScrollTrigger.refresh();
+			}
+
+			function setupFullscreen() {
+				if (!fullscreenButton) return;
+
+				fullscreenButton.addEventListener('click', function (e) {
+					e.preventDefault();
+					e.stopPropagation();
+
+					if (document.fullscreenElement) {
+						document.exitFullscreen().catch(err => {
+							console.error('Error exiting fullscreen:', err);
+						});
+					} else {
+						area.requestFullscreen().catch(err => {
+							console.error('Error entering fullscreen:', err);
+						});
+					}
+				});
+
+				document.addEventListener('fullscreenchange', function () {
+					if (document.fullscreenElement) {
+						fullscreenButton.textContent = 'Выйти из полноэкранного';
+					} else {
+						fullscreenButton.textContent = 'Полный экран';
+					}
+					setTimeout(() => ScrollTrigger.refresh(), 100);
+				});
+			}
+
+			function setupResizeHandler() {
+				let resizeTimeout;
+				window.addEventListener('resize', function () {
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(() => {
+						createScrollTrigger();
+					}, 250);
+				});
+			}
+
+			function init() {
+				preloadImages();
+				initImages();
+				setupFullscreen();
+				setupResizeHandler();
+
+				window.addEventListener('load', function () {
+					createScrollTrigger();
+
+					setTimeout(() => ScrollTrigger.refresh(), 500);
+				});
+
+				if (document.readyState === 'complete') {
+					createScrollTrigger();
+				}
+			}
+
+			init();
+
+		})();
 	}
 
 	if (window.innerWidth <= 992) {
+		(function () {
+			'use strict';
 
-	}
+			// Регистрируем плагин ScrollTrigger
+			gsap.registerPlugin(ScrollTrigger);
 
-	(function () {
-		'use strict';
+			const area = document.querySelector('.area');
+			if (!area) return;
 
-		// Регистрируем плагин ScrollTrigger
-		gsap.registerPlugin(ScrollTrigger);
+			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+			if (allImgs.length === 0) return;
 
-		const area = document.querySelector('.area');
-		if (!area) return;
+			const fullscreenButton = area.querySelector('.fullscreen-button');
+			let currentIndex = 0;
+			let st = null;
+			let isMobile = window.innerWidth <= 768;
+			let rafId = null;
 
-		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-		if (allImgs.length === 0) return;
+			// 🔧 Оптимизация для мобильных устройств
+			function optimizeForMobile() {
+				if (!isMobile) return;
 
-		const fullscreenButton = area.querySelector('.fullscreen-button');
-		let currentIndex = 0;
-		let st = null;
-
-		// Функция для предзагрузки изображений
-		function preloadImages() {
-			allImgs.forEach(img => {
-				const src = img.getAttribute('src');
-				if (src) {
-					new Image().src = src;
-				}
-			});
-		}
-
-		// Инициализация изображений
-		function initImages() {
-			allImgs.forEach((img, i) => {
-				img.style.opacity = i === 0 ? '1' : '0';
-				img.classList.toggle('active', i === 0);
-			});
-		}
-
-		// Показ определенного индекса с оптимизацией
-		function showIndex(idx) {
-			if (idx === currentIndex) return;
-
-			currentIndex = idx;
-
-			// Используем will-change для оптимизации
-			allImgs.forEach(img => {
-				img.style.willChange = 'opacity';
-			});
-
-			requestAnimationFrame(() => {
-				allImgs.forEach((img, i) => {
-					const isActive = i === idx;
-					img.style.opacity = isActive ? '1' : '0';
-					img.classList.toggle('active', isActive);
+				// Уменьшаем качество изображений для мобильных
+				allImgs.forEach(img => {
+					img.loading = 'eager';
+					img.fetchPriority = 'high';
 				});
 
-				// Убираем will-change после анимации
-				setTimeout(() => {
-					allImgs.forEach(img => {
-						img.style.willChange = 'auto';
-					});
-				}, 300);
-			});
-		}
-
-		// Создание ScrollTrigger
-		function createScrollTrigger() {
-			// Удаляем старый триггер если существует
-			if (st) {
-				st.kill();
-				st = null;
+				// Принудительно включаем аппаратное ускорение
+				document.body.style.transform = 'translateZ(0)';
 			}
 
-			// Вычисляем длину пина (высота секции * количество изображений)
-			const pinLength = area.offsetHeight * allImgs.length;
+			// 🖼️ Предзагрузка изображений с прогрессивной загрузкой
+			function preloadImages() {
+				allImgs.forEach((img, index) => {
+					if (index > 2 && isMobile) return; // На мобильных предзагружаем только первые 3
 
-			st = ScrollTrigger.create({
-				trigger: area,
-				start: "top top",
-				end: `+=${pinLength / 1.8}`, // Уменьшите значение для более быстрой прокрутки
-				pin: true,
-				scrub: 0.1, // Оставьте это значение
-				markers: false, // Поставьте true для отладки
-				onEnter: () => {
-					console.log('Entered area section');
-				},
-				onUpdate: (self) => {
-					const progress = Math.min(1, Math.max(0, self.progress));
-					const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-					showIndex(idx);
-				},
-				onLeave: () => {
-					console.log('Left area section');
-				},
-				anticipatePin: 1,
-				fastScrollEnd: true
-			});
-
-			// Обновляем ScrollTrigger после создания
-			ScrollTrigger.refresh();
-		}
-
-		// Обработчик полноэкранного режима
-		function setupFullscreen() {
-			if (!fullscreenButton) return;
-
-			fullscreenButton.addEventListener('click', function (e) {
-				e.preventDefault();
-				e.stopPropagation();
-
-				if (document.fullscreenElement) {
-					document.exitFullscreen().catch(err => {
-						console.error('Error exiting fullscreen:', err);
-					});
-				} else {
-					area.requestFullscreen().catch(err => {
-						console.error('Error entering fullscreen:', err);
-					});
-				}
-			});
-
-			// Обработчик изменения полноэкранного режима
-			document.addEventListener('fullscreenchange', function () {
-				if (document.fullscreenElement) {
-					fullscreenButton.textContent = 'Выйти из полноэкранного';
-				} else {
-					fullscreenButton.textContent = 'Полный экран';
-				}
-				// Обновляем ScrollTrigger при изменении размера
-				setTimeout(() => ScrollTrigger.refresh(), 100);
-			});
-		}
-
-		// Обработчик изменения размера окна
-		function setupResizeHandler() {
-			let resizeTimeout;
-			window.addEventListener('resize', function () {
-				clearTimeout(resizeTimeout);
-				resizeTimeout = setTimeout(() => {
-					ScrollTrigger.getAll().forEach(trigger => trigger.kill());
-					createScrollTrigger();
-				}, 100);
-			});
-		}
-
-		// Основная функция инициализации
-		function init() {
-			preloadImages();
-			initImages();
-			setupFullscreen();
-			setupResizeHandler();
-
-			// Ждем загрузки всех ресурсов
-			window.addEventListener('load', function () {
-				createScrollTrigger();
-
-				// Дополнительное обновление после полной загрузки
-				setTimeout(() => ScrollTrigger.refresh(), 500);
-			});
-
-			// Также обновляем при полной загрузке DOM
-			if (document.readyState === 'complete') {
-				createScrollTrigger();
+					const src = img.getAttribute('src');
+					if (src) {
+						const preloadImg = new Image();
+						preloadImg.src = src;
+						preloadImg.decode().catch(() => {
+							console.log('Image decode failed:', src);
+						});
+					}
+				});
 			}
-		}
 
-		// Запускаем инициализацию
-		init();
+			// 📱 Адаптивная функция показа индекса
+			function showIndex(idx) {
+				if (idx === currentIndex) return;
 
-	})();
+				// Отменяем предыдущий RAF если есть
+				if (rafId) {
+					cancelAnimationFrame(rafId);
+				}
 
+				currentIndex = idx;
+
+				rafId = requestAnimationFrame(() => {
+					allImgs.forEach((img, i) => {
+						const isActive = i === idx;
+
+						// Используем transform вместо opacity для лучшей производительности
+						img.style.transform = isActive ? 'scale(1)' : 'scale(0.98)';
+						img.style.opacity = isActive ? '1' : '0';
+						img.style.transition = isMobile ? 'opacity 0.3s ease, transform 0.3s ease' : 'opacity 0.4s ease';
+
+						img.classList.toggle('active', isActive);
+					});
+
+					rafId = null;
+				});
+			}
+
+			// ⚡ Упрощенный ScrollTrigger для мобильных
+			function createMobileScrollTrigger() {
+				let lastScrollY = window.scrollY;
+				let ticking = false;
+
+				function updateOnScroll() {
+					const scrollY = window.scrollY;
+					const sectionTop = area.offsetTop;
+					const sectionHeight = area.offsetHeight;
+
+					if (scrollY >= sectionTop && scrollY <= sectionTop + sectionHeight) {
+						const progress = (scrollY - sectionTop) / sectionHeight;
+						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+
+						if (idx !== currentIndex) {
+							showIndex(idx);
+						}
+					}
+
+					ticking = false;
+				}
+
+				window.addEventListener('scroll', function () {
+					if (!ticking) {
+						requestAnimationFrame(updateOnScroll);
+						ticking = true;
+					}
+				});
+
+				return { kill: () => window.removeEventListener('scroll', updateOnScroll) };
+			}
+
+			// 🖥️ Стандартный ScrollTrigger для десктопа
+			function createDesktopScrollTrigger() {
+				if (st) {
+					st.kill();
+					st = null;
+				}
+
+				const pinLength = area.offsetHeight * allImgs.length;
+
+				st = ScrollTrigger.create({
+					trigger: area,
+					start: "top top",
+					end: `+=${pinLength}`,
+					pin: true,
+					scrub: 0.5,
+					markers: false,
+					anticipatePin: 1,
+					fastScrollEnd: true,
+					onUpdate: (self) => {
+						const progress = Math.min(1, Math.max(0, self.progress));
+						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+						if (idx !== currentIndex) {
+							showIndex(idx);
+						}
+					}
+				});
+
+				ScrollTrigger.refresh();
+				return st;
+			}
+
+			// 📏 Обработчик изменения размера
+			function setupResizeHandler() {
+				let resizeTimeout;
+				window.addEventListener('resize', function () {
+					clearTimeout(resizeTimeout);
+					resizeTimeout = setTimeout(() => {
+						const newIsMobile = window.innerWidth <= 768;
+
+						if (newIsMobile !== isMobile) {
+							isMobile = newIsMobile;
+
+							if (st) {
+								st.kill();
+								st = null;
+							}
+
+							optimizeForMobile();
+
+							if (isMobile) {
+								st = createMobileScrollTrigger();
+							} else {
+								st = createDesktopScrollTrigger();
+							}
+						} else {
+							ScrollTrigger.refresh();
+						}
+					}, 250);
+				});
+			}
+
+			// 🎯 Основная инициализация
+			function init() {
+				optimizeForMobile();
+				preloadImages();
+
+				// Инициализируем первое изображение
+				allImgs.forEach((img, i) => {
+					img.style.opacity = i === 0 ? '1' : '0';
+					img.classList.toggle('active', i === 0);
+				});
+
+				// Выбираем подходящий триггер в зависимости от устройства
+				if (isMobile) {
+					st = createMobileScrollTrigger();
+				} else {
+					st = createDesktopScrollTrigger();
+				}
+
+				setupResizeHandler();
+
+				// Обновляем после полной загрузки
+				window.addEventListener('load', function () {
+					setTimeout(() => {
+						if (st && st.refresh) {
+							st.refresh();
+						}
+					}, 1000);
+				});
+			}
+
+			// 🚀 Запускаем с задержкой для стабильности
+			setTimeout(init, 100);
+
+		})();
+	}
 
 
 
