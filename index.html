@@ -1329,147 +1329,6 @@
 
 
 
-	// (function initAreaBackgroundSequence() {
-	// 	const area = document.querySelector('.area');
-	// 	if (!area) return;
-
-	// 	const imgs = Array.from(area.querySelectorAll('.area-images img'));
-	// 	const total = imgs.length;
-	// 	if (total <= 1) return;
-
-	// 	// Настройка: скорость. Меньше 1 = быстрее смена (уменьшает длину pin).
-	// 	// Попробуй 0.6, 0.5, 0.4 и выбери комфортное значение.
-	// 	const speedFactor = 0.3;
-
-	// 	// Инициализация начальных состояний
-	// 	imgs.forEach((img, i) => {
-	// 		gsap.set(img, { opacity: i === 0 ? 1 : 0, pointerEvents: "none" });
-	// 		// убираем CSS transition, если он есть, чтобы избежать конфликтов
-	// 		img.style.transition = "none";
-	// 	});
-
-	// 	// Вычисляем pinLength и создаём ScrollTrigger
-	// 	let pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
-
-	// 	// Создаём ScrollTrigger (discrete смена кадров в onUpdate)
-	// 	let st = ScrollTrigger.create({
-	// 		trigger: area,
-	// 		start: "top top",
-	// 		end: `+=${pinLength}`,
-	// 		pin: true,
-	// 		pinSpacing: true,   // важно: создаст отступы, чтобы остальной контент не смещался
-	// 		scrub: false,       // без плавного привязки
-	// 		anticipatePin: 1,
-	// 		onUpdate(self) {
-	// 			const p = self.progress; // 0..1
-	// 			// Индекс кадра: дискретно от 0 до total-1
-	// 			// Используем floor, чтобы смена происходила строго при достижении порога
-	// 			const idx = Math.min(total - 1, Math.floor(p * total));
-	// 			imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
-	// 		},
-	// 		// markers: true // включи для отладки
-	// 	});
-
-	// 	// При ресайзе пересчитываем длину и обновляем ScrollTrigger
-	// 	const refreshHandler = () => {
-	// 		// удаляем триггер и создаём заново с новой длиной, чтобы end был корректен
-	// 		if (st) st.kill();
-
-	// 		pinLength = Math.max(0, Math.round(window.innerHeight * (total - 1) * speedFactor));
-
-	// 		st = ScrollTrigger.create({
-	// 			trigger: area,
-	// 			start: "top top",
-	// 			end: `+=${pinLength}`,
-	// 			pin: true,
-	// 			pinSpacing: true,
-	// 			scrub: false,
-	// 			anticipatePin: 1,
-	// 			onUpdate(self) {
-	// 				const p = self.progress;
-	// 				const idx = Math.min(total - 1, Math.floor(p * total));
-	// 				imgs.forEach((img, i) => img.style.opacity = i === idx ? '1' : '0');
-	// 			},
-	// 			// markers: true
-	// 		});
-
-	// 		ScrollTrigger.refresh();
-	// 	};
-
-	// 	// Debounce ресайза для производительности
-	// 	let resizeTimeout;
-	// 	const debouncedRefresh = () => {
-	// 		clearTimeout(resizeTimeout);
-	// 		resizeTimeout = setTimeout(refreshHandler, 150);
-	// 	};
-	// 	window.addEventListener('resize', debouncedRefresh);
-
-	// 	// Очистка при выгрузке страницы (опционально)
-	// 	window.addEventListener('unload', () => {
-	// 		if (st) st.kill();
-	// 		window.removeEventListener('resize', debouncedRefresh);
-	// 	});
-	// })();
-
-
-
-
-	// const area = document.querySelector('.area');
-	// const images = [
-	// 	'img/area-img.webp',
-	// 	'img/area-img2.webp',
-	// 	'img/area-img5.webp',
-	// 	'img/area-img7.webp',
-	// 	'img/area-img9.webp',
-	// 	'img/area-img10.webp',
-	// 	'img/area-img12.webp',
-	// 	'img/area-img15.webp',
-	// 	'img/area-img17.webp',
-	// 	'img/area-img19.webp',
-	// 	'img/area-img21.webp',
-	// 	'img/area-img22.webp',
-	// ];
-	// images.forEach((src) => {
-	// 	const div = document.createElement('div');
-	// 	div.style.backgroundImage = `url(${src})`;
-	// 	div.style.position = 'absolute';
-	// 	div.style.top = 0;
-	// 	div.style.left = 0;
-	// 	div.style.width = '100%';
-	// 	div.style.height = '100%';
-	// 	div.style.backgroundSize = 'cover';
-	// 	div.style.backgroundPosition = 'center center';
-	// 	div.style.opacity = 0;
-	// 	div.style.pointerEvents = 'none';
-	// 	div.classList.add('bg-slide');
-	// 	area.appendChild(div);
-	// });
-	// const bgSlides = gsap.utils.toArray('.bg-slide');
-	// const slideCount = bgSlides.length;
-	// const scrollLength = slideCount * 150;
-	// gsap.set(bgSlides[0], { opacity: 1 });
-	// ScrollTrigger.create({
-	// 	trigger: area,
-	// 	start: "top top",
-	// 	end: "+=" + scrollLength,
-	// 	scrub: true,
-	// 	pin: true,
-	// 	pinSpacing: true,
-	// 	onUpdate: self => {
-	// 		const progress = self.progress * (slideCount - 1);
-	// 		const index = Math.floor(progress);
-	// 		const frac = progress - index;
-
-	// 		bgSlides.forEach((slide, i) => {
-	// 			gsap.to(slide, {
-	// 				opacity: (i === index) ? 1 - frac : (i === index + 1) ? frac : 0,
-	// 				overwrite: 'auto',
-	// 				duration: 0.1
-	// 			});
-	// 		});
-	// 	}
-	// });
-
 	// Advantages
 	(() => {
 		const advantagesTimeline = gsap.timeline({ paused: true });
@@ -1693,21 +1552,21 @@
 
 
 	// ScrollTop
-	if ('scrollRestoration' in history) {
-		try { history.scrollRestoration = 'manual'; } catch (e) { }
-	}
+	// if ('scrollRestoration' in history) {
+	// 	try { history.scrollRestoration = 'manual'; } catch (e) { }
+	// }
 
-	function forceScrollTop() {
-		const docEl = document.documentElement;
-		const prev = docEl.style.scrollBehavior;
-		docEl.style.scrollBehavior = 'auto';
-		window.scrollTo(0, 0);
-		setTimeout(() => { docEl.style.scrollBehavior = prev || ''; }, 0);
-	}
+	// function forceScrollTop() {
+	// 	const docEl = document.documentElement;
+	// 	const prev = docEl.style.scrollBehavior;
+	// 	docEl.style.scrollBehavior = 'auto';
+	// 	window.scrollTo(0, 0);
+	// 	setTimeout(() => { docEl.style.scrollBehavior = prev || ''; }, 0);
+	// }
 
-	window.addEventListener('load', forceScrollTop, { passive: true });
-	window.addEventListener('pageshow', function () { forceScrollTop(); }, { passive: true });
-	window.addEventListener('DOMContentLoaded', function () {
-		if (window.pageYOffset !== 0) forceScrollTop();
-	}, { passive: true });    
+	// window.addEventListener('load', forceScrollTop, { passive: true });
+	// window.addEventListener('pageshow', function () { forceScrollTop(); }, { passive: true });
+	// window.addEventListener('DOMContentLoaded', function () {
+	// 	if (window.pageYOffset !== 0) forceScrollTop();
+	// }, { passive: true });    
 </script>
