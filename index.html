@@ -1326,497 +1326,146 @@
 
 	// Area
 	if (window.innerWidth >= 993) {
-		(function () {
-			'use strict';
 
-			const area = document.querySelector('.area');
-			if (!area) return;
-
-			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-			if (allImgs.length === 0) return;
-
-			const fullscreenButton = area.querySelector('.fullscreen-button');
-			let currentIndex = 0;
-			let st = null;
-
-			function preloadImages() {
-				allImgs.forEach(img => {
-					const src = img.getAttribute('src');
-					if (src) {
-						new Image().src = src;
-					}
-				});
-			}
-
-			function initImages() {
-				allImgs.forEach((img, i) => {
-					img.style.opacity = i === 0 ? '1' : '0';
-					img.classList.toggle('active', i === 0);
-				});
-			}
-
-			function showIndex(idx) {
-				if (idx === currentIndex) return;
-
-				currentIndex = idx;
-
-				requestAnimationFrame(() => {
-					allImgs.forEach((img, i) => {
-						const isActive = i === idx;
-						img.style.opacity = isActive ? '1' : '0';
-						img.classList.toggle('active', isActive);
-					});
-				});
-			}
-
-			function createScrollTrigger() {
-				if (st) {
-					st.kill();
-					st = null;
-				}
-
-				const pinLength = area.offsetHeight * allImgs.length;
-
-				st = ScrollTrigger.create({
-					trigger: area,
-					start: "top top",
-					end: `+=${pinLength / 1.8}`,
-					pin: true,
-					scrub: 0.1,
-					markers: false,
-					onEnter: () => {
-						console.log('Entered area section');
-					},
-					onUpdate: (self) => {
-						const progress = Math.min(1, Math.max(0, self.progress));
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-						showIndex(idx);
-					},
-					onLeave: () => {
-						console.log('Left area section');
-					}
-				});
-
-				ScrollTrigger.refresh();
-			}
-
-			function setupFullscreen() {
-				if (!fullscreenButton) return;
-
-				fullscreenButton.addEventListener('click', function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					if (document.fullscreenElement) {
-						document.exitFullscreen().catch(err => {
-							console.error('Error exiting fullscreen:', err);
-						});
-					} else {
-						area.requestFullscreen().catch(err => {
-							console.error('Error entering fullscreen:', err);
-						});
-					}
-				});
-
-				document.addEventListener('fullscreenchange', function () {
-					if (document.fullscreenElement) {
-						fullscreenButton.textContent = 'Выйти из полноэкранного';
-					} else {
-						fullscreenButton.textContent = 'Полный экран';
-					}
-					setTimeout(() => ScrollTrigger.refresh(), 100);
-				});
-			}
-
-			function setupResizeHandler() {
-				let resizeTimeout;
-				window.addEventListener('resize', function () {
-					clearTimeout(resizeTimeout);
-					resizeTimeout = setTimeout(() => {
-						createScrollTrigger();
-					}, 250);
-				});
-			}
-
-			function init() {
-				preloadImages();
-				initImages();
-				setupFullscreen();
-				setupResizeHandler();
-
-				window.addEventListener('load', function () {
-					createScrollTrigger();
-
-					setTimeout(() => ScrollTrigger.refresh(), 500);
-				});
-
-				if (document.readyState === 'complete') {
-					createScrollTrigger();
-				}
-			}
-
-			init();
-
-		})();
 	}
 
 	if (window.innerWidth <= 992) {
-		(function () {
-			'use strict';
 
-			// Регистрируем плагин ScrollTrigger
-			gsap.registerPlugin(ScrollTrigger);
-
-			const area = document.querySelector('.area');
-			if (!area) return;
-
-			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-			if (allImgs.length === 0) return;
-
-			const fullscreenButton = area.querySelector('.fullscreen-button');
-			let currentIndex = 0;
-			let st = null;
-			let isMobile = window.innerWidth <= 768;
-			let rafId = null;
-
-			// 🔧 Оптимизация для мобильных устройств
-			function optimizeForMobile() {
-				if (!isMobile) return;
-
-				// Уменьшаем качество изображений для мобильных
-				allImgs.forEach(img => {
-					img.loading = 'eager';
-					img.fetchPriority = 'high';
-				});
-
-				// Принудительно включаем аппаратное ускорение
-				document.body.style.transform = 'translateZ(0)';
-			}
-
-			// 🖼️ Предзагрузка изображений с прогрессивной загрузкой
-			function preloadImages() {
-				allImgs.forEach((img, index) => {
-					if (index > 2 && isMobile) return; // На мобильных предзагружаем только первые 3
-
-					const src = img.getAttribute('src');
-					if (src) {
-						const preloadImg = new Image();
-						preloadImg.src = src;
-						preloadImg.decode().catch(() => {
-							console.log('Image decode failed:', src);
-						});
-					}
-				});
-			}
-
-			// 📱 Адаптивная функция показа индекса
-			function showIndex(idx) {
-				if (idx === currentIndex) return;
-
-				// Отменяем предыдущий RAF если есть
-				if (rafId) {
-					cancelAnimationFrame(rafId);
-				}
-
-				currentIndex = idx;
-
-				rafId = requestAnimationFrame(() => {
-					allImgs.forEach((img, i) => {
-						const isActive = i === idx;
-
-						// Используем transform вместо opacity для лучшей производительности
-						img.style.transform = isActive ? 'scale(1)' : 'scale(0.98)';
-						img.style.opacity = isActive ? '1' : '0';
-						img.style.transition = isMobile ? 'opacity 0.3s ease, transform 0.3s ease' : 'opacity 0.4s ease';
-
-						img.classList.toggle('active', isActive);
-					});
-
-					rafId = null;
-				});
-			}
-
-			// ⚡ Упрощенный ScrollTrigger для мобильных
-			function createMobileScrollTrigger() {
-				let lastScrollY = window.scrollY;
-				let ticking = false;
-
-				function updateOnScroll() {
-					const scrollY = window.scrollY;
-					const sectionTop = area.offsetTop;
-					const sectionHeight = area.offsetHeight;
-
-					if (scrollY >= sectionTop && scrollY <= sectionTop + sectionHeight) {
-						const progress = (scrollY - sectionTop) / sectionHeight;
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-
-						if (idx !== currentIndex) {
-							showIndex(idx);
-						}
-					}
-
-					ticking = false;
-				}
-
-				window.addEventListener('scroll', function () {
-					if (!ticking) {
-						requestAnimationFrame(updateOnScroll);
-						ticking = true;
-					}
-				});
-
-				return { kill: () => window.removeEventListener('scroll', updateOnScroll) };
-			}
-
-			// 🖥️ Стандартный ScrollTrigger для десктопа
-			function createDesktopScrollTrigger() {
-				if (st) {
-					st.kill();
-					st = null;
-				}
-
-				const pinLength = area.offsetHeight * allImgs.length;
-
-				st = ScrollTrigger.create({
-					trigger: area,
-					start: "top top",
-					end: `+=${pinLength}`,
-					pin: true,
-					scrub: 0.5,
-					markers: false,
-					anticipatePin: 1,
-					fastScrollEnd: true,
-					onUpdate: (self) => {
-						const progress = Math.min(1, Math.max(0, self.progress));
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-						if (idx !== currentIndex) {
-							showIndex(idx);
-						}
-					}
-				});
-
-				ScrollTrigger.refresh();
-				return st;
-			}
-
-			// 📏 Обработчик изменения размера
-			function setupResizeHandler() {
-				let resizeTimeout;
-				window.addEventListener('resize', function () {
-					clearTimeout(resizeTimeout);
-					resizeTimeout = setTimeout(() => {
-						const newIsMobile = window.innerWidth <= 768;
-
-						if (newIsMobile !== isMobile) {
-							isMobile = newIsMobile;
-
-							if (st) {
-								st.kill();
-								st = null;
-							}
-
-							optimizeForMobile();
-
-							if (isMobile) {
-								st = createMobileScrollTrigger();
-							} else {
-								st = createDesktopScrollTrigger();
-							}
-						} else {
-							ScrollTrigger.refresh();
-						}
-					}, 250);
-				});
-			}
-
-			// 🎯 Основная инициализация
-			function init() {
-				optimizeForMobile();
-				preloadImages();
-
-				// Инициализируем первое изображение
-				allImgs.forEach((img, i) => {
-					img.style.opacity = i === 0 ? '1' : '0';
-					img.classList.toggle('active', i === 0);
-				});
-
-				// Выбираем подходящий триггер в зависимости от устройства
-				if (isMobile) {
-					st = createMobileScrollTrigger();
-				} else {
-					st = createDesktopScrollTrigger();
-				}
-
-				setupResizeHandler();
-
-				// Обновляем после полной загрузки
-				window.addEventListener('load', function () {
-					setTimeout(() => {
-						if (st && st.refresh) {
-							st.refresh();
-						}
-					}, 1000);
-				});
-			}
-
-			// 🚀 Запускаем с задержкой для стабильности
-			setTimeout(init, 100);
-
-		})();
 	}
 
+	(function () {
+		'use strict';
 
+		const area = document.querySelector('.area');
+		if (!area) return;
 
+		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+		if (allImgs.length === 0) return;
 
+		const fullscreenButton = area.querySelector('.fullscreen-button');
+		let currentIndex = 0;
+		let st = null;
 
+		function preloadImages() {
+			allImgs.forEach(img => {
+				const src = img.getAttribute('src');
+				if (src) {
+					new Image().src = src;
+				}
+			});
+		}
 
-	// (function () {
-	// 	const area = document.querySelector('.area');
-	// 	if (!area) return;
+		function initImages() {
+			allImgs.forEach((img, i) => {
+				img.style.opacity = i === 0 ? '1' : '0';
+				img.classList.toggle('active', i === 0);
+			});
+		}
 
-	// 	const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-	// 	if (allImgs.length === 0) return;
+		function showIndex(idx) {
+			if (idx === currentIndex) return;
 
-	// 	const MAX_MOBILE_FRAMES = 6;
-	// 	const PRELOAD_PARALLEL = 3;
-	// 	const SPEED_FACTOR = 0.5;
-	// 	const MIN_PIN_PIXELS = 250;
+			currentIndex = idx;
 
-	// 	const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-	// 	const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
-	// 	const deviceMemory = navigator.deviceMemory || 4;
-	// 	const isLowMemory = deviceMemory <= 1.5;
-	// 	const isMobileLike = isTouch && window.innerWidth <= 900;
+			requestAnimationFrame(() => {
+				allImgs.forEach((img, i) => {
+					const isActive = i === idx;
+					img.style.opacity = isActive ? '1' : '0';
+					img.classList.toggle('active', isActive);
+				});
+			});
+		}
 
-	// 	const disableHeavy = isReducedMotion || isLowMemory;
+		function createScrollTrigger() {
+			if (st) {
+				st.kill();
+				st = null;
+			}
 
-	// 	let imgsToUse = allImgs.slice();
-	// 	if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
-	// 		const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
-	// 		imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
-	// 	} else if (disableHeavy) {
-	// 		imgsToUse = [imgsToUse[0]];
-	// 	}
+			const pinLength = area.offsetHeight * allImgs.length;
 
-	// 	allImgs.forEach(img => {
-	// 		img.style.transition = 'none';
-	// 		img.style.willChange = 'opacity';
-	// 		img.style.opacity = '0';
-	// 		img.dataset.areaImg = '1';
-	// 	});
+			st = ScrollTrigger.create({
+				trigger: area,
+				start: "top top",
+				end: `+=${pinLength / 1.8}`,
+				pin: true,
+				scrub: 0.1,
+				markers: false,
+				onEnter: () => {
+					console.log('Entered area section');
+				},
+				onUpdate: (self) => {
+					const progress = Math.min(1, Math.max(0, self.progress));
+					const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+					showIndex(idx);
+				},
+				onLeave: () => {
+					console.log('Left area section');
+				}
+			});
 
-	// 	imgsToUse.forEach((img, i) => {
-	// 		img.style.opacity = i === 0 ? '1' : '0';
-	// 		img.dataset._area_index = i;
-	// 	});
+			ScrollTrigger.refresh();
+		}
 
-	// 	function preloadImages(list) {
-	// 		const toLoad = list.map(img => img.getAttribute('src'));
-	// 		const results = [];
-	// 		let idx = 0;
+		function setupFullscreen() {
+			if (!fullscreenButton) return;
 
-	// 		return new Promise(resolve => {
-	// 			let active = 0;
-	// 			function next() {
-	// 				if (idx >= toLoad.length && active === 0) {
-	// 					resolve(results);
-	// 					return;
-	// 				}
-	// 				while (active < PRELOAD_PARALLEL && idx < toLoad.length) {
-	// 					const src = toLoad[idx++];
-	// 					active++;
-	// 					const image = new Image();
-	// 					image.onload = () => {
-	// 						results.push({ src, ok: true });
-	// 						active--;
-	// 						next();
-	// 					};
-	// 					image.onerror = () => {
-	// 						results.push({ src, ok: false });
-	// 						active--;
-	// 						next();
-	// 					};
-	// 					image.src = src;
-	// 				}
-	// 			}
-	// 			next();
-	// 		});
-	// 	}
+			fullscreenButton.addEventListener('click', function (e) {
+				e.preventDefault();
+				e.stopPropagation();
 
-	// 	let currentIndex = 0;
-	// 	let rafId = null;
-	// 	function showIndex(idx) {
-	// 		if (idx === currentIndex) return;
-	// 		currentIndex = idx;
-	// 		if (rafId) cancelAnimationFrame(rafId);
-	// 		rafId = requestAnimationFrame(() => {
-	// 			imgsToUse.forEach((img, i) => {
-	// 				img.style.opacity = i === idx ? '1' : '0';
-	// 			});
-	// 		});
-	// 	}
+				if (document.fullscreenElement) {
+					document.exitFullscreen().catch(err => {
+						console.error('Error exiting fullscreen:', err);
+					});
+				} else {
+					area.requestFullscreen().catch(err => {
+						console.error('Error entering fullscreen:', err);
+					});
+				}
+			});
 
-	// 	let st = null;
-	// 	function createScrollTrigger() {
-	// 		if (st) {
-	// 			try { st.kill(); } catch (e) { }
-	// 			st = null;
-	// 		}
+			document.addEventListener('fullscreenchange', function () {
+				if (document.fullscreenElement) {
+					fullscreenButton.textContent = 'Выйти из полноэкранного';
+				} else {
+					fullscreenButton.textContent = 'Полный экран';
+				}
+				setTimeout(() => ScrollTrigger.refresh(), 100);
+			});
+		}
 
-	// 		if (disableHeavy || imgsToUse.length <= 1) {
-	// 			imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
-	// 			ScrollTrigger.refresh();
-	// 			return;
-	// 		}
+		function setupResizeHandler() {
+			let resizeTimeout;
+			window.addEventListener('resize', function () {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = setTimeout(() => {
+					createScrollTrigger();
+				}, 250);
+			});
+		}
 
-	// 		const total = imgsToUse.length;
-	// 		let pinLength = Math.max(MIN_PIN_PIXELS, Math.round(window.innerHeight * (total - 1) * SPEED_FACTOR));
+		function init() {
+			preloadImages();
+			initImages();
+			setupFullscreen();
+			setupResizeHandler();
 
-	// 		st = ScrollTrigger.create({
-	// 			trigger: area,
-	// 			start: "top top",
-	// 			end: `+=${pinLength}`,
-	// 			pin: true,
-	// 			pinSpacing: true,
-	// 			scrub: false,
-	// 			anticipatePin: 1,
-	// 			onUpdate(self) {
-	// 				const p = Math.max(0, Math.min(1, self.progress));
-	// 				const idx = Math.min(total - 1, Math.floor(p * total));
-	// 				showIndex(idx);
-	// 			},
-	// 			onKill() {
-	// 				if (rafId) cancelAnimationFrame(rafId);
-	// 			}
-	// 		});
+			window.addEventListener('load', function () {
+				createScrollTrigger();
 
-	// 		ScrollTrigger.refresh();
-	// 	}
+				setTimeout(() => ScrollTrigger.refresh(), 500);
+			});
 
-	// 	preloadImages(imgsToUse).then(() => {
-	// 		createScrollTrigger();
-	// 	}).catch(() => {
-	// 		imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
-	// 		createScrollTrigger();
-	// 	});
+			if (document.readyState === 'complete') {
+				createScrollTrigger();
+			}
+		}
 
-	// 	let resizeTimeout = null;
-	// 	function handleResize() {
-	// 		clearTimeout(resizeTimeout);
-	// 		resizeTimeout = setTimeout(() => {
-	// 			try { if (st) st.kill(); } catch (e) { }
-	// 			allImgs.forEach(img => { img.style.opacity = '0'; });
-	// 			createScrollTrigger(); // Перезапускаем ScrollTrigger вместо перезагрузки страницы
-	// 		}, 200);
-	// 	}
-	// 	window.addEventListener('resize', handleResize);
+		init();
 
-	// 	window.addEventListener('beforeunload', () => {
-	// 		if (st) st.kill();
-	// 		if (rafId) cancelAnimationFrame(rafId);
-	// 		window.removeEventListener('resize', handleResize);
-	// 	});
-	// })();
+	})();
+
 
 	// Advantages
 	(() => {
