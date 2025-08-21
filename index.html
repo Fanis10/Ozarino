@@ -1356,6 +1356,7 @@
 			allImgs.forEach((img, i) => {
 				img.style.opacity = i === 0 ? '1' : '0';
 				img.classList.toggle('active', i === 0);
+				img.style.willChange = 'opacity'; // Добавляем will-change
 			});
 		}
 
@@ -1391,7 +1392,7 @@
 				start: "top top",
 				end: `+=${pinLength / 1.8}`, // Уменьшите значение для более быстрой прокрутки
 				pin: true,
-				scrub: 0.1, // Оставьте это значение
+				scrub: 0.5, // Попробуйте увеличить значение
 				markers: false, // Поставьте true для отладки
 				onEnter: () => {
 					console.log('Entered area section');
@@ -1477,6 +1478,7 @@
 		init();
 
 	})();
+
 
 
 
