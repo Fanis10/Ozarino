@@ -1326,6 +1326,8 @@
 
 	// Area
 	(function () {
+		'use strict';
+
 		const area = document.querySelector('.area');
 		if (!area) return;
 
@@ -1338,32 +1340,35 @@
 		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
 		if (allImgs.length === 0) return;
 
+		// Конфигурация
 		const MAX_MOBILE_FRAMES = 6;
 		const PRELOAD_PARALLEL = 3;
 		const SPEED_FACTOR = 0.5;
 		const MIN_PIN_PIXELS = 250;
+		const START_OFFSET = 0.1; // 10% отступ перед началом анимации
 
+		// Определение возможностей устройства
 		const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 		const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
 		const deviceMemory = navigator.deviceMemory || 4;
 		const isLowMemory = deviceMemory <= 1.5;
 		const isMobileLike = isTouch && window.innerWidth <= 900;
-
 		const disableHeavy = isReducedMotion || isLowMemory;
 
+		// Переменные состояния
 		let imgsToUse = allImgs.slice();
-		if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
-			const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
-			imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
-		} else if (disableHeavy) {
-			imgsToUse = [imgsToUse[0]];
-		}
+		let currentIndex = 0;
+		let rafId = null;
+		let st = null;
+		let resizeTimeout = null;
+		let isInitialized = false;
 
 		// Инициализация изображений
 		function initImages() {
 			allImgs.forEach(img => {
 				img.style.willChange = 'opacity';
 				img.style.opacity = '0';
+				img.style.transition = 'opacity 0.3s ease';
 				img.dataset.areaImg = '1';
 			});
 
@@ -1373,11 +1378,25 @@
 			});
 		}
 
-		initImages();
+		// Оптимизация количества изображений
+		function optimizeImages() {
+			if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
+				const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
+				imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
+			} else if (disableHeavy) {
+				imgsToUse = [imgsToUse[0]];
+			}
+		}
 
-		// Функция предзагрузки
+		// Предзагрузка изображений
 		async function preloadImages(list) {
-			const toLoad = list.map(img => img.getAttribute('src'));
+			const toLoad = list.map(img => {
+				const src = img.getAttribute('src');
+				return src && src.trim() !== '' ? src : null;
+			}).filter(Boolean);
+
+			if (toLoad.length === 0) return [];
+
 			const results = [];
 
 			for (let i = 0; i < toLoad.length; i += PRELOAD_PARALLEL) {
@@ -1398,9 +1417,7 @@
 			return results;
 		}
 
-		let currentIndex = 0;
-		let rafId = null;
-
+		// Показ определенного индекса
 		function showIndex(idx) {
 			if (idx === currentIndex) return;
 			currentIndex = idx;
@@ -1413,8 +1430,7 @@
 			});
 		}
 
-		let st = null;
-
+		// Создание ScrollTrigger
 		function createScrollTrigger() {
 			// Очистка предыдущего триггера
 			if (st) {
@@ -1426,6 +1442,7 @@
 				}
 			}
 
+			// Если анимация отключена или только одно изображение
 			if (disableHeavy || imgsToUse.length <= 1) {
 				imgsToUse.forEach((img, i) => {
 					img.style.opacity = i === 0 ? '1' : '0';
@@ -1434,82 +1451,183 @@
 				return;
 			}
 
-			// Пересчет с актуальными размерами
 			const total = imgsToUse.length;
 			const viewportHeight = window.innerHeight;
+			const areaRect = area.getBoundingClientRect();
+			const areaTop = areaRect.top + window.scrollY;
+
+			// Расчет длины пина с учетом отступа
 			const pinLength = Math.max(
 				MIN_PIN_PIXELS,
 				Math.round(viewportHeight * (total - 1) * SPEED_FACTOR)
 			);
 
+			// Расчет стартовой позиции с отступом
+			const startOffset = Math.round(viewportHeight * START_OFFSET);
+			const startPosition = `top ${startOffset}px`;
+
 			try {
 				st = ScrollTrigger.create({
 					trigger: area,
-					start: "top top",
+					start: startPosition,
 					end: `+=${pinLength}`,
 					pin: true,
 					pinSpacing: true,
-					scrub: false,
+					scrub: 0.5,
 					anticipatePin: 1,
-					onUpdate(self) {
-						const p = Math.max(0, Math.min(1, self.progress));
-						const idx = Math.min(total - 1, Math.floor(p * total));
-						showIndex(idx);
+					markers: false, // Включите для отладки
+					onEnter: () => {
+						console.log('Entered area');
 					},
-					onKill() {
+					onLeave: () => {
+						console.log('Left area');
+					},
+					onEnterBack: () => {
+						console.log('Entered back');
+					},
+					onLeaveBack: () => {
+						console.log('Left back');
+					},
+					onUpdate: (self) => {
+						// Более точный контроль прогресса
+						const effectiveProgress = Math.max(0, Math.min(1, self.progress));
+
+						// Добавляем небольшую задержку перед началом анимации
+						const adjustedProgress = effectiveProgress < 0.05 ? 0 : effectiveProgress;
+
+						const idx = Math.min(
+							total - 1,
+							Math.floor(adjustedProgress * total)
+						);
+
+						// Дополнительная проверка видимости области
+						const isAreaVisible = (
+							self.direction === 1 && self.progress > 0.02 ||
+							self.direction === -1 && self.progress < 0.98
+						);
+
+						if (isAreaVisible) {
+							showIndex(idx);
+						}
+					},
+					onRefresh: () => {
+						console.log('ScrollTrigger refreshed');
+					},
+					onKill: () => {
 						if (rafId) cancelAnimationFrame(rafId);
+						rafId = null;
 					}
 				});
 
 				ScrollTrigger.refresh();
+				console.log('ScrollTrigger created successfully');
+
 			} catch (error) {
 				console.error('Ошибка создания ScrollTrigger:', error);
-			}
-		}
-
-		// Основная инициализация
-		async function init() {
-			try {
-				await preloadImages(imgsToUse);
-				createScrollTrigger();
-			} catch (error) {
-				console.error('Ошибка инициализации:', error);
+				// Fallback: показываем только первое изображение
 				imgsToUse.forEach((img, i) => {
 					img.style.opacity = i === 0 ? '1' : '0';
 				});
-				createScrollTrigger();
 			}
 		}
 
 		// Обработчик изменения размера
-		let resizeTimeout = null;
 		function handleResize() {
 			clearTimeout(resizeTimeout);
 			resizeTimeout = setTimeout(() => {
+				console.log('Window resized, recreating ScrollTrigger');
+				optimizeImages();
 				createScrollTrigger();
-			}, 200);
+			}, 250);
 		}
 
-		// Инициализация
-		init();
+		// Очистка ресурсов
+		function cleanup() {
+			console.log('Cleaning up resources');
 
-		// Очистка
-		const cleanup = () => {
 			if (st) {
-				try { st.kill(); } catch (e) { }
+				try {
+					st.kill();
+				} catch (e) {
+					console.error('Error killing ScrollTrigger:', e);
+				}
 				st = null;
 			}
+
 			if (rafId) {
 				cancelAnimationFrame(rafId);
 				rafId = null;
 			}
+
+			if (resizeTimeout) {
+				clearTimeout(resizeTimeout);
+				resizeTimeout = null;
+			}
+
 			window.removeEventListener('resize', handleResize);
 			window.removeEventListener('beforeunload', cleanup);
+			window.removeEventListener('unload', cleanup);
+		}
+
+		// Основная функция инициализации
+		async function init() {
+			if (isInitialized) return;
+
+			try {
+				console.log('Initializing area animation');
+
+				// Оптимизация изображений
+				optimizeImages();
+
+				// Инициализация изображений
+				initImages();
+
+				// Предзагрузка
+				const preloadResults = await preloadImages(imgsToUse);
+				console.log('Preload results:', preloadResults);
+
+				// Создание ScrollTrigger
+				createScrollTrigger();
+
+				// Установка обработчиков событий
+				window.addEventListener('resize', handleResize);
+				window.addEventListener('beforeunload', cleanup);
+				window.addEventListener('unload', cleanup);
+
+				isInitialized = true;
+				console.log('Area animation initialized successfully');
+
+			} catch (error) {
+				console.error('Ошибка инициализации:', error);
+				// Fallback
+				imgsToUse.forEach((img, i) => {
+					img.style.opacity = i === 0 ? '1' : '0';
+				});
+			}
+		}
+
+		// Запуск инициализации после загрузки страницы
+		if (document.readyState === 'loading') {
+			document.addEventListener('DOMContentLoaded', init);
+		} else {
+			setTimeout(init, 100); // Небольшая задержка для стабильности
+		}
+
+		// Экспорт для отладки
+		window.areaAnimation = {
+			init,
+			cleanup,
+			refresh: createScrollTrigger,
+			getState: () => ({
+				currentIndex,
+				totalImages: imgsToUse.length,
+				isInitialized,
+				st: st ? 'active' : 'inactive'
+			})
 		};
 
-		window.addEventListener('resize', handleResize);
-		window.addEventListener('beforeunload', cleanup);
 	})();
+
 
 
 
