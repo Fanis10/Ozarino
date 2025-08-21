@@ -1389,9 +1389,9 @@
 			st = ScrollTrigger.create({
 				trigger: area,
 				start: "top top",
-				end: `+=${pinLength}`,
+				end: `+=${pinLength / 2}`, // Уменьшите значение для более быстрой прокрутки
 				pin: true,
-				scrub: 0.5,
+				scrub: 0.1, // Оставьте это значение
 				markers: false, // Поставьте true для отладки
 				onEnter: () => {
 					console.log('Entered area section');
