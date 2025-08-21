@@ -354,7 +354,7 @@
 					<img class="area-img" src="img/area-img.webp" alt="">
 					<img class="area-img" src="img/area-img2.webp" alt="">
 					<img class="area-img" src="img/area-img5.webp" alt="">
-					<!-- <img class="area-img" src="img/area-img7.webp" alt=""> -->
+					<img class="area-img" src="img/area-img7.webp" alt="">
 					<!-- <img class="area-img" src="img/area-img9.webp" alt=""> -->
 					<!-- <img class="area-img" src="img/area-img10.webp" alt=""> -->
 					<!-- <img class="area-img" src="img/area-img12.webp" alt=""> -->
@@ -1389,9 +1389,9 @@
 			st = ScrollTrigger.create({
 				trigger: area,
 				start: "top top",
-				end: `+=${pinLength}`,
+				end: `+=${pinLength / 1.8}`, // Уменьшите значение для более быстрой прокрутки
 				pin: true,
-				scrub: 0.1,
+				scrub: 0.1, // Оставьте это значение
 				markers: false, // Поставьте true для отладки
 				onEnter: () => {
 					console.log('Entered area section');
