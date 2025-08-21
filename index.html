@@ -1325,9 +1325,153 @@
 	});
 
 	// Area
+	(function () {
+		const area = document.querySelector('.area');
+		if (!area) return;
 
+		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+		if (allImgs.length === 0) return;
 
+		const MAX_MOBILE_FRAMES = 6;
+		const PRELOAD_PARALLEL = 3;
+		const SPEED_FACTOR = 0.5;
+		const MIN_PIN_PIXELS = 250;
 
+		const isReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+		const isTouch = 'ontouchstart' in window || navigator.maxTouchPoints > 0;
+		const deviceMemory = navigator.deviceMemory || 4;
+		const isLowMemory = deviceMemory <= 1.5;
+		const isMobileLike = isTouch && window.innerWidth <= 900;
+
+		const disableHeavy = isReducedMotion || isLowMemory;
+
+		let imgsToUse = allImgs.slice();
+		if (!disableHeavy && isMobileLike && imgsToUse.length > MAX_MOBILE_FRAMES) {
+			const step = Math.ceil(imgsToUse.length / MAX_MOBILE_FRAMES);
+			imgsToUse = imgsToUse.filter((_, i) => i % step === 0).slice(0, MAX_MOBILE_FRAMES);
+		} else if (disableHeavy) {
+			imgsToUse = [imgsToUse[0]];
+		}
+
+		allImgs.forEach(img => {
+			img.style.transition = 'none';
+			img.style.willChange = 'opacity';
+			img.style.opacity = '0';
+			img.dataset.areaImg = '1';
+		});
+
+		imgsToUse.forEach((img, i) => {
+			img.style.opacity = i === 0 ? '1' : '0';
+			img.dataset._area_index = i;
+		});
+
+		function preloadImages(list) {
+			const toLoad = list.map(img => img.getAttribute('src'));
+			const results = [];
+			let idx = 0;
+
+			return new Promise(resolve => {
+				let active = 0;
+				function next() {
+					if (idx >= toLoad.length && active === 0) {
+						resolve(results);
+						return;
+					}
+					while (active < PRELOAD_PARALLEL && idx < toLoad.length) {
+						const src = toLoad[idx++];
+						active++;
+						const image = new Image();
+						image.onload = () => {
+							results.push({ src, ok: true });
+							active--;
+							next();
+						};
+						image.onerror = () => {
+							results.push({ src, ok: false });
+							active--;
+							next();
+						};
+						image.src = src;
+					}
+				}
+				next();
+			});
+		}
+
+		let currentIndex = 0;
+		let rafId = null;
+		function showIndex(idx) {
+			if (idx === currentIndex) return;
+			currentIndex = idx;
+			if (rafId) cancelAnimationFrame(rafId);
+			rafId = requestAnimationFrame(() => {
+				imgsToUse.forEach((img, i) => {
+					img.style.opacity = i === idx ? '1' : '0';
+				});
+			});
+		}
+
+		let st = null;
+		function createScrollTrigger() {
+			if (st) {
+				try { st.kill(); } catch (e) { }
+				st = null;
+			}
+
+			if (disableHeavy || imgsToUse.length <= 1) {
+				imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
+				ScrollTrigger.refresh();
+				return;
+			}
+
+			const total = imgsToUse.length;
+			let pinLength = Math.max(MIN_PIN_PIXELS, Math.round(window.innerHeight * (total - 1) * SPEED_FACTOR));
+
+			st = ScrollTrigger.create({
+				trigger: area,
+				start: "top top",
+				end: `+=${pinLength}`,
+				pin: true,
+				pinSpacing: true,
+				scrub: false,
+				anticipatePin: 1,
+				onUpdate(self) {
+					const p = Math.max(0, Math.min(1, self.progress));
+					const idx = Math.min(total - 1, Math.floor(p * total));
+					showIndex(idx);
+				},
+				onKill() {
+					if (rafId) cancelAnimationFrame(rafId);
+				}
+			});
+
+			ScrollTrigger.refresh();
+		}
+
+		preloadImages(imgsToUse).then(() => {
+			createScrollTrigger();
+		}).catch(() => {
+			imgsToUse.forEach((img, i) => img.style.opacity = i === 0 ? '1' : '0');
+			createScrollTrigger();
+		});
+
+		let resizeTimeout = null;
+		function handleResize() {
+			clearTimeout(resizeTimeout);
+			resizeTimeout = setTimeout(() => {
+				try { if (st) st.kill(); } catch (e) { }
+				allImgs.forEach(img => { img.style.opacity = '0'; });
+				createScrollTrigger(); // Перезапускаем ScrollTrigger вместо перезагрузки страницы
+			}, 200);
+		}
+		window.addEventListener('resize', handleResize);
+
+		window.addEventListener('beforeunload', () => {
+			if (st) st.kill();
+			if (rafId) cancelAnimationFrame(rafId);
+			window.removeEventListener('resize', handleResize);
+		});
+	})();
 
 	// Advantages
 	(() => {
@@ -1552,21 +1696,21 @@
 
 
 	// ScrollTop
-	// if ('scrollRestoration' in history) {
-	// 	try { history.scrollRestoration = 'manual'; } catch (e) { }
-	// }
+	if ('scrollRestoration' in history) {
+		try { history.scrollRestoration = 'manual'; } catch (e) { }
+	}
 
-	// function forceScrollTop() {
-	// 	const docEl = document.documentElement;
-	// 	const prev = docEl.style.scrollBehavior;
-	// 	docEl.style.scrollBehavior = 'auto';
-	// 	window.scrollTo(0, 0);
-	// 	setTimeout(() => { docEl.style.scrollBehavior = prev || ''; }, 0);
-	// }
+	function forceScrollTop() {
+		const docEl = document.documentElement;
+		const prev = docEl.style.scrollBehavior;
+		docEl.style.scrollBehavior = 'auto';
+		window.scrollTo(0, 0);
+		setTimeout(() => { docEl.style.scrollBehavior = prev || ''; }, 0);
+	}
 
-	// window.addEventListener('load', forceScrollTop, { passive: true });
-	// window.addEventListener('pageshow', function () { forceScrollTop(); }, { passive: true });
-	// window.addEventListener('DOMContentLoaded', function () {
-	// 	if (window.pageYOffset !== 0) forceScrollTop();
-	// }, { passive: true });    
+	window.addEventListener('load', forceScrollTop, { passive: true });
+	window.addEventListener('pageshow', function () { forceScrollTop(); }, { passive: true });
+	window.addEventListener('DOMContentLoaded', function () {
+		if (window.pageYOffset !== 0) forceScrollTop();
+	}, { passive: true });    
 </script>
