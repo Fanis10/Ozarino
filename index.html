@@ -1377,13 +1377,24 @@
 		}
 
 		function createScrollTrigger() {
+			// если триггер уже есть — убираем, чтобы корректно пересоздать
 			if (st) {
 				st.kill();
 				st = null;
 			}
 
+			// Если нижняя граница viewport ещё не достигла верхней границы секции — не создаём триггер
+			const rect = area.getBoundingClientRect();
+			const viewportBottom = window.innerHeight || document.documentElement.clientHeight;
+			if (rect.top > viewportBottom) {
+				// не достигли — отложим создание
+				return false;
+			}
+
+			// длина пина по высоте секции и количеству картинок
 			const pinLength = area.offsetHeight * allImgs.length;
 
+			// Запускаем когда пользователь дошёл до секции (далее прогресс управляет индексами)
 			st = ScrollTrigger.create({
 				trigger: area,
 				start: "top top",
@@ -1405,6 +1416,7 @@
 			});
 
 			ScrollTrigger.refresh();
+			return true;
 		}
 
 		function setupFullscreen() {
@@ -1451,12 +1463,23 @@
 			setupFullscreen();
 			setupResizeHandler();
 
+			// Попробуем создать триггер сразу (если секция уже в зоне видимости)
+			if (!createScrollTrigger()) {
+				// Если ещё не достигли секции — слушаем скролл и создаём триггер один раз, когда условие выполнится
+				const onScrollTryCreate = function () {
+					if (createScrollTrigger()) {
+						window.removeEventListener('scroll', onScrollTryCreate);
+					}
+				};
+				window.addEventListener('scroll', onScrollTryCreate, { passive: true });
+			}
+
 			window.addEventListener('load', function () {
 				createScrollTrigger();
-
 				setTimeout(() => ScrollTrigger.refresh(), 500);
 			});
 
+			// На случай, если документ уже полностью загружен
 			if (document.readyState === 'complete') {
 				createScrollTrigger();
 			}
@@ -1467,50 +1490,185 @@
 	})();
 
 
+
+	// (function () {
+	// 	'use strict';
+
+	// 	const area = document.querySelector('.area');
+	// 	if (!area) return;
+
+	// 	const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+	// 	if (allImgs.length === 0) return;
+
+	// 	const fullscreenButton = area.querySelector('.fullscreen-button');
+	// 	let currentIndex = 0;
+	// 	let st = null;
+
+	// 	function preloadImages() {
+	// 		allImgs.forEach(img => {
+	// 			const src = img.getAttribute('src');
+	// 			if (src) {
+	// 				new Image().src = src;
+	// 			}
+	// 		});
+	// 	}
+
+	// 	function initImages() {
+	// 		allImgs.forEach((img, i) => {
+	// 			img.style.opacity = i === 0 ? '1' : '0';
+	// 			img.classList.toggle('active', i === 0);
+	// 		});
+	// 	}
+
+	// 	function showIndex(idx) {
+	// 		if (idx === currentIndex) return;
+
+	// 		currentIndex = idx;
+
+	// 		requestAnimationFrame(() => {
+	// 			allImgs.forEach((img, i) => {
+	// 				const isActive = i === idx;
+	// 				img.style.opacity = isActive ? '1' : '0';
+	// 				img.classList.toggle('active', isActive);
+	// 			});
+	// 		});
+	// 	}
+
+	// 	function createScrollTrigger() {
+	// 		if (st) {
+	// 			st.kill();
+	// 			st = null;
+	// 		}
+
+	// 		const pinLength = area.offsetHeight * allImgs.length;
+
+	// 		st = ScrollTrigger.create({
+	// 			trigger: area,
+	// 			start: "top top",
+	// 			end: `+=${pinLength / 1.8}`,
+	// 			pin: true,
+	// 			scrub: 0.1,
+	// 			markers: false,
+	// 			onEnter: () => {
+	// 				console.log('Entered area section');
+	// 			},
+	// 			onUpdate: (self) => {
+	// 				const progress = Math.min(1, Math.max(0, self.progress));
+	// 				const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+	// 				showIndex(idx);
+	// 			},
+	// 			onLeave: () => {
+	// 				console.log('Left area section');
+	// 			}
+	// 		});
+
+	// 		ScrollTrigger.refresh();
+	// 	}
+
+	// 	function setupFullscreen() {
+	// 		if (!fullscreenButton) return;
+
+	// 		fullscreenButton.addEventListener('click', function (e) {
+	// 			e.preventDefault();
+	// 			e.stopPropagation();
+
+	// 			if (document.fullscreenElement) {
+	// 				document.exitFullscreen().catch(err => {
+	// 					console.error('Error exiting fullscreen:', err);
+	// 				});
+	// 			} else {
+	// 				area.requestFullscreen().catch(err => {
+	// 					console.error('Error entering fullscreen:', err);
+	// 				});
+	// 			}
+	// 		});
+
+	// 		document.addEventListener('fullscreenchange', function () {
+	// 			if (document.fullscreenElement) {
+	// 				fullscreenButton.textContent = 'Выйти из полноэкранного';
+	// 			} else {
+	// 				fullscreenButton.textContent = 'Полный экран';
+	// 			}
+	// 			setTimeout(() => ScrollTrigger.refresh(), 100);
+	// 		});
+	// 	}
+
+	// 	function setupResizeHandler() {
+	// 		let resizeTimeout;
+	// 		window.addEventListener('resize', function () {
+	// 			clearTimeout(resizeTimeout);
+	// 			resizeTimeout = setTimeout(() => {
+	// 				createScrollTrigger();
+	// 			}, 250);
+	// 		});
+	// 	}
+
+	// 	function init() {
+	// 		preloadImages();
+	// 		initImages();
+	// 		setupFullscreen();
+	// 		setupResizeHandler();
+
+	// 		window.addEventListener('load', function () {
+	// 			createScrollTrigger();
+
+	// 			setTimeout(() => ScrollTrigger.refresh(), 500);
+	// 		});
+
+	// 		if (document.readyState === 'complete') {
+	// 			createScrollTrigger();
+	// 		}
+	// 	}
+
+	// 	init();
+
+	// })();
+
+
 	// Advantages
-	(() => {
-		const advantagesTimeline = gsap.timeline({ paused: true });
+	// (() => {
+	// 	const advantagesTimeline = gsap.timeline({ paused: true });
 
-		function animateAdvantagesItems() {
-			const itemsNodeList = document.querySelectorAll('.advantages__item');
+	// 	function animateAdvantagesItems() {
+	// 		const itemsNodeList = document.querySelectorAll('.advantages__item');
 
-			if (!itemsNodeList.length) return;
+	// 		if (!itemsNodeList.length) return;
 
-			const items = Array.from(itemsNodeList);
+	// 		const items = Array.from(itemsNodeList);
 
-			advantagesTimeline.clear();
+	// 		advantagesTimeline.clear();
 
-			items.reverse().forEach((item) => {
-				const duration = parseFloat(item.dataset.duration);
-				const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0.6;
+	// 		items.reverse().forEach((item) => {
+	// 			const duration = parseFloat(item.dataset.duration);
+	// 			const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0.6;
 
-				advantagesTimeline.to(item, {
-					opacity: 1,
-					y: 0,
-					duration: safeDuration,
-					ease: 'power2.out'
-				}, '+=0');
-			});
+	// 			advantagesTimeline.to(item, {
+	// 				opacity: 1,
+	// 				y: 0,
+	// 				duration: safeDuration,
+	// 				ease: 'power2.out'
+	// 			}, '+=0');
+	// 		});
 
-			advantagesTimeline.play();
-		}
+	// 		advantagesTimeline.play();
+	// 	}
 
-		const observerAdvantages = new IntersectionObserver((entries, observer) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					animateAdvantagesItems();
-					observer.disconnect();
-				}
-			});
-		}, {
-			threshold: 0.5
-		});
+	// 	const observerAdvantages = new IntersectionObserver((entries, observer) => {
+	// 		entries.forEach(entry => {
+	// 			if (entry.isIntersecting) {
+	// 				animateAdvantagesItems();
+	// 				observer.disconnect();
+	// 			}
+	// 		});
+	// 	}, {
+	// 		threshold: 0.5
+	// 	});
 
-		const advantagesSection = document.querySelector('.advantages__items');
-		if (advantagesSection) {
-			observerAdvantages.observe(advantagesSection);
-		}
-	})();
+	// 	const advantagesSection = document.querySelector('.advantages__items');
+	// 	if (advantagesSection) {
+	// 		observerAdvantages.observe(advantagesSection);
+	// 	}
+	// })();
 
 	// Map
 	// const mapSection = document.querySelector('.map');
