@@ -1529,62 +1529,6 @@
 
 			},
 			"(max-width: 991px)": function () {
-
-				gsap.set(".map-img2 img", { display: "none", opacity: 0 });
-
-				// Timeline с четкими контрольными точками
-				const mapTimeline = gsap.timeline({
-					scrollTrigger: {
-						trigger: ".map",
-						start: "top top",
-						end: "+=400px",
-						scrub: 1, // Более плавная синхронизация
-						pin: true,
-						anticipatePin: 1
-					}
-				});
-
-				// Анимация с промежутками между этапами
-				mapTimeline
-					// Этап 1: Уменьшение scale (0-40% времени)
-					.to(".map-img", {
-						scale: 0.4,
-						duration: 0.6,
-						ease: "back.out(1.2)"
-					})
-					// Этап 2: Исчезновение opacity (40-70% времени)
-					.to(".map-img", {
-						opacity: 0,
-						duration: 0.4,
-						ease: "power1.in"
-					}, ">-=0.2") // Начинаем немного раньше завершения scale
-					// Этап 3: Появление нового изображения (70-100% времени)
-					.to(".map-img2 img", {
-						display: "block",
-						opacity: 1,
-						duration: 0.6,
-						ease: "power2.out",
-						onStart: () => {
-							// Гарантируем, что первое изображение полностью скрыто
-							gsap.set(".map-img", { opacity: 0 });
-						}
-					}, ">+=0.1");
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 				// const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
 				// const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
 
