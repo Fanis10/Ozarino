@@ -1601,8 +1601,8 @@
 	const mapSection = document.querySelector('.map');
 	const img1 = mapSection.querySelector('.map-img');
 	const img2 = mapSection.querySelector('.map-img2 img');
-	const img1DisappearLength = 150;
-	const img2AppearLength = 300;
+	const img1DisappearLength = 300; // Увеличиваем длину исчезновения
+	const img2AppearLength = 400; // Увеличиваем длину появления
 	const pinExtra = 200;
 
 	function animateMap() {
@@ -1611,20 +1611,19 @@
 				const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
 				const startPoint = img1Bottom - window.innerHeight;
 				const endPointImg1 = startPoint + img1DisappearLength;
-				const startPointImg2 = endPointImg1;
+				const startPointImg2 = endPointImg1 + 50; // Добавляем небольшую задержку
 				const endPointImg2 = startPointImg2 + img2AppearLength;
 				const pinEnd = endPointImg2 + pinExtra;
 
 				gsap.to(img1, {
 					scale: 0.4,
-					display: 'none',
-					pointerEvents: 'none',
-					ease: 'none',
+					opacity: 0, // Плавное исчезновение
+					ease: 'power1.inOut',
 					scrollTrigger: {
 						trigger: mapSection,
 						start: startPoint,
 						end: endPointImg1,
-						scrub: true,
+						scrub: 1, // Увеличиваем чувствительность
 					}
 				});
 
@@ -1637,12 +1636,12 @@
 						display: 'block',
 						opacity: 1,
 						pointerEvents: 'auto',
-						ease: 'none',
+						ease: 'power1.inOut',
 						scrollTrigger: {
 							trigger: mapSection,
 							start: startPointImg2,
 							end: endPointImg2,
-							scrub: true,
+							scrub: 1,
 							onEnter: () => {
 								mapSection.classList.add('map--active');
 							},
@@ -1666,19 +1665,19 @@
 			"(max-width: 991px)": function () {
 				const startPoint = mapSection.offsetTop;
 				const endPointImg1 = startPoint + img1DisappearLength;
-				const endPointImg2 = endPointImg1 + img2AppearLength;
+				const startPointImg2 = endPointImg1 + 50; // Добавляем небольшую задержку
+				const endPointImg2 = startPointImg2 + img2AppearLength;
 				const pinEnd = endPointImg2 + pinExtra;
 
 				gsap.to(img1, {
 					scale: 0.4,
-					display: 'none',
-					pointerEvents: 'none',
-					ease: 'none',
+					opacity: 0, // Плавное исчезновение
+					ease: 'power1.inOut',
 					scrollTrigger: {
 						trigger: mapSection,
 						start: startPoint,
 						end: endPointImg1,
-						scrub: true,
+						scrub: 1,
 					}
 				});
 
@@ -1691,12 +1690,12 @@
 						display: 'block',
 						opacity: 1,
 						pointerEvents: 'auto',
-						ease: 'none',
+						ease: 'power1.inOut',
 						scrollTrigger: {
 							trigger: mapSection,
-							start: endPointImg1,
+							start: startPointImg2,
 							end: endPointImg2,
-							scrub: true,
+							scrub: 1,
 							onEnter: () => {
 								mapSection.classList.add('map--active');
 							},
