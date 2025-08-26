@@ -1599,134 +1599,121 @@
 
 
 	const mapSection = document.querySelector('.map');
-	const img1 = mapSection.querySelector('.map-img');
-	const img2 = mapSection.querySelector('.map-img2 img');
-	const img1DisappearLength = 300; // Увеличиваем длину исчезновения
-	const img2AppearLength = 400; // Увеличиваем длину появления
-	const pinExtra = 200;
+	const img1 = mapSection?.querySelector('.map-img');
+	const img2 = mapSection?.querySelector('.map-img2 img');
 
-	function animateMap() {
-		ScrollTrigger.matchMedia({
-			"(min-width: 992px)": function () {
-				const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
-				const startPoint = img1Bottom - window.innerHeight;
-				const endPointImg1 = startPoint + img1DisappearLength;
-				const startPointImg2 = endPointImg1 + 50; // Добавляем небольшую задержку
-				const endPointImg2 = startPointImg2 + img2AppearLength;
-				const pinEnd = endPointImg2 + pinExtra;
+	// Оптимизация: предварительный расчет и кэширование
+	let animationInstances = [];
+	let isMobile = window.innerWidth <= 991;
 
-				gsap.to(img1, {
-					scale: 0.4,
-					opacity: 0, // Плавное исчезновение
-					ease: 'power1.inOut',
-					scrollTrigger: {
-						trigger: mapSection,
-						start: startPoint,
-						end: endPointImg1,
-						scrub: 1, // Увеличиваем чувствительность
-					}
-				});
+	function calculatePoints() {
+		if (!mapSection || !img1) return null;
 
-				gsap.fromTo(img2,
-					{ opacity: 0, display: 'none', pointerEvents: 'none' },
-					{
-						top: 0,
-						right: 0,
-						width: '100%',
-						display: 'block',
-						opacity: 1,
-						pointerEvents: 'auto',
-						ease: 'power1.inOut',
-						scrollTrigger: {
-							trigger: mapSection,
-							start: startPointImg2,
-							end: endPointImg2,
-							scrub: 1,
-							onEnter: () => {
-								mapSection.classList.add('map--active');
-							},
-							onLeaveBack: () => {
-								mapSection.classList.remove('map--active');
-							}
-						}
-					}
-				);
+		const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
+		const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
 
-				ScrollTrigger.create({
-					trigger: mapSection,
-					start: startPoint,
-					end: pinEnd,
-					pin: true,
-					pinSpacing: true,
-					anticipatePin: 1,
-				});
+		const img1DisappearLength = 150;
+		const img2AppearLength = 300;
+		const pinExtra = 200;
 
-			},
-			"(max-width: 991px)": function () {
-				const startPoint = mapSection.offsetTop;
-				const endPointImg1 = startPoint + img1DisappearLength;
-				const startPointImg2 = endPointImg1 + 50; // Добавляем небольшую задержку
-				const endPointImg2 = startPointImg2 + img2AppearLength;
-				const pinEnd = endPointImg2 + pinExtra;
-
-				gsap.to(img1, {
-					scale: 0.4,
-					opacity: 0, // Плавное исчезновение
-					ease: 'power1.inOut',
-					scrollTrigger: {
-						trigger: mapSection,
-						start: startPoint,
-						end: endPointImg1,
-						scrub: 1,
-					}
-				});
-
-				gsap.fromTo(img2,
-					{ opacity: 0, display: 'none', pointerEvents: 'none' },
-					{
-						top: 0,
-						right: -30,
-						width: 'calc(100% + 60px)',
-						display: 'block',
-						opacity: 1,
-						pointerEvents: 'auto',
-						ease: 'power1.inOut',
-						scrollTrigger: {
-							trigger: mapSection,
-							start: startPointImg2,
-							end: endPointImg2,
-							scrub: 1,
-							onEnter: () => {
-								mapSection.classList.add('map--active');
-							},
-							onLeaveBack: () => {
-								mapSection.classList.remove('map--active');
-							}
-						}
-					}
-				);
-
-				ScrollTrigger.create({
-					trigger: mapSection,
-					start: startPoint,
-					end: pinEnd,
-					pin: true,
-					pinSpacing: true,
-					anticipatePin: 1,
-				});
-			}
-		});
+		if (isMobile) {
+			return {
+				startPoint: mapTop,
+				endPointImg1: mapTop + img1DisappearLength,
+				startPointImg2: mapTop + img1DisappearLength,
+				endPointImg2: mapTop + img1DisappearLength + img2AppearLength,
+				pinEnd: mapTop + img1DisappearLength + img2AppearLength + pinExtra
+			};
+		} else {
+			return {
+				startPoint: img1Bottom - window.innerHeight,
+				endPointImg1: img1Bottom - window.innerHeight + img1DisappearLength,
+				startPointImg2: img1Bottom - window.innerHeight + img1DisappearLength,
+				endPointImg2: img1Bottom - window.innerHeight + img1DisappearLength + img2AppearLength,
+				pinEnd: img1Bottom - window.innerHeight + img1DisappearLength + img2AppearLength + pinExtra
+			};
+		}
 	}
 
+	function createAnimations(points) {
+		// Очистка предыдущих анимаций
+		animationInstances.forEach(instance => instance.kill());
+		animationInstances = [];
+
+		const tl = gsap.timeline({
+			scrollTrigger: {
+				trigger: mapSection,
+				start: points.startPoint,
+				end: points.pinEnd,
+				scrub: true,
+				pin: true,
+				pinSpacing: true,
+				anticipatePin: 1,
+				onEnter: () => mapSection.classList.add('map--active'),
+				onLeaveBack: () => mapSection.classList.remove('map--active')
+			}
+		});
+
+		// Анимация первой карты
+		tl.to(img1, {
+			scale: 0.4,
+			opacity: 0,
+			pointerEvents: 'none',
+			duration: (points.endPointImg1 - points.startPoint) / 1000,
+			ease: 'power1.inOut'
+		}, 0);
+
+		// Анимация второй карты
+		tl.fromTo(img2,
+			{ opacity: 0, display: 'none' },
+			{
+				opacity: 1,
+				display: 'block',
+				pointerEvents: 'auto',
+				duration: (points.endPointImg2 - points.startPointImg2) / 1000,
+				ease: 'power1.inOut'
+			},
+			(points.startPointImg2 - points.startPoint) / 1000
+		);
+
+		animationInstances.push(tl);
+	}
+
+	function initMapAnimation() {
+		if (!mapSection || !img1 || !img2) return;
+
+		const points = calculatePoints();
+		if (!points) return;
+
+		createAnimations(points);
+	}
+
+	// Debounce функция для оптимизации
+	function debounce(func, wait) {
+		let timeout;
+		return function executedFunction(...args) {
+			const later = () => {
+				clearTimeout(timeout);
+				func(...args);
+			};
+			clearTimeout(timeout);
+			timeout = setTimeout(later, wait);
+		};
+	}
+
+	// Инициализация
 	window.addEventListener('load', () => {
 		if (mapSection) {
-			animateMap();
+			initMapAnimation();
 		}
 	});
 
-	window.addEventListener('resize', () => {
+	// Оптимизированный resize
+	window.addEventListener('resize', debounce(() => {
+		isMobile = window.innerWidth <= 991;
 		ScrollTrigger.refresh();
-	});
+		initMapAnimation();
+	}, 250));
 
 
 
