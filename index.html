@@ -1596,10 +1596,13 @@
 
 
 	// Map-mob
-	if (window.innerWidth <= 992) {
+	if (window.innerWidth <= 576) {
 		const mapSection = document.querySelector('.map');
 		const mapImg = document.querySelector('.map-img');
 		const mapImg2 = document.querySelector('.map-img2 img');
+
+		// Скрываем .map-img2 img изначально
+		mapImg2.style.display = 'none';
 
 		ScrollTrigger.create({
 			trigger: mapSection,
@@ -1610,39 +1613,46 @@
 				// Уменьшаем .map-img и уменьшаем его opacity
 				gsap.to(mapImg, {
 					scale: 0.4,
-					opacity: 0,
+					display: 'none',
 					duration: 1,
 					ease: "power1.out"
 				});
 
 				// После завершения анимации увеличиваем .map-img2
 				gsap.to(mapImg2, {
+					display: 'block', // Устанавливаем display в block
 					opacity: 1,
 					width: "100%",
-					top: 0,
-					right: 0,
+					top: 0, // Устанавливаем top в 0
+					right: 0, // Устанавливаем right в 0
 					duration: 1,
 					delay: 1, // Ждем, пока первая анимация закончится
 					ease: "power1.out"
 				});
 			},
 			onLeaveBack: () => {
-				// В обратном скролле восстанавливаем все
+				// В обратном скролле восстанавливаем только .map-img
 				gsap.to(mapImg, {
 					scale: 1,
-					opacity: 1,
+					display: 'block',
 					duration: 1,
 					ease: "power1.out"
 				});
 				gsap.to(mapImg2, {
-					opacity: 0,
+					top: "-3em",
+					right: "-15em",
 					width: "400%",
 					duration: 1,
-					ease: "power1.out"
+					ease: "power1.out",
+					onComplete: () => {
+						// Устанавливаем display в none после завершения анимации
+						mapImg2.style.display = 'none';
+					}
 				});
 			}
 		});
 	}
+
 
 
 
