@@ -1464,355 +1464,161 @@
 	})();
 
 	// Map
-	// const mapSection = document.querySelector('.map');
-	// const img1 = mapSection.querySelector('.map-img');
-	// const img2 = mapSection.querySelector('.map-img2 img');
-	// const img1DisappearLength = 150;
-	// const img2AppearLength = 300;
-	// const pinExtra = 200;
-	// function animateMap() {
-	// 	ScrollTrigger.matchMedia({
-	// 		"(min-width: 992px)": function () {
-	// 			const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
-	// 			const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
-	// 			const startPoint = img1Bottom - window.innerHeight;
-	// 			const endPointImg1 = startPoint + img1DisappearLength;
-	// 			const startPointImg2 = endPointImg1;
-	// 			const endPointImg2 = startPointImg2 + img2AppearLength;
-	// 			const pinEnd = endPointImg2 + pinExtra;
-	// 			gsap.to(img1, {
-	// 				scale: 0.4,
-	// 				display: 'none',
-	// 				pointerEvents: 'none',
-	// 				ease: 'none',
-	// 				scrollTrigger: {
-	// 					trigger: mapSection,
-	// 					start: startPoint,
-	// 					end: endPointImg1,
-	// 					scrub: true,
-	// 				}
-	// 			});
+	const mapSection = document.querySelector('.map');
+	const img1 = mapSection.querySelector('.map-img');
+	const img2 = mapSection.querySelector('.map-img2 img');
+	const img1DisappearLength = 150;
+	const img2AppearLength = 300;
+	const pinExtra = 200;
+	function animateMap() {
+		ScrollTrigger.matchMedia({
+			"(min-width: 992px)": function () {
+				const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
+				const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
+				const startPoint = img1Bottom - window.innerHeight;
+				const endPointImg1 = startPoint + img1DisappearLength;
+				const startPointImg2 = endPointImg1;
+				const endPointImg2 = startPointImg2 + img2AppearLength;
+				const pinEnd = endPointImg2 + pinExtra;
+				gsap.to(img1, {
+					scale: 0.4,
+					display: 'none',
+					pointerEvents: 'none',
+					ease: 'none',
+					scrollTrigger: {
+						trigger: mapSection,
+						start: startPoint,
+						end: endPointImg1,
+						scrub: true,
+					}
+				});
 
-	// 			gsap.fromTo(img2,
-	// 				{ opacity: 1, display: 'none', pointerEvents: 'none' },
-	// 				{
-	// 					top: 0,
-	// 					right: 0,
-	// 					width: '100%',
-	// 					display: 'block',
-	// 					opacity: 1,
-	// 					pointerEvents: 'auto',
-	// 					ease: 'none',
-	// 					scrollTrigger: {
-	// 						trigger: mapSection,
-	// 						start: startPointImg2,
-	// 						end: endPointImg2,
-	// 						scrub: true,
-	// 						onEnter: () => {
-	// 							mapSection.classList.add('map--active');
-	// 						},
-	// 						onLeaveBack: () => {
-	// 							mapSection.classList.remove('map--active');
-	// 						}
-	// 					}
-	// 				}
-	// 			);
-
-	// 			ScrollTrigger.create({
-	// 				trigger: mapSection,
-	// 				start: startPoint,
-	// 				end: pinEnd,
-	// 				pin: true,
-	// 				pinSpacing: true,
-	// 				anticipatePin: 1,
-	// 			});
-
-	// 		},
-	// 		"(max-width: 991px)": function () {
-	// 			const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
-	// 			const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
-
-	// 			const startPoint = mapTop;
-	// 			const endPointImg1 = startPoint + img1DisappearLength;
-	// 			const startPointImg2 = endPointImg1;
-	// 			const endPointImg2 = startPointImg2 + img2AppearLength;
-	// 			const pinEnd = endPointImg2 + pinExtra;
-
-	// 			gsap.to(img1, {
-	// 				scale: 0.4,
-	// 				display: 'none',
-	// 				pointerEvents: 'none',
-	// 				ease: 'none',
-	// 				scrollTrigger: {
-	// 					trigger: mapSection,
-	// 					start: startPoint,
-	// 					end: endPointImg1,
-	// 					scrub: true,
-	// 				}
-	// 			});
-
-	// 			gsap.fromTo(img2,
-	// 				{ opacity: 1, display: 'none', pointerEvents: 'none' },
-	// 				{
-	// 					top: 0,
-	// 					right: -30,
-	// 					width: 'calc(100% + 60px)',
-	// 					display: 'block',
-	// 					opacity: 1,
-	// 					pointerEvents: 'auto',
-	// 					ease: 'none',
-	// 					scrollTrigger: {
-	// 						trigger: mapSection,
-	// 						start: startPointImg2,
-	// 						end: endPointImg2,
-	// 						scrub: true,
-	// 						onEnter: () => {
-	// 							mapSection.classList.add('map--active');
-	// 						},
-	// 						onLeaveBack: () => {
-	// 							mapSection.classList.remove('map--active');
-	// 						}
-	// 					}
-	// 				}
-	// 			);
-
-	// 			ScrollTrigger.create({
-	// 				trigger: mapSection,
-	// 				start: startPoint,
-	// 				end: pinEnd,
-	// 				pin: true,
-	// 				pinSpacing: true,
-	// 				anticipatePin: 1,
-	// 			});
-	// 		}
-	// 	});
-	// }
-	// window.addEventListener('load', () => {
-	// 	if (mapSection) {
-	// 		animateMap();
-	// 	}
-	// });
-	// window.addEventListener('resize', () => {
-	// 	ScrollTrigger.refresh();
-	// });
-
-
-
-	// Убедитесь, что gsap и ScrollTrigger подключены и зарегистрированы:
-	// gsap.registerPlugin(ScrollTrigger);
-
-	(function () {
-		const mapSection = document.querySelector('.map');
-		if (!mapSection) {
-			// секция не найдена — ничего не делаем
-			return;
-		}
-
-		const img1 = mapSection.querySelector('.map-img');
-		const img2 = mapSection.querySelector('.map-img2 img');
-		const img1DisappearLength = 150;
-		const img2AppearLength = 300;
-		const pinExtra = 200;
-
-		function clearMapTriggers() {
-			// Удаляем только триггеры, где триггер === mapSection
-			ScrollTrigger.getAll().forEach(t => {
-				if (t.trigger === mapSection) {
-					t.kill();
-				}
-			});
-			// Убиваем твины для элементов, если они есть
-			gsap.killTweensOf([img1, img2]);
-		}
-
-		function animateMap() {
-			// Очистим старые триггеры/twины, если были
-			clearMapTriggers();
-
-			ScrollTrigger.matchMedia({
-				"(min-width: 992px)": function () {
-					const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
-					const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
-					const startPoint = img1Bottom - window.innerHeight;
-					const endPointImg1 = startPoint + img1DisappearLength;
-					const startPointImg2 = endPointImg1;
-					const endPointImg2 = startPointImg2 + img2AppearLength;
-					const pinEnd = endPointImg2 + pinExtra;
-
-					// стартовые состояния (desktop)
-					gsap.set(img1, {
-						clearProps: 'all',
-						transformOrigin: 'center center',
-						scale: 1,
+				gsap.fromTo(img2,
+					{ opacity: 1, display: 'none', pointerEvents: 'none' },
+					{
+						top: 0,
+						right: 0,
+						width: '100%',
+						display: 'block',
 						opacity: 1,
 						pointerEvents: 'auto',
-						display: 'block'
-					});
-
-					if (img2) {
-						gsap.set(img2, {
-							clearProps: 'all',
-							display: 'block',
-							opacity: 0,
-							pointerEvents: 'none',
-							top: 0,
-							right: 0,
-							width: '100%'
-						});
-					}
-
-					gsap.to(img1, {
-						scale: 0.4,
-						opacity: 0,
-						pointerEvents: 'none',
 						ease: 'none',
 						scrollTrigger: {
 							trigger: mapSection,
-							start: startPoint,
-							end: endPointImg1,
+							start: startPointImg2,
+							end: endPointImg2,
 							scrub: true,
-							onLeave: () => gsap.set(img1, { display: 'none' }),
-							onEnterBack: () => gsap.set(img1, { display: 'block' })
-						}
-					});
-
-					if (img2) {
-						gsap.to(img2, {
-							top: 0,
-							right: 0,
-							width: '100%',
-							opacity: 1,
-							pointerEvents: 'auto',
-							ease: 'none',
-							scrollTrigger: {
-								trigger: mapSection,
-								start: startPointImg2,
-								end: endPointImg2,
-								scrub: true,
-								onEnter: () => {
-									mapSection.classList.add('map--active');
-								},
-								onLeaveBack: () => {
-									mapSection.classList.remove('map--active');
-									gsap.set(img2, { pointerEvents: 'none' });
-								}
+							onEnter: () => {
+								mapSection.classList.add('map--active');
+							},
+							onLeaveBack: () => {
+								mapSection.classList.remove('map--active');
 							}
-						});
-					}
-
-					ScrollTrigger.create({
-						trigger: mapSection,
-						start: startPoint,
-						end: pinEnd,
-						pin: true,
-						pinSpacing: true,
-						anticipatePin: 1,
-					});
-				},
-
-				"(max-width: 991px)": function () {
-					// Мобильная ветка — исправленная, стабильная
-					const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
-					const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
-
-					const startPoint = mapTop;
-					const endPointImg1 = startPoint + img1DisappearLength;
-					const startPointImg2 = endPointImg1;
-					const endPointImg2 = startPointImg2 + img2AppearLength;
-					const pinEnd = endPointImg2 + pinExtra;
-
-					// выставляем начальные состояния для мобильной версии
-					gsap.set(img1, {
-						clearProps: 'all',
-						transformOrigin: 'center center',
-						scale: 1,
-						opacity: 1,
-						pointerEvents: 'auto',
-						display: 'block'
-					});
-
-					if (img2) {
-						gsap.set(img2, {
-							clearProps: 'all',
-							display: 'block',
-							opacity: 0,
-							pointerEvents: 'none',
-							top: 0,
-							right: -30,
-							width: 'calc(100% + 60px)'
-						});
-					}
-
-					// Плавное исчезновение img1 (scale + opacity), без установки display внутри tween'а
-					gsap.to(img1, {
-						scale: 0.4,
-						opacity: 0,
-						pointerEvents: 'none',
-						ease: 'none',
-						scrollTrigger: {
-							trigger: mapSection,
-							start: startPoint,
-							end: endPointImg1,
-							scrub: true,
-							onLeave: () => gsap.set(img1, { display: 'none' }),
-							onEnterBack: () => gsap.set(img1, { display: 'block' })
 						}
-					});
-
-					// Плавное появление img2 (opacity + right), pointerEvents включаем по завершению появления
-					if (img2) {
-						gsap.to(img2, {
-							opacity: 1,
-							right: 0,
-							pointerEvents: 'auto',
-							ease: 'none',
-							scrollTrigger: {
-								trigger: mapSection,
-								start: startPointImg2,
-								end: endPointImg2,
-								scrub: true,
-								onEnter: () => {
-									mapSection.classList.add('map--active');
-								},
-								onLeaveBack: () => {
-									mapSection.classList.remove('map--active');
-									gsap.set(img2, { pointerEvents: 'none' });
-								}
-							}
-						});
 					}
+				);
 
-					ScrollTrigger.create({
+				ScrollTrigger.create({
+					trigger: mapSection,
+					start: startPoint,
+					end: pinEnd,
+					pin: true,
+					pinSpacing: true,
+					anticipatePin: 1,
+				});
+
+			},
+			"(max-width: 991px)": function () {
+
+
+				gsap.to(img1, {
+					scale: 0.4,
+					opacity: 0,
+					scrollTrigger: {
 						trigger: mapSection,
-						start: startPoint,
-						end: pinEnd,
-						pin: true,
-						pinSpacing: true,
-						anticipatePin: 1,
-					});
-				}
-			});
-		}
+						start: "top 30%",
+						end: "top 10%",
+						scrub: true
+					}
+				});
 
-		window.addEventListener('load', () => {
+				gsap.to(img2, {
+					opacity: 1,
+					scrollTrigger: {
+						trigger: mapSection,
+						start: "top 20%",
+						end: "top top",
+						scrub: true
+					}
+				});
+
+
+				// const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
+				// const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
+
+				// const startPoint = mapTop;
+				// const endPointImg1 = startPoint + img1DisappearLength;
+				// const startPointImg2 = endPointImg1;
+				// const endPointImg2 = startPointImg2 + img2AppearLength;
+				// const pinEnd = endPointImg2 + pinExtra;
+
+				// gsap.to(img1, {
+				// 	scale: 0.4,
+				// 	display: 'none',
+				// 	pointerEvents: 'none',
+				// 	ease: 'none',
+				// 	scrollTrigger: {
+				// 		trigger: mapSection,
+				// 		start: startPoint,
+				// 		end: endPointImg1,
+				// 		scrub: true,
+				// 	}
+				// });
+
+				// gsap.fromTo(img2,
+				// 	{ opacity: 1, display: 'none', pointerEvents: 'none' },
+				// 	{
+				// 		top: 0,
+				// 		right: -30,
+				// 		width: 'calc(100% + 60px)',
+				// 		display: 'block',
+				// 		opacity: 1,
+				// 		pointerEvents: 'auto',
+				// 		ease: 'none',
+				// 		scrollTrigger: {
+				// 			trigger: mapSection,
+				// 			start: startPointImg2,
+				// 			end: endPointImg2,
+				// 			scrub: true,
+				// 			onEnter: () => {
+				// 				mapSection.classList.add('map--active');
+				// 			},
+				// 			onLeaveBack: () => {
+				// 				mapSection.classList.remove('map--active');
+				// 			}
+				// 		}
+				// 	}
+				// );
+
+				// ScrollTrigger.create({
+				// 	trigger: mapSection,
+				// 	start: startPoint,
+				// 	end: pinEnd,
+				// 	pin: true,
+				// 	pinSpacing: true,
+				// 	anticipatePin: 1,
+				// });
+			}
+		});
+	}
+	window.addEventListener('load', () => {
+		if (mapSection) {
 			animateMap();
-		});
-
-		// debounce для resize: уменьшает количество пересозданий триггеров
-		let resizeTimer = null;
-		window.addEventListener('resize', () => {
-			clearTimeout(resizeTimer);
-			resizeTimer = setTimeout(() => {
-				// безопасно очищаем и пересоздаём анимацию
-				clearMapTriggers();
-				ScrollTrigger.refresh();
-				animateMap();
-			}, 150);
-		});
-	})();
-
-
-
+		}
+	});
+	window.addEventListener('resize', () => {
+		ScrollTrigger.refresh();
+	});
 
 	// House
 	const house = document.querySelector('.house');
