@@ -1462,7 +1462,7 @@
 	})();
 
 	// Map
-	if (window.innerWidth >= 577) {
+	if (window.innerWidth >= 993) {
 		const mapSection = document.querySelector('.map');
 		const img1 = mapSection.querySelector('.map-img');
 		const img2 = mapSection.querySelector('.map-img2 img');
@@ -1471,7 +1471,7 @@
 		const pinExtra = 200;
 		function animateMap() {
 			ScrollTrigger.matchMedia({
-				"(min-width: 577px)": function () {
+				"(min-width: 993px)": function () {
 					const img1Bottom = img1.getBoundingClientRect().bottom + window.pageYOffset;
 					const mapTop = mapSection.getBoundingClientRect().top + window.pageYOffset;
 					const startPoint = img1Bottom - window.innerHeight;
@@ -1538,12 +1538,30 @@
 		});
 	}
 
-	if (window.innerWidth <= 576) {
+	if (window.innerWidth <= 992) {
 		const mapSection = document.querySelector('.map');
 		const mapImg = document.querySelector('.map-img');
 		const mapImg2 = document.querySelector('.map-img2 img');
 
-		gsap.set(mapImg2, { display: 'none', opacity: 0.6, width: '400%', top: '-3em', right: '-15em' });
+		const mobileStyles = window.innerWidth <= 576 ? {
+			initial: { width: '400%', top: '-2em', right: '-15em' },
+			step1: { width: '300%', top: '-1.5em', right: '-10em' },
+			step2: { width: '200%', top: '-1em', right: '-5em' },
+			final: { width: 'calc(100% + 60px)', top: '0', right: '0' }
+		} : {
+			initial: { width: '400%', top: '-5.5em', right: '-31em' },
+			step1: { width: '300%', top: '-3.7em', right: '-19.4em' },
+			step2: { width: '200%', top: '-1.8em', right: '-9.6em' },
+			final: { width: '100%', top: '0', right: '0' }
+		};
+
+		gsap.set(mapImg2, {
+			display: 'none',
+			opacity: 0.6,
+			width: mobileStyles.initial.width,
+			top: mobileStyles.initial.top,
+			right: mobileStyles.initial.right
+		});
 
 		const tl = gsap.timeline({
 			scrollTrigger: {
@@ -1560,19 +1578,16 @@
 			duration: 0.3,
 			ease: "power1.out"
 		})
-
 			.to(mapImg, {
 				scale: 0.6,
 				duration: 0.3,
 				ease: "power1.out"
 			})
-
 			.to(mapImg, {
 				scale: 0.4,
 				duration: 0.3,
 				ease: "power1.out"
 			})
-
 			.to(mapImg, {
 				display: 'none',
 				duration: 0.1,
@@ -1584,30 +1599,28 @@
 				duration: 0.1,
 				ease: "power1.out"
 			}, "<")
-
 			.to(mapImg2, {
-				width: '300%',
-				top: '-2em',
-				right: '-10em',
+				width: mobileStyles.step1.width,
+				top: mobileStyles.step1.top,
+				right: mobileStyles.step1.right,
 				duration: 0.3,
 				ease: "power1.out"
 			})
-
 			.to(mapImg2, {
-				width: '200%',
-				top: '-1em',
-				right: '-5em',
+				width: mobileStyles.step2.width,
+				top: mobileStyles.step2.top,
+				right: mobileStyles.step2.right,
 				duration: 0.3,
 				ease: "power1.out"
 			})
-
 			.to(mapImg2, {
-				width: 'calc(100% + 60px)',
-				top: '0',
-				right: '0',
+				width: mobileStyles.final.width,
+				top: mobileStyles.final.top,
+				right: mobileStyles.final.right,
 				duration: 0.3,
 				ease: "power1.out"
 			});
+
 		function checkMapImgVisibility() {
 			if (mapImg.style.display === 'none') {
 				mapSection.classList.add('map--active');
@@ -1630,75 +1643,8 @@
 		});
 
 		checkMapImgVisibility();
-
 		window.addEventListener('resize', checkMapImgVisibility);
 	}
-
-
-
-
-
-
-	// if (window.innerWidth <= 576) {
-	// 	const mapSection = document.querySelector('.map');
-	// 	const mapImg = document.querySelector('.map-img');
-	// 	const mapImg2 = document.querySelector('.map-img2 img');
-
-	// 	// Скрываем .map-img2 img изначально
-	// 	mapImg2.style.display = 'none';
-
-	// 	ScrollTrigger.create({
-	// 		trigger: mapSection,
-	// 		start: "top top", // Начало триггера, когда верх секции совпадает с верхом окна
-	// 		end: "bottom top", // Конец триггера, когда низ секции совпадает с верхом окна
-	// 		pin: true, // Фиксируем секцию
-	// 		onEnter: () => {
-	// 			// Уменьшаем .map-img и уменьшаем его opacity
-	// 			gsap.to(mapImg, {
-	// 				scale: 0.4,
-	// 				display: 'none',
-	// 				duration: 1,
-	// 				ease: "power1.out"
-	// 			});
-
-	// 			// После завершения анимации увеличиваем .map-img2
-	// 			gsap.to(mapImg2, {
-	// 				display: 'block', // Устанавливаем display в block
-	// 				opacity: 1,
-	// 				width: "100%",
-	// 				top: 0, // Устанавливаем top в 0
-	// 				right: 0, // Устанавливаем right в 0
-	// 				duration: 1,
-	// 				delay: 1, // Ждем, пока первая анимация закончится
-	// 				ease: "power1.out"
-	// 			});
-	// 		},
-	// 		onLeaveBack: () => {
-	// 			// В обратном скролле восстанавливаем только .map-img
-	// 			gsap.to(mapImg, {
-	// 				scale: 1,
-	// 				display: 'block',
-	// 				duration: 1,
-	// 				ease: "power1.out"
-	// 			});
-	// 			gsap.to(mapImg2, {
-	// 				top: "-3em",
-	// 				right: "-15em",
-	// 				width: "400%",
-	// 				duration: 1,
-	// 				ease: "power1.out",
-	// 				onComplete: () => {
-	// 					// Устанавливаем display в none после завершения анимации
-	// 					mapImg2.style.display = 'none';
-	// 				}
-	// 			});
-	// 		}
-	// 	});
-	// }
-
-
-
-
 
 	// House
 	const house = document.querySelector('.house');
