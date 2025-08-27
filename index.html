@@ -1602,7 +1602,7 @@
 		const mapImg2 = document.querySelector('.map-img2 img');
 
 		// Скрываем .map-img2 img изначально
-		gsap.set(mapImg2, { display: 'none', opacity: 0, scale: 1 });
+		gsap.set(mapImg2, { display: 'none', opacity: 0.6, width: '400%', top: '-3em', right: '-15em' });
 
 		// Создаем timeline с несколькими шагами анимации
 		const tl = gsap.timeline({
@@ -1638,41 +1638,43 @@
 
 			// Четвертый этап - скрытие .map-img и появление .map-img2
 			.to(mapImg, {
-				opacity: 0,
+				display: 'none',
 				duration: 0.1,
 				ease: "power1.out"
 			})
 			.to(mapImg2, {
 				display: 'block',
 				opacity: 1,
-				scale: 1,
 				duration: 0.1,
 				ease: "power1.out"
 			}, "<")
 
 			// Пятый этап - уменьшение .map-img2 до 0.8
 			.to(mapImg2, {
-				scale: 0.8,
+				width: '300%',
+				top: '-2em',
+				right: '-10em',
 				duration: 0.3,
 				ease: "power1.out"
 			})
 
 			// Шестой этап - уменьшение .map-img2 до 0.6
 			.to(mapImg2, {
-				scale: 0.6,
+				width: '200%',
+				top: '-1em',
+				right: '-5em',
 				duration: 0.3,
 				ease: "power1.out"
 			})
 
 			// Седьмой этап - уменьшение .map-img2 до 0.4
 			.to(mapImg2, {
-				scale: 0.4,
+				width: 'calc(100% + 60px)',
+				top: '0',
+				right: '0',
 				duration: 0.3,
 				ease: "power1.out"
 			});
-
-		// Убираем отдельный обработчик для обратного скролла
-		// Теперь timeline автоматически реверсируется при скролле назад
 	}
 
 
