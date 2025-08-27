@@ -1675,6 +1675,34 @@
 				duration: 0.3,
 				ease: "power1.out"
 			});
+		function checkMapImgVisibility() {
+			if (mapImg.style.display === 'none') {
+				mapSection.classList.add('map--active');
+			} else {
+				mapSection.classList.remove('map--active');
+			}
+		}
+
+		// Создаем наблюдатель за изменениями
+		const observer = new MutationObserver(function (mutations) {
+			mutations.forEach(function (mutation) {
+				if (mutation.attributeName === 'style') {
+					checkMapImgVisibility();
+				}
+			});
+		});
+
+		// Начинаем наблюдение за изменениями стиля
+		observer.observe(mapImg, {
+			attributes: true,
+			attributeFilter: ['style']
+		});
+
+		// Проверяем начальное состояние
+		checkMapImgVisibility();
+
+		// Также проверяем при изменении размера окна (на всякий случай)
+		window.addEventListener('resize', checkMapImgVisibility);
 	}
 
 
