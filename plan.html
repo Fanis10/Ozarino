@@ -5566,58 +5566,7 @@
 <script>
     // Plan--zoom
     if (window.innerWidth <= 576) {
-        const bgElement = document.querySelector('.plan-bg');
-        const imgElement = document.querySelector('.plan__img svg');
 
-        // Переменные для отслеживания зума
-        let initialDistance = 0;
-        let currentScale = 1;
-        const minScale = 0.5;
-        const maxScale = 2.0;
-
-        // Функция для вычисления расстояния
-        function getDistance(touches) {
-            const dx = touches[0].clientX - touches[1].clientX;
-            const dy = touches[0].clientY - touches[1].clientY;
-            return Math.sqrt(dx * dx + dy * dy);
-        }
-
-        // Обработчик начала касания
-        function handleTouchStart(event) {
-            if (event.touches.length === 2) {
-                initialDistance = getDistance(event.touches);
-            }
-        }
-
-        // Обработчик движения касания
-        function handleTouchMove(event) {
-            if (event.touches.length === 2) {
-                event.preventDefault();
-
-                const currentDistance = getDistance(event.touches);
-                const scale = currentDistance / initialDistance;
-
-                let newScale = currentScale * scale;
-                newScale = Math.min(Math.max(newScale, minScale), maxScale);
-
-                // Масштабируем ТОЛЬКО фон и картинку
-                bgElement.style.transform = `scale(${newScale})`;
-                imgElement.style.transform = `scale(${newScale})`;
-
-                initialDistance = currentDistance;
-                currentScale = newScale;
-            }
-        }
-
-        // Обработчик окончания касания
-        function handleTouchEnd(event) {
-            // Можно добавить сброс: currentScale = 1; bgElement.style.transform = 'scale(1)'; imgElement.style.transform = 'scale(1)';
-        }
-
-        // Слушатели событий
-        document.addEventListener('touchstart', handleTouchStart, { passive: false });
-        document.addEventListener('touchmove', handleTouchMove, { passive: false });
-        document.addEventListener('touchend', handleTouchEnd);
     }
 
     // Plan--Slider
