@@ -119,7 +119,7 @@
                             </a>
                             <ul class="menu__list2">
                                 <li><a href="">Этапы развития</a></li>
-                                <li><a href="">СМИ о нас</a></li>
+                                <!-- <li><a href="">СМИ о нас</a></li> -->
                                 <li><a href="">Контакты</a></li>
                             </ul>
                         </div>
@@ -569,7 +569,7 @@
 							<div class="house__text">
 								Ничего лишнего. Всё — по делу. Простая архитектура, приятные фасады, уют внутри.
 							</div>
-							<button class="house__btn btn btn-pink btn-animation">
+							<button class="house__btn btn btn-pink btn-animation" data-modal="contactModal--2">
 								<span class="btn-icon">
 									<img src="img/btn-icon2.svg" alt="">
 								</span>
@@ -846,7 +846,7 @@
                     </ul>
                     <ul class="footer__list2">
                         <li><a href="">Этапы развития</a></li>
-                        <li><a href="">СМИ о нас</a></li>
+                        <!-- <li><a href="">СМИ о нас</a></li> -->
                         <li><a href="">Контакты</a></li>
                     </ul>
                     <div class="footer__info">
@@ -939,6 +939,57 @@
 						<div class="modal__title">Получите персональную подборку участков</div>
 						<div class="modal__text">
 							Наш менеджер подберет участок, который подходит именно вам.
+						</div>
+						<form class="form">
+							<div class="form-grid">
+								<div class="form-group">
+									<input type="tel" placeholder="Номер телефона">
+									<span class="input-info">
+										<span class="input-info__icon">
+											<img src="img/info.svg" alt="">
+										</span>
+										<span class="input-info__text">Заполните поле</span>
+									</span>
+								</div>
+								<button class="form-btn btn-animation btn btn-orange">
+									<span class="btn-text">Получить презентацию с ценами</span>
+									<span class="circle"></span>
+								</button>
+							</div>
+							<div class="form-check">
+								<input type="checkbox">
+								<label>
+									Согласно <a href="">Политике АО «Таргет»</a> я даю согласие на обработку моих
+									персональных данных, <a href="">получение рекламно-информационных материалов</a>
+									и <a href="">обработку заявок</a>, в том числе <a href="">в целях продвижения
+										товаров, работ и услуг</a>.
+								</label>
+							</div>
+						</form>
+					</div>
+				</div>
+			</div>
+		</div>
+		<div class="modal modal--1" id="contactModal--2">
+			<div class="modal__dialog">
+				<button type="button" class="_close-modal modal__close btn btn-animation btn-pink" data-bs-dismiss="modal"
+					aria-label="Close">
+					<svg width="14" height="14" viewBox="0 0 14 14" fill="none" xmlns="http://www.w3.org/2000/svg">
+						<path
+							d="M1.77852 13.092L0.908235 12.2217L6.12995 7L0.908235 1.77829L1.77852 0.908003L7.00023 6.12971L12.2219 0.908004L13.0922 1.77829L7.87052 7L13.0922 12.2217L12.2219 13.092L7.00023 7.87029L1.77852 13.092Z"
+							fill="#637057" />
+					</svg>
+					<span class="circle"></span>
+				</button>
+				<div class="modal__content">
+					<div class="modal__img">
+						<img src="img/modal-img.webp" alt="">
+						<img src="img/modal-img2.webp" alt="">
+					</div>
+					<div class="modal__desc">
+						<div class="modal__title">Каталог</div>
+						<div class="modal__text">
+							Наш менеджер свяжется с вами.
 						</div>
 						<form class="form">
 							<div class="form-grid">
@@ -1243,7 +1294,6 @@
 			}
 		});
 
-
 		document.addEventListener('DOMContentLoaded', () => {
 
 			const targets = gsap.utils.toArray(
@@ -1255,7 +1305,7 @@
 			gsap.to(targets, {
 				opacity: 1,
 				y: 0,
-				duration: 1,
+				duration: 1.5,
 				ease: 'power3.out',
 				stagger: 0.06,
 				overwrite: true
@@ -1368,22 +1418,22 @@
 	const grid3 = document.querySelector('.images-grid--3');
 	const grid4 = document.querySelector('.images-grid--4');
 	const gridAnim1 = gsap.to(grid1, {
-		x: -20,
+		x: -30,
 		ease: 'power1.inOut',
 		paused: true
 	});
 	const gridAnim2 = gsap.to(grid2, {
-		x: 20,
+		x: 30,
 		ease: 'power1.inOut',
 		paused: true
 	});
 	const gridAnim3 = gsap.to(grid3, {
-		x: -20,
+		x: -30,
 		ease: 'power1.inOut',
 		paused: true
 	});
 	const gridAnim4 = gsap.to(grid4, {
-		x: 20,
+		x: 30,
 		ease: 'power1.inOut',
 		paused: true
 	});
@@ -1397,7 +1447,7 @@
 
 			gsap.to([gridAnim1, gridAnim2, gridAnim3, gridAnim4], {
 				progress: progress,
-				duration: 0.1,
+				duration: 0.3,
 				ease: 'power1.inOut'
 			});
 
@@ -1495,7 +1545,7 @@
 				gsap.to(batch, {
 					opacity: 1,
 					y: 0,
-					duration: 1,
+					duration: 1.5,
 					ease: 'power3.out',
 					stagger: 0.06,
 					overwrite: true
@@ -1914,7 +1964,7 @@
 				gsap.to(batch, {
 					opacity: 1,
 					y: 0,
-					duration: 1,
+					duration: 1.5,
 					ease: 'power3.out',
 					stagger: 0.06,
 					overwrite: true
@@ -1952,7 +2002,7 @@
 					gsap.to(entry.target, {
 						opacity: 1,
 						y: 0,
-						duration: 1,
+						duration: 1.5,
 						ease: 'power3.out',
 						overwrite: true,
 						delay: index * 0.06
@@ -2006,7 +2056,7 @@
 					gsap.to(entry.target, {
 						opacity: 1,
 						y: 0,
-						duration: 1,
+						duration: 1.5,
 						ease: 'power3.out',
 						overwrite: true,
 						delay: index * 0.06
@@ -2035,7 +2085,7 @@
 					gsap.to(entry.target, {
 						opacity: 1,
 						y: 0,
-						duration: 1,
+						duration: 1.5,
 						ease: 'power3.out',
 						overwrite: true,
 						delay: index * 0.06
