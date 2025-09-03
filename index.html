@@ -1064,9 +1064,11 @@
 	if (window.innerWidth >= 993) {
 		document.addEventListener('DOMContentLoaded', () => {
 			const main = document.querySelector('.main');
+			if (!main) return;
+
 			const title = main.querySelector('.main__title');
 			const button = main.querySelector('.main__btn');
-			const items = main.querySelector('.main__items');
+			const itemsWrap = main.querySelector('.main__items');
 			const body = document.body;
 
 			let isAnimating = false;
@@ -1075,10 +1077,8 @@
 			function isMainFullScreen() {
 				const rect = main.getBoundingClientRect();
 				const windowHeight = window.innerHeight;
-
 				const heightMatches = Math.abs(rect.height - windowHeight) < 5;
 				const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
-
 				return heightMatches && topIsAtWindowTop;
 			}
 
@@ -1088,76 +1088,163 @@
 
 			if (window.innerWidth > 992) {
 				window.addEventListener('wheel', (event) => {
-					if (bodyHasFixedClass()) {
-						return;
-					}
-
-					if (isAnimating) {
-						event.preventDefault();
-						return;
-					}
-
-					if (!isMainFullScreen()) {
-						return;
-					}
+					if (bodyHasFixedClass()) return;
+					if (isAnimating) { event.preventDefault(); return; }
+					if (!isMainFullScreen()) return;
 
 					const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
 
 					if (scrollDirection === 'down' && !animationDone) {
 						isAnimating = true;
-
 						main.style.overflow = 'hidden';
-
 						title.classList.add('hidden');
 						button.classList.add('hidden');
-						items.classList.add('scale-up');
-
+						itemsWrap.classList.add('scale-up');
 						setTimeout(() => {
 							main.style.overflow = '';
 							isAnimating = false;
 							animationDone = true;
 						}, 500);
-
 						event.preventDefault();
 					} else if (scrollDirection === 'up' && animationDone) {
 						isAnimating = true;
-
 						main.style.overflow = 'hidden';
-
 						title.classList.remove('hidden');
 						button.classList.remove('hidden');
-						items.classList.remove('scale-up');
-
+						itemsWrap.classList.remove('scale-up');
 						setTimeout(() => {
 							main.style.overflow = '';
 							isAnimating = false;
 							animationDone = false;
 						}, 500);
-
 						event.preventDefault();
 					}
 				}, { passive: false });
 
-				const itemElements = main.querySelectorAll('.main__item');
-				const defaultBackground = getComputedStyle(main).backgroundImage;
+				const itemElements = Array.from(main.querySelectorAll('.main__item'));
+				const defaultBackground = getComputedStyle(main).backgroundImage || 'none';
+
+				const durationPerItem = 3000;
+				const filledColor = 'rgba(255,241,218,1)';
+				const unfilledColor = 'rgba(255,241,218,0.7)';
+
+				let currentIdx = 0;
+				let progress = 0;
+				let isPaused = false;
+				let rafId = null;
+				let lastTimestamp = null;
+				let isFinished = false;
+				let lastAppliedIndex = -1;
 
 				itemElements.forEach(item => {
-					item.addEventListener('mouseover', () => {
-						const imageUrl = item.getAttribute('data-image');
-						if (imageUrl) {
-							main.style.backgroundImage = `url(${imageUrl})`;
+					const numberEl = item.querySelector('.main__item-number');
+					const textEl = item.querySelector('.main__item-text');
+
+					[numberEl, textEl].forEach(el => {
+						if (!el) return;
+						el.style.setProperty('--progress', '0');
+						el.style.color = unfilledColor;
+						el.style.position = 'relative';
+						el.style.display = 'inline-block';
+					});
+				});
+
+				const itemsData = itemElements.map(item => {
+					const numberEl = item.querySelector('.main__item-number');
+					const textEl = item.querySelector('.main__item-text');
+					return {
+						item,
+						numberEl,
+						textEl,
+						image: item.getAttribute('data-image'),
+						filled: false
+					};
+				});
+
+				function applyMainBackgroundByIndex(idx) {
+					if (idx == null || idx < 0) {
+						main.style.backgroundImage = defaultBackground;
+						lastAppliedIndex = -1;
+						return;
+					}
+					const url = itemsData[idx].image;
+					if (url) {
+						main.style.backgroundImage = `url(${url})`;
+						lastAppliedIndex = idx;
+					} else {
+						main.style.backgroundImage = defaultBackground;
+						lastAppliedIndex = -1;
+					}
+				}
+
+				function setFillForIndex(idx, value) {
+					const d = itemsData[idx];
+					if (!d) return;
+					const clamped = Math.max(0, Math.min(1, value));
+					if (d.numberEl) d.numberEl.style.setProperty('--progress', clamped);
+					if (d.textEl) d.textEl.style.setProperty('--progress', clamped);
+				}
+
+				function tick(ts) {
+					if (isFinished) return;
+					rafId = requestAnimationFrame(tick);
+					if (isPaused) {
+						lastTimestamp = ts;
+						return;
+					}
+					if (!lastTimestamp) lastTimestamp = ts;
+					const delta = ts - lastTimestamp;
+					lastTimestamp = ts;
+
+					progress += delta / durationPerItem;
+					const clamped = Math.min(progress, 1);
+					setFillForIndex(currentIdx, clamped);
+
+					if (progress >= 1) {
+						setFillForIndex(currentIdx, 1);
+						itemsData[currentIdx].filled = true;
+						applyMainBackgroundByIndex(currentIdx);
+
+						progress = 0;
+						currentIdx++;
+
+						if (currentIdx >= itemsData.length) {
+							isFinished = true;
+							cancelAnimationFrame(rafId);
+							rafId = null;
+							return;
+						} else {
+							lastTimestamp = null;
 						}
+					}
+				}
+
+				if (!isFinished && !rafId) {
+					rafId = requestAnimationFrame(tick);
+				}
+
+				itemsData.forEach((d, idx) => {
+					d.item.addEventListener('mouseover', () => {
+						isPaused = true;
+						if (d.image) main.style.backgroundImage = `url(${d.image})`;
+						else main.style.backgroundImage = defaultBackground;
 					});
 
-					item.addEventListener('mouseout', () => {
-						main.style.backgroundImage = defaultBackground;
+					d.item.addEventListener('mouseout', () => {
+						if (lastAppliedIndex >= 0) applyMainBackgroundByIndex(lastAppliedIndex);
+						else main.style.backgroundImage = defaultBackground;
+
+						if (!isFinished) {
+							isPaused = false;
+							lastTimestamp = performance.now();
+						}
 					});
 				});
 			}
 		});
 
+
 		document.addEventListener('DOMContentLoaded', () => {
-			gsap.registerPlugin(ScrollTrigger);
 
 			const targets = gsap.utils.toArray(
 				'.main__title-wrap, .main__btn-wrap, .main__item'
@@ -1165,19 +1252,13 @@
 
 			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-			ScrollTrigger.batch(targets, {
-				onEnter: batch => {
-					gsap.to(batch, {
-						opacity: 1,
-						y: 0,
-						duration: 1,
-						ease: 'power3.out',
-						stagger: 0.06,
-						overwrite: true
-					});
-				},
-				start: 'top 80%',
-				once: true
+			gsap.to(targets, {
+				opacity: 1,
+				y: 0,
+				duration: 1,
+				ease: 'power3.out',
+				stagger: 0.06,
+				overwrite: true
 			});
 		});
 	}
@@ -1861,28 +1942,31 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
-
 		const targets = gsap.utils.toArray('.house .section-top');
 
 		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
-
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: startTrigger,
-			once: true
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry, index) => {
+				if (entry.isIntersecting) {
+					gsap.to(entry.target, {
+						opacity: 1,
+						y: 0,
+						duration: 1,
+						ease: 'power3.out',
+						overwrite: true,
+						delay: index * 0.06
+					});
+					observer.unobserve(entry.target);
+				}
+			});
+		}, {
+			root: null,
+			rootMargin: '0px',
+			threshold: 1
 		});
+
+		targets.forEach(target => observer.observe(target));
 	});
 
 	// Services
@@ -1912,54 +1996,60 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
-
 		const targets = gsap.utils.toArray('.services .section-top');
 
 		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
-
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: startTrigger,
-			once: true
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry, index) => {
+				if (entry.isIntersecting) {
+					gsap.to(entry.target, {
+						opacity: 1,
+						y: 0,
+						duration: 1,
+						ease: 'power3.out',
+						overwrite: true,
+						delay: index * 0.06
+					});
+					observer.unobserve(entry.target);
+				}
+			});
+		}, {
+			root: null,
+			rootMargin: '0px',
+			threshold: 1
 		});
+
+		targets.forEach(target => observer.observe(target));
 	});
 
 	// Area2
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
-
 		const targets = gsap.utils.toArray('.area2__inner');
 
 		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
-
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: startTrigger,
-			once: true
+		const observer = new IntersectionObserver((entries) => {
+			entries.forEach((entry, index) => {
+				if (entry.isIntersecting) {
+					gsap.to(entry.target, {
+						opacity: 1,
+						y: 0,
+						duration: 1,
+						ease: 'power3.out',
+						overwrite: true,
+						delay: index * 0.06
+					});
+					observer.unobserve(entry.target);
+				}
+			});
+		}, {
+			root: null,
+			rootMargin: '0px',
+			threshold: 1
 		});
+
+		targets.forEach(target => observer.observe(target));
 	});
 
 	// ScrollTop
