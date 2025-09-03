@@ -168,18 +168,22 @@
 			<section class="main">
 				<div class="container">
 					<div class="main__inner">
-						<h1 class="main__title">Озарино. <br> Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span>
-						</h1>
-						<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
-							<span class="btn-text">загляните</span>
-							<span class="btn-icon">
-								<img src="img/btn-icon.svg" alt="">
-							</span>
-							<span class="btn-play">
-								<img src="img/play2.svg" alt="">
-							</span>
-							<span class="circle"></span>
-						</button>
+						<div class="main__title-wrap">
+							<h1 class="main__title">Озарино. <br> Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span>
+							</h1>
+						</div>
+						<div class="main__btn-wrap">
+							<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
+								<span class="btn-text">загляните</span>
+								<span class="btn-icon">
+									<img src="img/btn-icon.svg" alt="">
+								</span>
+								<span class="btn-play">
+									<img src="img/play2.svg" alt="">
+								</span>
+								<span class="circle"></span>
+							</button>
+						</div>
 						<div class="main__items">
 							<div class="main__item" data-image="img/main-img2.webp">
 								<div class="main__item-number"><span>22</span> минуты</div>
@@ -350,20 +354,20 @@
 						<div class="area__title">Общая площадь</div>
 					</div>
 				</div>
-				<div class="area-images" aria-hidden="true">
+				<div class="area__video">
+					<video id="myVideo" muted playsinline preload="auto" src="video/video2.mp4"></video>
+				</div>
+				<!-- <div class="area-images" aria-hidden="true">
 					<img class="area-img" src="img/area-img.webp" alt="">
 					<img class="area-img" src="img/area-img2.webp" alt="">
 					<img class="area-img" src="img/area-img5.webp" alt="">
 					<img class="area-img" src="img/area-img7.webp" alt="">
-					<!-- <img class="area-img" src="img/area-img9.webp" alt=""> -->
-					<!-- <img class="area-img" src="img/area-img10.webp" alt=""> -->
-					<!-- <img class="area-img" src="img/area-img12.webp" alt=""> -->
 					<img class="area-img" src="img/area-img15.webp" alt="">
 					<img class="area-img" src="img/area-img17.webp" alt="">
 					<img class="area-img" src="img/area-img19.webp" alt="">
 					<img class="area-img" src="img/area-img21.webp" alt="">
 					<img class="area-img" src="img/area-img22.webp" alt="">
-				</div>
+				</div> -->
 			</section>
 			<section class="advantages">
 				<div class="container">
@@ -374,7 +378,7 @@
 						</div>
 						<div class="advantages__overflow">
 							<div class="advantages__items">
-								<div class="advantages__item" data-duration="0.4">
+								<div class="advantages__item" data-duration="0.8">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">23,4 <span>км</span></div>
@@ -388,7 +392,7 @@
 										<div class="advantages__item-text">Прокрути выходные на велосипеде</div>
 									</div>
 								</div>
-								<div class="advantages__item" data-duration="0.4">
+								<div class="advantages__item" data-duration="0.8">
 									<div class="advantages__item-group">
 										<div class="advantages__item-subgroup">
 											<div class="advantages__item-number">1,1 <span>км</span></div>
@@ -459,11 +463,13 @@
 				<div class="container">
 					<div class="map__inner">
 						<div class="section-top">
-							<h2 class="section-top__title h2">Подберите <br> свой участок</h2>
 							<div class="section-top__subtitle">
-								Каждый участок в Озарино — с характером. Озеро, лес,  простор.
-								<br> А ещё — выбор. Попробуйте найти свое место
+								Подберите свой участок
 							</div>
+							<h2 class="section-top__title h2">
+								Каждый участок в Озарино — с характером. Озеро, лес,  простор.
+								А ещё — выбор. Попробуйте найти свое место
+							</h2>
 						</div>
 					</div>
 				</div>
@@ -517,10 +523,10 @@
 					</a>
 				</div>
 				<button class="map__btn2 btn btn-animation btn-pink" data-modal="contactModal">
-					<svg width="21" height="22" viewBox="0 0 21 22" fill="none" xmlns="http://www.w3.org/2000/svg">
+					<svg xmlns="http://www.w3.org/2000/svg" width="50" height="50" viewBox="0 0 50 50" fill="none">
 						<path
-							d="M7.76837 1.2002L1.32634 4.91675C1.24813 4.96187 1.19995 5.04529 1.19995 5.13558V21.009C1.19995 21.195 1.39433 21.3173 1.56205 21.2366L7.76837 18.2528M7.76837 1.2002L14.4631 4.98967M7.76837 1.2002V18.2528M14.4631 4.98967L20.0114 1.44821C20.1796 1.34087 20.4 1.46165 20.4 1.66116V18.1011C20.4 18.1945 20.3484 18.2802 20.266 18.3241L14.4631 21.4107M14.4631 4.98967V21.4107M14.4631 21.4107L7.76837 18.2528"
-							stroke="#637057" stroke-width="0.744" stroke-linecap="round" stroke-linejoin="round" />
+							d="M25.5 38.4458L11 34.4583V13.9167L16.5 15.125V13L25.5 15.5L34 13V15.5L40 13.9167V34.4583L25.5 38.4458ZM12 33.6125L25.5 37.5L39 33.6125V15.125L34 16.4542V31L25.5 33.6125L16.5 30.5V16L12 15.125V33.6125ZM26.5 16.5V32L33 30V14.5L26.5 16.5ZM17.5 30L25 32.5V16.4542L17.5 14.6417V30Z"
+							fill="#637057" />
 					</svg>
 					<span class="circle"></span>
 				</button>
@@ -532,7 +538,17 @@
 							<div class="section-top__subtitle">О, как будто построен для нас</div>
 							<h2 class="section-top__title h2">Каждый дом в Озарино с заботой о комфорте и чувством меры</h2>
 						</div>
-						<div class="house__text">Ничего лишнего. Всё — по делу. Простая архитектура, приятные фасады, уют внутри.
+						<div class="house__group">
+							<div class="house__text">
+								Ничего лишнего. Всё — по делу. Простая архитектура, приятные фасады, уют внутри.
+							</div>
+							<button class="house__btn btn btn-pink btn-animation">
+								<span class="btn-icon">
+									<img src="img/btn-icon2.svg" alt="">
+								</span>
+								<span class="btn-text">получить каталог</span>
+								<span class="circle"></span>
+							</button>
 						</div>
 					</div>
 				</div>
@@ -558,31 +574,6 @@
 													<img src="img/services-img.webp" alt="">
 												</div>
 												<div class="service-card__desc">
-													<div class="service-card__format">Формат 1, тип 2</div>
-													<div class="service-card__items">
-														<div class="service-card__item">
-															<div class="service-card__item-number">125</div>
-															<div class="service-card__item-text">S дома общая, м<sup>2</sup></div>
-														</div>
-														<div class="service-card__item">
-															<div class="service-card__item-number"><span>от</span> 10,08</div>
-															<div class="service-card__item-text">S участка, сотки</div>
-														</div>
-													</div>
-													<div class="service-card__price">от <span>15,5</span> млн ₽</div>
-													<button class="service-card__btn btn-animation btn btn-orange">
-														<span class="btn-text">Подробнее о проекте</span>
-														<span class="circle"></span>
-													</button>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="service-card">
-												<div class="service-card__img">
-													<img src="img/services-img2.webp" alt="">
-												</div>
-												<div class="service-card__desc">
 													<div class="service-card__format">Формат 1, тип 1</div>
 													<div class="service-card__items">
 														<div class="service-card__item">
@@ -605,21 +596,46 @@
 										<div class="swiper-slide">
 											<div class="service-card">
 												<div class="service-card__img">
-													<img src="img/services-img3.webp" alt="">
+													<img src="img/services-img2.webp" alt="">
 												</div>
 												<div class="service-card__desc">
-													<div class="service-card__format">Формат 3, тип 2</div>
+													<div class="service-card__format">Формат 1, тип 2</div>
 													<div class="service-card__items">
 														<div class="service-card__item">
 															<div class="service-card__item-number">125</div>
 															<div class="service-card__item-text">S дома общая, м<sup>2</sup></div>
 														</div>
 														<div class="service-card__item">
-															<div class="service-card__item-number"><span>от</span> 10,15</div>
+															<div class="service-card__item-number"><span>от</span> 10,08</div>
 															<div class="service-card__item-text">S участка, сотки</div>
 														</div>
 													</div>
-													<div class="service-card__price">от <span>17,5</span> млн ₽</div>
+													<div class="service-card__price">от <span>15,5</span> млн ₽</div>
+													<button class="service-card__btn btn-animation btn btn-orange">
+														<span class="btn-text">Подробнее о проекте</span>
+														<span class="circle"></span>
+													</button>
+												</div>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="service-card">
+												<div class="service-card__img">
+													<img src="img/services-img3.webp" alt="">
+												</div>
+												<div class="service-card__desc">
+													<div class="service-card__format">Формат 2, тип 1</div>
+													<div class="service-card__items">
+														<div class="service-card__item">
+															<div class="service-card__item-number">150</div>
+															<div class="service-card__item-text">S дома общая, м<sup>2</sup></div>
+														</div>
+														<div class="service-card__item">
+															<div class="service-card__item-number"><span>от</span> 10,09</div>
+															<div class="service-card__item-text">S участка, сотки</div>
+														</div>
+													</div>
+													<div class="service-card__price">от <span>16,8</span> млн ₽</div>
 													<button class="service-card__btn btn-animation btn btn-orange">
 														<span class="btn-text">Подробнее о проекте</span>
 														<span class="circle"></span>
@@ -658,18 +674,18 @@
 													<img src="img/services-img5.webp" alt="">
 												</div>
 												<div class="service-card__desc">
-													<div class="service-card__format">Формат 4, тип 1</div>
+													<div class="service-card__format">Формат 3, тип 2</div>
 													<div class="service-card__items">
 														<div class="service-card__item">
-															<div class="service-card__item-number">150</div>
+															<div class="service-card__item-number">125</div>
 															<div class="service-card__item-text">S дома общая, м<sup>2</sup></div>
 														</div>
 														<div class="service-card__item">
-															<div class="service-card__item-number"><span>от</span> 10,09</div>
+															<div class="service-card__item-number"><span>от</span> 10,15</div>
 															<div class="service-card__item-text">S участка, сотки</div>
 														</div>
 													</div>
-													<div class="service-card__price">от <span>16,8</span> млн ₽</div>
+													<div class="service-card__price">от <span>17,5</span> млн ₽</div>
 													<button class="service-card__btn btn-animation btn btn-orange">
 														<span class="btn-text">Подробнее о проекте</span>
 														<span class="circle"></span>
@@ -695,31 +711,6 @@
 														</div>
 													</div>
 													<div class="service-card__price">от <span>16,8</span> млн ₽</div>
-													<button class="service-card__btn btn-animation btn btn-orange">
-														<span class="btn-text">Подробнее о проекте</span>
-														<span class="circle"></span>
-													</button>
-												</div>
-											</div>
-										</div>
-										<div class="swiper-slide">
-											<div class="service-card">
-												<div class="service-card__img">
-													<img src="img/services-img7.webp" alt="">
-												</div>
-												<div class="service-card__desc">
-													<div class="service-card__format">Формат 4, тип 1</div>
-													<div class="service-card__items">
-														<div class="service-card__item">
-															<div class="service-card__item-number">150</div>
-															<div class="service-card__item-text">S дома общая, м<sup>2</sup></div>
-														</div>
-														<div class="service-card__item">
-															<div class="service-card__item-number"><span>от</span> 10,1</div>
-															<div class="service-card__item-text">S участка, сотки</div>
-														</div>
-													</div>
-													<div class="service-card__price">от <span>16,7</span> млн ₽</div>
 													<button class="service-card__btn btn-animation btn btn-orange">
 														<span class="btn-text">Подробнее о проекте</span>
 														<span class="circle"></span>
@@ -1043,91 +1034,126 @@
 	gsap.registerPlugin(ScrollTrigger);
 
 	// Main
-	document.addEventListener('DOMContentLoaded', () => {
-		const main = document.querySelector('.main');
-		const title = main.querySelector('.main__title');
-		const button = main.querySelector('.main__btn');
-		const items = main.querySelector('.main__items');
+	if (window.innerWidth >= 993) {
+		document.addEventListener('DOMContentLoaded', () => {
+			const main = document.querySelector('.main');
+			const title = main.querySelector('.main__title');
+			const button = main.querySelector('.main__btn');
+			const items = main.querySelector('.main__items');
+			const body = document.body;
 
-		let isAnimating = false;
-		let animationDone = false;
+			let isAnimating = false;
+			let animationDone = false;
 
-		function isMainFullScreen() {
-			const rect = main.getBoundingClientRect();
-			const windowHeight = window.innerHeight;
+			function isMainFullScreen() {
+				const rect = main.getBoundingClientRect();
+				const windowHeight = window.innerHeight;
 
-			const heightMatches = Math.abs(rect.height - windowHeight) < 5;
-			const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
+				const heightMatches = Math.abs(rect.height - windowHeight) < 5;
+				const topIsAtWindowTop = rect.top >= 0 && rect.top < 5;
 
-			return heightMatches && topIsAtWindowTop;
-		}
+				return heightMatches && topIsAtWindowTop;
+			}
 
-		// Проверяем ширину окна
-		if (window.innerWidth > 992) {
-			window.addEventListener('wheel', (event) => {
-				if (isAnimating) {
-					event.preventDefault();
-					return;
-				}
+			function bodyHasFixedClass() {
+				return body.classList.contains('fixed-body');
+			}
 
-				if (!isMainFullScreen()) {
-					return;
-				}
-
-				const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
-
-				if (scrollDirection === 'down' && !animationDone) {
-					isAnimating = true;
-
-					main.style.overflow = 'hidden';
-
-					title.classList.add('hidden');
-					button.classList.add('hidden');
-					items.classList.add('scale-up');
-
-					setTimeout(() => {
-						main.style.overflow = '';
-						isAnimating = false;
-						animationDone = true;
-					}, 500);
-
-					event.preventDefault();
-				} else if (scrollDirection === 'up' && animationDone) {
-					isAnimating = true;
-
-					main.style.overflow = 'hidden';
-
-					title.classList.remove('hidden');
-					button.classList.remove('hidden');
-					items.classList.remove('scale-up');
-
-					setTimeout(() => {
-						main.style.overflow = '';
-						isAnimating = false;
-						animationDone = false;
-					}, 500);
-
-					event.preventDefault();
-				}
-			}, { passive: false });
-
-			const itemElements = main.querySelectorAll('.main__item');
-			const defaultBackground = getComputedStyle(main).backgroundImage;
-
-			itemElements.forEach(item => {
-				item.addEventListener('mouseover', () => {
-					const imageUrl = item.getAttribute('data-image');
-					if (imageUrl) {
-						main.style.backgroundImage = `url(${imageUrl})`;
+			if (window.innerWidth > 992) {
+				window.addEventListener('wheel', (event) => {
+					if (bodyHasFixedClass()) {
+						return;
 					}
-				});
 
-				item.addEventListener('mouseout', () => {
-					main.style.backgroundImage = defaultBackground;
+					if (isAnimating) {
+						event.preventDefault();
+						return;
+					}
+
+					if (!isMainFullScreen()) {
+						return;
+					}
+
+					const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+
+					if (scrollDirection === 'down' && !animationDone) {
+						isAnimating = true;
+
+						main.style.overflow = 'hidden';
+
+						title.classList.add('hidden');
+						button.classList.add('hidden');
+						items.classList.add('scale-up');
+
+						setTimeout(() => {
+							main.style.overflow = '';
+							isAnimating = false;
+							animationDone = true;
+						}, 500);
+
+						event.preventDefault();
+					} else if (scrollDirection === 'up' && animationDone) {
+						isAnimating = true;
+
+						main.style.overflow = 'hidden';
+
+						title.classList.remove('hidden');
+						button.classList.remove('hidden');
+						items.classList.remove('scale-up');
+
+						setTimeout(() => {
+							main.style.overflow = '';
+							isAnimating = false;
+							animationDone = false;
+						}, 500);
+
+						event.preventDefault();
+					}
+				}, { passive: false });
+
+				const itemElements = main.querySelectorAll('.main__item');
+				const defaultBackground = getComputedStyle(main).backgroundImage;
+
+				itemElements.forEach(item => {
+					item.addEventListener('mouseover', () => {
+						const imageUrl = item.getAttribute('data-image');
+						if (imageUrl) {
+							main.style.backgroundImage = `url(${imageUrl})`;
+						}
+					});
+
+					item.addEventListener('mouseout', () => {
+						main.style.backgroundImage = defaultBackground;
+					});
 				});
+			}
+		});
+
+		document.addEventListener('DOMContentLoaded', () => {
+			gsap.registerPlugin(ScrollTrigger);
+
+			const targets = gsap.utils.toArray(
+				'.main__title-wrap, .main__btn-wrap, .main__item'
+			);
+
+			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+			ScrollTrigger.batch(targets, {
+				onEnter: batch => {
+					gsap.to(batch, {
+						opacity: 1,
+						y: 0,
+						duration: 1,
+						ease: 'power3.out',
+						stagger: 0.06,
+						overwrite: true
+					});
+				},
+				start: 'top 80%',
+				once: true
 			});
-		}
-	});
+		});
+	}
 
 	// Main-mob
 	function sliderMain() {
@@ -1263,7 +1289,7 @@
 
 			gsap.to([gridAnim1, gridAnim2, gridAnim3, gridAnim4], {
 				progress: progress,
-				duration: 0.5,
+				duration: 0.1,
 				ease: 'power1.inOut'
 			});
 
@@ -1275,146 +1301,241 @@
 		}
 	});
 
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		const targets = gsap.utils.toArray(
+			'.gallery .section-top, .gallery__text'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: 'top 80%',
+			once: true
+		});
+	});
+
 	// Area
-	if (window.innerWidth >= 993) {
-		(function () {
-			'use strict';
+	(function () {
+		const video = document.getElementById('myVideo');
+		let played = false;
+		let rafPending = false;
 
-			const area = document.querySelector('.area');
-			if (!area) return;
-
-			const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-			if (allImgs.length === 0) return;
-
-			const fullscreenButton = area.querySelector('.fullscreen-button');
-			let currentIndex = 0;
-			let st = null;
-
-			function preloadImages() {
-				allImgs.forEach(img => {
-					const src = img.getAttribute('src');
-					if (src) {
-						new Image().src = src;
-					}
-				});
-			}
-
-			function initImages() {
-				allImgs.forEach((img, i) => {
-					img.style.opacity = i === 0 ? '1' : '0';
-					img.classList.toggle('active', i === 0);
-				});
-			}
-
-			function showIndex(idx) {
-				if (idx === currentIndex) return;
-
-				currentIndex = idx;
-
-				requestAnimationFrame(() => {
-					allImgs.forEach((img, i) => {
-						const isActive = i === idx;
-						img.style.opacity = isActive ? '1' : '0';
-						img.classList.toggle('active', isActive);
+		function checkAndPlay() {
+			rafPending = false;
+			if (played) return;
+			const rect = video.getBoundingClientRect();
+			// Условие: низ видео находится не ниже низа окна
+			if (rect.bottom <= window.innerHeight) {
+				const playPromise = video.play();
+				if (playPromise !== undefined) {
+					playPromise.then(() => {
+						played = true;
+						cleanup();
+					}).catch((err) => {
+						// Если автозапуск запрещён — отметим как сработавшее, чтобы не пытаться снова
+						console.warn('Автовоспроизведение не удалось:', err);
+						played = true;
+						cleanup();
 					});
-				});
-			}
-
-			function createScrollTrigger() {
-				if (st) {
-					st.kill();
-					st = null;
-				}
-
-				const pinLength = area.offsetHeight * allImgs.length;
-
-				st = ScrollTrigger.create({
-					trigger: area,
-					start: "top top",
-					end: `+=${pinLength / 1.8}`,
-					pin: true,
-					scrub: 0.1,
-					markers: false,
-					onEnter: () => {
-						console.log('Entered area section');
-					},
-					onUpdate: (self) => {
-						const progress = Math.min(1, Math.max(0, self.progress));
-						const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-						showIndex(idx);
-					},
-					onLeave: () => {
-						console.log('Left area section');
-					}
-				});
-
-				ScrollTrigger.refresh();
-			}
-
-			function setupFullscreen() {
-				if (!fullscreenButton) return;
-
-				fullscreenButton.addEventListener('click', function (e) {
-					e.preventDefault();
-					e.stopPropagation();
-
-					if (document.fullscreenElement) {
-						document.exitFullscreen().catch(err => {
-							console.error('Error exiting fullscreen:', err);
-						});
-					} else {
-						area.requestFullscreen().catch(err => {
-							console.error('Error entering fullscreen:', err);
-						});
-					}
-				});
-
-				document.addEventListener('fullscreenchange', function () {
-					if (document.fullscreenElement) {
-						fullscreenButton.textContent = 'Выйти из полноэкранного';
-					} else {
-						fullscreenButton.textContent = 'Полный экран';
-					}
-					setTimeout(() => ScrollTrigger.refresh(), 100);
-				});
-			}
-
-			function setupResizeHandler() {
-				let resizeTimeout;
-				window.addEventListener('resize', function () {
-					clearTimeout(resizeTimeout);
-					resizeTimeout = setTimeout(() => {
-						createScrollTrigger();
-					}, 250);
-				});
-			}
-
-			function init() {
-				preloadImages();
-				initImages();
-				setupFullscreen();
-				setupResizeHandler();
-
-				window.addEventListener('load', function () {
-					createScrollTrigger();
-
-					setTimeout(() => ScrollTrigger.refresh(), 500);
-				});
-
-				if (document.readyState === 'complete') {
-					createScrollTrigger();
+				} else {
+					played = true;
+					cleanup();
 				}
 			}
+		}
 
-			init();
+		function scheduleCheck() {
+			if (rafPending || played) return;
+			rafPending = true;
+			requestAnimationFrame(checkAndPlay);
+		}
 
-		})();
-	}
+		function cleanup() {
+			window.removeEventListener('scroll', scheduleCheck);
+			window.removeEventListener('resize', scheduleCheck);
+		}
 
-	if (window.innerWidth <= 992) {
+		// Первичная проверка (на случай, если элемент уже в нужной позиции)
+		scheduleCheck();
+		window.addEventListener('scroll', scheduleCheck, { passive: true });
+		window.addEventListener('resize', scheduleCheck);
+	})();
 
-	}
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
 
+		const targets = gsap.utils.toArray(
+			'.area__desc'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: 'top 100%',
+			once: true
+		});
+	});
+
+	// if (window.innerWidth >= 993) {
+	// 	(function () {
+	// 		'use strict';
+
+	// 		const area = document.querySelector('.area');
+	// 		if (!area) return;
+
+	// 		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
+	// 		if (allImgs.length === 0) return;
+
+	// 		const fullscreenButton = area.querySelector('.fullscreen-button');
+	// 		let currentIndex = 0;
+	// 		let st = null;
+
+	// 		function preloadImages() {
+	// 			allImgs.forEach(img => {
+	// 				const src = img.getAttribute('src');
+	// 				if (src) {
+	// 					new Image().src = src;
+	// 				}
+	// 			});
+	// 		}
+
+	// 		function initImages() {
+	// 			allImgs.forEach((img, i) => {
+	// 				img.style.opacity = i === 0 ? '1' : '0';
+	// 				img.classList.toggle('active', i === 0);
+	// 			});
+	// 		}
+
+	// 		function showIndex(idx) {
+	// 			if (idx === currentIndex) return;
+
+	// 			currentIndex = idx;
+
+	// 			requestAnimationFrame(() => {
+	// 				allImgs.forEach((img, i) => {
+	// 					const isActive = i === idx;
+	// 					img.style.opacity = isActive ? '1' : '0';
+	// 					img.classList.toggle('active', isActive);
+	// 				});
+	// 			});
+	// 		}
+
+	// 		function createScrollTrigger() {
+	// 			if (st) {
+	// 				st.kill();
+	// 				st = null;
+	// 			}
+
+	// 			const pinLength = area.offsetHeight * allImgs.length;
+
+	// 			st = ScrollTrigger.create({
+	// 				trigger: area,
+	// 				start: "top top",
+	// 				end: `+=${pinLength / 1.8}`,
+	// 				pin: true,
+	// 				scrub: 0.1,
+	// 				markers: false,
+	// 				onEnter: () => {
+	// 					console.log('Entered area section');
+	// 				},
+	// 				onUpdate: (self) => {
+	// 					const progress = Math.min(1, Math.max(0, self.progress));
+	// 					const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
+	// 					showIndex(idx);
+	// 				},
+	// 				onLeave: () => {
+	// 					console.log('Left area section');
+	// 				}
+	// 			});
+
+	// 			ScrollTrigger.refresh();
+	// 		}
+
+	// 		function setupFullscreen() {
+	// 			if (!fullscreenButton) return;
+
+	// 			fullscreenButton.addEventListener('click', function (e) {
+	// 				e.preventDefault();
+	// 				e.stopPropagation();
+
+	// 				if (document.fullscreenElement) {
+	// 					document.exitFullscreen().catch(err => {
+	// 						console.error('Error exiting fullscreen:', err);
+	// 					});
+	// 				} else {
+	// 					area.requestFullscreen().catch(err => {
+	// 						console.error('Error entering fullscreen:', err);
+	// 					});
+	// 				}
+	// 			});
+
+	// 			document.addEventListener('fullscreenchange', function () {
+	// 				if (document.fullscreenElement) {
+	// 					fullscreenButton.textContent = 'Выйти из полноэкранного';
+	// 				} else {
+	// 					fullscreenButton.textContent = 'Полный экран';
+	// 				}
+	// 				setTimeout(() => ScrollTrigger.refresh(), 100);
+	// 			});
+	// 		}
+
+	// 		function setupResizeHandler() {
+	// 			let resizeTimeout;
+	// 			window.addEventListener('resize', function () {
+	// 				clearTimeout(resizeTimeout);
+	// 				resizeTimeout = setTimeout(() => {
+	// 					createScrollTrigger();
+	// 				}, 250);
+	// 			});
+	// 		}
+
+	// 		function init() {
+	// 			preloadImages();
+	// 			initImages();
+	// 			setupFullscreen();
+	// 			setupResizeHandler();
+
+	// 			window.addEventListener('load', function () {
+	// 				createScrollTrigger();
+
+	// 				setTimeout(() => ScrollTrigger.refresh(), 500);
+	// 			});
+
+	// 			if (document.readyState === 'complete') {
+	// 				createScrollTrigger();
+	// 			}
+	// 		}
+
+	// 		init();
+
+	// 	})();
+	// }
+
+	// if (window.innerWidth <= 992) {
+
+	// }
 
 	// Advantages
 	(() => {
@@ -1429,7 +1550,7 @@
 
 			advantagesTimeline.clear();
 
-			items.reverse().forEach((item) => {
+			items.forEach((item) => {
 				const duration = parseFloat(item.dataset.duration);
 				const safeDuration = Number.isFinite(duration) && duration > 0 ? duration : 0.6;
 
@@ -1460,6 +1581,31 @@
 			observerAdvantages.observe(advantagesSection);
 		}
 	})();
+
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		const targets = gsap.utils.toArray(
+			'.advantages .section-top'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: 'top 80%',
+			once: true
+		});
+	});
 
 	// Map
 	if (window.innerWidth >= 993) {
@@ -1646,6 +1792,31 @@
 		window.addEventListener('resize', checkMapImgVisibility);
 	}
 
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		const targets = gsap.utils.toArray(
+			'.map .section-top'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: 'top 80%',
+			once: true
+		});
+	});
+
 	// House
 	const house = document.querySelector('.house');
 	const observerHouse = new IntersectionObserver((entries, observer) => {
@@ -1661,6 +1832,31 @@
 	if (houseSection) {
 		observerHouse.observe(houseSection);
 	}
+
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		const targets = gsap.utils.toArray('.house .section-top');
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: startTrigger,
+			once: true
+		});
+	});
 
 	// Services
 	const serviceTimeline = gsap.timeline({ paused: true });
@@ -1688,7 +1884,56 @@
 		observerServices.observe(servicesSection);
 	}
 
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
 
+		const targets = gsap.utils.toArray('.services .section-top');
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: startTrigger,
+			once: true
+		});
+	});
+
+	// Area2
+	document.addEventListener('DOMContentLoaded', () => {
+		gsap.registerPlugin(ScrollTrigger);
+
+		const targets = gsap.utils.toArray('.area2__inner');
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		const startTrigger = window.innerWidth <= 992 ? 'top 80%' : 'top 30%';
+
+		ScrollTrigger.batch(targets, {
+			onEnter: batch => {
+				gsap.to(batch, {
+					opacity: 1,
+					y: 0,
+					duration: 1,
+					ease: 'power3.out',
+					stagger: 0.06,
+					overwrite: true
+				});
+			},
+			start: startTrigger,
+			once: true
+		});
+	});
 
 	// ScrollTop
 	(function () {
