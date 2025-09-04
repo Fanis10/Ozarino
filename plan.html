@@ -5,11 +5,11 @@
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="keywords" content="">
+	<link rel="icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="css/libs.min.css">
 	<link rel="stylesheet" href="css/style.min.css">
 	<title>Генплан</title>
 </head>
-
 
 <body style="background: #637057; color: #FFF1DA">
     <div class="wrapper">
@@ -4695,7 +4695,7 @@
                             <span class=circle2></span>
                             <span class=circle3></span>
                         </div>
-                        <div data-slider-path="5" class="plan__btn plan__btn--6">
+                        <div data-slider-path="7" class="plan__btn plan__btn--6">
                             <img src="img/plan-icon8.svg" alt="">
                             <span class=circle></span>
                             <span class=circle2></span>
@@ -4707,7 +4707,7 @@
                             <span class=circle2></span>
                             <span class=circle3></span>
                         </div>
-                        <div data-slider-path="7" class="plan__btn plan__btn--8">
+                        <div data-slider-path="5" class="plan__btn plan__btn--8">
                             <img src="img/plan-icon.svg" alt="">
                             <span class=circle></span>
                             <span class=circle2></span>
@@ -5197,9 +5197,9 @@
                         <img src="img/modal-img2.webp" alt="">
                     </div>
                     <div class="modal__desc">
-                        <div class="modal__title">Получите персональную подборку участков</div>
+                        <div class="modal__title">Получите персональную подборку домов</div>
                         <div class="modal__text">
-                            Наш менеджер подберет участок, который подходит именно вам.
+                            Наш менеджер подберет дом, который подходит именно вам.
                         </div>
                         <form class="form">
                             <div class="form-grid">
@@ -5566,7 +5566,61 @@
 <script>
     // Plan--zoom
     if (window.innerWidth <= 576) {
+        const planElement = document.querySelector('.plan__bg');
+        const imgElement = document.querySelector('.plan__img svg');
 
+        // Переменные для отслеживания зума
+        let initialDistance = 0;
+        let currentScale = 1;
+        const minScale = 0.5; // Минимальный масштаб
+        const maxScale = 2.0; // Максимальный масштаб
+
+        // Функция для вычисления расстояния между двумя точками касания
+        function getDistance(touches) {
+            const dx = touches[0].clientX - touches[1].clientX;
+            const dy = touches[0].clientY - touches[1].clientY;
+            return Math.sqrt(dx * dx + dy * dy);
+        }
+
+        // Обработчик начала касания
+        function handleTouchStart(event) {
+            if (event.touches.length === 2) {
+                initialDistance = getDistance(event.touches);
+            }
+        }
+
+        // Обработчик движения касания (pinch)
+        function handleTouchMove(event) {
+            if (event.touches.length === 2) {
+                event.preventDefault(); // Предотвращаем стандартный зум
+
+                const currentDistance = getDistance(event.touches);
+                const scale = currentDistance / initialDistance;
+
+                // Вычисляем новый масштаб
+                let newScale = currentScale * scale;
+                newScale = Math.min(Math.max(newScale, minScale), maxScale); // Ограничиваем
+
+                // Применяем масштаб только к .plan и картинке
+                planElement.style.transform = `scale(${newScale})`;
+                imgElement.style.transform = `scale(${newScale})`;
+
+                // Обновляем начальное расстояние для следующего движения
+                initialDistance = currentDistance;
+                currentScale = newScale;
+            }
+        }
+
+        // Обработчик окончания касания (сброс, если нужно)
+        function handleTouchEnd(event) {
+            // Можно добавить сброс масштаба, если пальцы убраны
+            // Например, currentScale = 1; и сброс transform
+        }
+
+        // Добавляем слушатели событий
+        document.addEventListener('touchstart', handleTouchStart, { passive: false });
+        document.addEventListener('touchmove', handleTouchMove, { passive: false });
+        document.addEventListener('touchend', handleTouchEnd);
     }
 
     // Plan--Slider
