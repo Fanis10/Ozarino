@@ -382,7 +382,8 @@
 					</div>
 				</div>
 				<div class="area__video">
-					<video id="myVideo" muted playsinline preload="auto" src="video/video2.mp4"></video>
+					<video id="myVideo" muted playsinline preload="auto" src="video/video2.mp4"
+						poster="img/area-img.webp"></video>
 				</div>
 				<!-- <div class="area-images" aria-hidden="true">
 					<img class="area-img" src="img/area-img.webp" alt="">
@@ -1067,7 +1068,7 @@
 					<span class="circle"></span>
 				</button>
 				<div class="modal__video">
-					<video width="100%" height="100%" controls>
+					<video width="100%" height="100%" poster="img/poster-img.webp" controls>
 						<source src="video/video.mp4" type="video/mp4">
 					</video>
 				</div>
@@ -1137,162 +1138,192 @@
 				return body.classList.contains('fixed-body');
 			}
 
-			if (window.innerWidth > 992) {
-				window.addEventListener('wheel', (event) => {
-					if (bodyHasFixedClass()) return;
-					if (isAnimating) { event.preventDefault(); return; }
-					if (!isMainFullScreen()) return;
+			if (window.innerWidth <= 992) return;
 
-					const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+			const itemElements = Array.from(main.querySelectorAll('.main__item'));
+			const defaultBackground = getComputedStyle(main).backgroundImage || 'none';
 
-					if (scrollDirection === 'down' && !animationDone) {
-						isAnimating = true;
-						main.style.overflow = 'hidden';
-						title.classList.add('hidden');
-						button.classList.add('hidden');
-						itemsWrap.classList.add('scale-up');
-						setTimeout(() => {
-							main.style.overflow = '';
-							isAnimating = false;
-							animationDone = true;
-						}, 500);
-						event.preventDefault();
-					} else if (scrollDirection === 'up' && animationDone) {
-						isAnimating = true;
-						main.style.overflow = 'hidden';
-						title.classList.remove('hidden');
-						button.classList.remove('hidden');
-						itemsWrap.classList.remove('scale-up');
-						setTimeout(() => {
-							main.style.overflow = '';
-							isAnimating = false;
-							animationDone = false;
-						}, 500);
-						event.preventDefault();
-					}
-				}, { passive: false });
+			const durationPerItem = 5000;
+			const filledColor = 'rgba(255,241,218,1)';
+			const unfilledColor = 'rgba(255,241,218,0.7)';
 
-				const itemElements = Array.from(main.querySelectorAll('.main__item'));
-				const defaultBackground = getComputedStyle(main).backgroundImage || 'none';
+			let currentIdx = 0;
+			let progress = 0;
+			let isPaused = false;
+			let rafId = null;
+			let lastTimestamp = null;
+			let isFinished = false;
+			let lastAppliedIndex = -1;
+			let startedFilling = false;
 
-				const durationPerItem = 3000;
-				const filledColor = 'rgba(255,241,218,1)';
-				const unfilledColor = 'rgba(255,241,218,0.7)';
+			itemElements.forEach(item => {
+				const numberEl = item.querySelector('.main__item-number');
+				const textEl = item.querySelector('.main__item-text');
 
-				let currentIdx = 0;
-				let progress = 0;
-				let isPaused = false;
-				let rafId = null;
-				let lastTimestamp = null;
-				let isFinished = false;
-				let lastAppliedIndex = -1;
-
-				itemElements.forEach(item => {
-					const numberEl = item.querySelector('.main__item-number');
-					const textEl = item.querySelector('.main__item-text');
-
-					[numberEl, textEl].forEach(el => {
-						if (!el) return;
-						el.style.setProperty('--progress', '0');
-						el.style.color = unfilledColor;
-						el.style.position = 'relative';
-						el.style.display = 'inline-block';
-					});
+				[numberEl, textEl].forEach(el => {
+					if (!el) return;
+					el.style.setProperty('--progress', '0');
+					el.style.color = unfilledColor;
+					el.style.position = 'relative';
+					el.style.display = 'inline-block';
 				});
+			});
 
-				const itemsData = itemElements.map(item => {
-					const numberEl = item.querySelector('.main__item-number');
-					const textEl = item.querySelector('.main__item-text');
-					return {
-						item,
-						numberEl,
-						textEl,
-						image: item.getAttribute('data-image'),
-						filled: false
-					};
-				});
+			const itemsData = itemElements.map(item => {
+				return {
+					item,
+					numberEl: item.querySelector('.main__item-number'),
+					textEl: item.querySelector('.main__item-text'),
+					image: item.getAttribute('data-image'),
+					filled: false
+				};
+			});
 
-				function applyMainBackgroundByIndex(idx) {
-					if (idx == null || idx < 0) {
-						main.style.backgroundImage = defaultBackground;
-						lastAppliedIndex = -1;
-						return;
-					}
-					const url = itemsData[idx].image;
-					if (url) {
-						main.style.backgroundImage = `url(${url})`;
-						lastAppliedIndex = idx;
-					} else {
-						main.style.backgroundImage = defaultBackground;
-						lastAppliedIndex = -1;
-					}
+			function applyMainBackgroundByIndex(idx) {
+				if (idx == null || idx < 0) {
+					main.style.backgroundImage = defaultBackground;
+					lastAppliedIndex = -1;
+					return;
 				}
-
-				function setFillForIndex(idx, value) {
-					const d = itemsData[idx];
-					if (!d) return;
-					const clamped = Math.max(0, Math.min(1, value));
-					if (d.numberEl) d.numberEl.style.setProperty('--progress', clamped);
-					if (d.textEl) d.textEl.style.setProperty('--progress', clamped);
+				const url = itemsData[idx] && itemsData[idx].image;
+				if (url) {
+					main.style.backgroundImage = `url(${url})`;
+					lastAppliedIndex = idx;
+				} else {
+					main.style.backgroundImage = defaultBackground;
+					lastAppliedIndex = -1;
 				}
+			}
 
-				function tick(ts) {
-					if (isFinished) return;
-					rafId = requestAnimationFrame(tick);
-					if (isPaused) {
-						lastTimestamp = ts;
-						return;
-					}
-					if (!lastTimestamp) lastTimestamp = ts;
-					const delta = ts - lastTimestamp;
+			function setFillForIndex(idx, value) {
+				const d = itemsData[idx];
+				if (!d) return;
+				const clamped = Math.max(0, Math.min(1, value));
+				if (d.numberEl) d.numberEl.style.setProperty('--progress', clamped);
+				if (d.textEl) d.textEl.style.setProperty('--progress', clamped);
+
+				const useFilledColor = clamped >= 1;
+				if (d.numberEl) d.numberEl.style.color = useFilledColor ? filledColor : unfilledColor;
+				if (d.textEl) d.textEl.style.color = useFilledColor ? filledColor : unfilledColor;
+			}
+
+			function tick(ts) {
+				if (isFinished) return;
+				rafId = requestAnimationFrame(tick);
+
+				if (isPaused) {
 					lastTimestamp = ts;
+					return;
+				}
 
-					progress += delta / durationPerItem;
-					const clamped = Math.min(progress, 1);
-					setFillForIndex(currentIdx, clamped);
+				if (!lastTimestamp) lastTimestamp = ts;
+				const delta = ts - lastTimestamp;
+				lastTimestamp = ts;
 
-					if (progress >= 1) {
-						setFillForIndex(currentIdx, 1);
-						itemsData[currentIdx].filled = true;
-						applyMainBackgroundByIndex(currentIdx);
+				progress += delta / durationPerItem;
+				const clamped = Math.min(progress, 1);
+				setFillForIndex(currentIdx, clamped);
 
-						progress = 0;
-						currentIdx++;
+				if (clamped > 0 && lastAppliedIndex !== currentIdx) {
+					applyMainBackgroundByIndex(currentIdx);
+				}
 
-						if (currentIdx >= itemsData.length) {
-							isFinished = true;
+				if (progress >= 1) {
+					setFillForIndex(currentIdx, 1);
+					itemsData[currentIdx].filled = true;
+					progress = 0;
+					currentIdx++;
+
+					if (currentIdx >= itemsData.length) {
+						isFinished = true;
+						if (rafId) {
 							cancelAnimationFrame(rafId);
 							rafId = null;
-							return;
-						} else {
-							lastTimestamp = null;
 						}
+						return;
+					} else {
+						lastTimestamp = null;
 					}
 				}
+			}
 
-				if (!isFinished && !rafId) {
+			function startAutoFill() {
+				if (startedFilling || isFinished) return;
+				startedFilling = true;
+				lastTimestamp = null;
+				isPaused = false;
+				if (!rafId) {
 					rafId = requestAnimationFrame(tick);
 				}
-
-				itemsData.forEach((d, idx) => {
-					d.item.addEventListener('mouseover', () => {
-						isPaused = true;
-						if (d.image) main.style.backgroundImage = `url(${d.image})`;
-						else main.style.backgroundImage = defaultBackground;
-					});
-
-					d.item.addEventListener('mouseout', () => {
-						if (lastAppliedIndex >= 0) applyMainBackgroundByIndex(lastAppliedIndex);
-						else main.style.backgroundImage = defaultBackground;
-
-						if (!isFinished) {
-							isPaused = false;
-							lastTimestamp = performance.now();
-						}
-					});
-				});
 			}
+
+			itemsData.forEach((d, idx) => {
+				if (!d.item) return;
+
+				d.item.addEventListener('mouseover', () => {
+					isPaused = true;
+					if (d.image) {
+						main.style.backgroundImage = `url(${d.image})`;
+					} else {
+						main.style.backgroundImage = defaultBackground;
+					}
+				});
+
+				d.item.addEventListener('mouseout', () => {
+					if (lastAppliedIndex >= 0) {
+						applyMainBackgroundByIndex(lastAppliedIndex);
+					} else {
+						main.style.backgroundImage = defaultBackground;
+					}
+
+					if (!isFinished && startedFilling) {
+						isPaused = false;
+						lastTimestamp = performance.now();
+					} else {
+						isPaused = false;
+					}
+				});
+			});
+
+			window.addEventListener('wheel', (event) => {
+				if (bodyHasFixedClass()) return;
+				if (isAnimating) { event.preventDefault(); return; }
+				if (!isMainFullScreen()) return;
+
+				const scrollDirection = event.deltaY > 0 ? 'down' : 'up';
+
+				if (scrollDirection === 'down' && !animationDone) {
+					isAnimating = true;
+					main.style.overflow = 'hidden';
+					title.classList.add('hidden');
+					button.classList.add('hidden');
+					itemsWrap.classList.add('scale-up');
+					setTimeout(() => {
+						main.style.overflow = '';
+						isAnimating = false;
+						animationDone = true;
+
+						startAutoFill();
+
+					}, 500);
+					event.preventDefault();
+				} else if (scrollDirection === 'up' && animationDone) {
+					isAnimating = true;
+					main.style.overflow = 'hidden';
+					title.classList.remove('hidden');
+					button.classList.remove('hidden');
+					itemsWrap.classList.remove('scale-up');
+					setTimeout(() => {
+						main.style.overflow = '';
+						isAnimating = false;
+						animationDone = false;
+					}, 500);
+					event.preventDefault();
+				}
+			}, { passive: false });
+
 		});
+
 
 		document.addEventListener('DOMContentLoaded', () => {
 
