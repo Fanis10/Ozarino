@@ -1324,7 +1324,6 @@
 
 		});
 
-
 		document.addEventListener('DOMContentLoaded', () => {
 
 			const targets = gsap.utils.toArray(
@@ -1491,27 +1490,24 @@
 	});
 
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
 
-		const targets = gsap.utils.toArray(
-			'.gallery .section-top, .gallery__text'
-		);
+		const targets = gsap.utils.toArray('.gallery .section-top, .gallery__text');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
 
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: 'top 80%',
-			once: true
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 1.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 90%',
+					end: 'top 60%',
+					scrub: true,
+				}
+			});
 		});
 	});
 
@@ -1563,27 +1559,24 @@
 	})();
 
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
 
-		const targets = gsap.utils.toArray(
-			'.area__desc'
-		);
+		const targets = gsap.utils.toArray('.area__desc');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
 
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1.5,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: 'top 100%',
-			once: true
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 1.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 90%',
+					end: 'top 60%',
+					scrub: true,
+				}
+			});
 		});
 	});
 
@@ -1774,25 +1767,23 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		gsap.registerPlugin(ScrollTrigger);
 
-		const targets = gsap.utils.toArray(
-			'.advantages .section-top'
-		);
+		const targets = gsap.utils.toArray('.advantages .section-top');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
 
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: 'top 80%',
-			once: true
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 1.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 90%',
+					end: 'top 60%',
+					scrub: true,
+				}
+			});
 		});
 	});
 
@@ -1982,27 +1973,24 @@
 	}
 
 	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
 
-		const targets = gsap.utils.toArray(
-			'.map .section-top'
-		);
+		const targets = gsap.utils.toArray('.map .section-top');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
 
-		ScrollTrigger.batch(targets, {
-			onEnter: batch => {
-				gsap.to(batch, {
-					opacity: 1,
-					y: 0,
-					duration: 1.5,
-					ease: 'power3.out',
-					stagger: 0.06,
-					overwrite: true
-				});
-			},
-			start: 'top 80%',
-			once: true
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 1.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 90%',
+					end: 'top 60%',
+					scrub: true,
+				}
+			});
 		});
 	});
 
@@ -2025,30 +2013,68 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		const targets = gsap.utils.toArray('.house .section-top');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry, index) => {
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
 				if (entry.isIntersecting) {
-					gsap.to(entry.target, {
-						opacity: 1,
-						y: 0,
-						duration: 1.5,
-						ease: 'power3.out',
-						overwrite: true,
-						delay: index * 0.06
-					});
-					observer.unobserve(entry.target);
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+
+						gsap.to(el, {
+							y: 0,
+							scale: 1,
+							ease: 'power3.out',
+							duration: 1.5,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 60%',
+								scrub: true,
+							}
+						});
+
+						obs.unobserve(el);
+					}
 				}
 			});
 		}, {
-			root: null,
-			rootMargin: '0px',
-			threshold: 1
+			threshold: 0.05
 		});
 
-		targets.forEach(target => observer.observe(target));
+		targets.forEach(el => io.observe(el));
 	});
+
+	// document.addEventListener('DOMContentLoaded', () => {
+	// 	const targets = gsap.utils.toArray('.house .section-top');
+
+	// 	gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+	// 	const observer = new IntersectionObserver((entries) => {
+	// 		entries.forEach((entry, index) => {
+	// 			if (entry.isIntersecting) {
+	// 				gsap.to(entry.target, {
+	// 					opacity: 1,
+	// 					y: 0,
+	// 					duration: 1.5,
+	// 					ease: 'power3.out',
+	// 					overwrite: true,
+	// 					delay: index * 0.06
+	// 				});
+	// 				observer.unobserve(entry.target);
+	// 			}
+	// 		});
+	// 	}, {
+	// 		root: null,
+	// 		rootMargin: '0px',
+	// 		threshold: 1
+	// 	});
+
+	// 	targets.forEach(target => observer.observe(target));
+	// });
 
 	// Services
 	const serviceTimeline = gsap.timeline({ paused: true });
@@ -2079,58 +2105,78 @@
 	document.addEventListener('DOMContentLoaded', () => {
 		const targets = gsap.utils.toArray('.services .section-top');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry, index) => {
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
 				if (entry.isIntersecting) {
-					gsap.to(entry.target, {
-						opacity: 1,
-						y: 0,
-						duration: 1.5,
-						ease: 'power3.out',
-						overwrite: true,
-						delay: index * 0.06
-					});
-					observer.unobserve(entry.target);
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+
+						gsap.to(el, {
+							y: 0,
+							scale: 1,
+							ease: 'power3.out',
+							duration: 1.5,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 60%',
+								scrub: true,
+							}
+						});
+
+						obs.unobserve(el);
+					}
 				}
 			});
 		}, {
-			root: null,
-			rootMargin: '0px',
-			threshold: 1
+			threshold: 0.05
 		});
 
-		targets.forEach(target => observer.observe(target));
+		targets.forEach(el => io.observe(el));
 	});
 
 	// Area2
 	document.addEventListener('DOMContentLoaded', () => {
 		const targets = gsap.utils.toArray('.area2__inner');
 
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach((entry, index) => {
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
 				if (entry.isIntersecting) {
-					gsap.to(entry.target, {
-						opacity: 1,
-						y: 0,
-						duration: 1.5,
-						ease: 'power3.out',
-						overwrite: true,
-						delay: index * 0.06
-					});
-					observer.unobserve(entry.target);
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+
+						gsap.to(el, {
+							y: 0,
+							scale: 1,
+							ease: 'power3.out',
+							duration: 1.5,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 60%',
+								scrub: true,
+							}
+						});
+
+						obs.unobserve(el);
+					}
 				}
 			});
 		}, {
-			root: null,
-			rootMargin: '0px',
-			threshold: 1
+			threshold: 0.05
 		});
 
-		targets.forEach(target => observer.observe(target));
+		targets.forEach(el => io.observe(el));
 	});
 
 	// ScrollTop
