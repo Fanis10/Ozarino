@@ -1494,7 +1494,7 @@
 		const targets = gsap.utils.toArray('.gallery .section-top, .gallery__text');
 
 		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.5, transformOrigin: 'center center', willChange: 'transform, opacity' });
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
 
 			gsap.to(el, {
 				y: 0,
@@ -1503,9 +1503,9 @@
 				duration: 2.5,
 				scrollTrigger: {
 					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+					start: 'top 90%',
+					end: 'top 60%',
+					scrub: true,
 				}
 			});
 		});
