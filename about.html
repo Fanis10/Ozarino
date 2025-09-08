@@ -572,5 +572,91 @@
 	// Animation
 	gsap.registerPlugin(ScrollTrigger);
 
+	//About-main
+	document.addEventListener('DOMContentLoaded', () => {
 
+		const targets = gsap.utils.toArray(
+			'.about-main__title'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		gsap.to(targets, {
+			opacity: 1,
+			y: 0,
+			duration: 1.5,
+			ease: 'power3.out',
+			stagger: 0.06,
+			overwrite: true
+		});
+	});
+
+	//About-info
+	document.addEventListener('DOMContentLoaded', () => {
+
+		const targets = gsap.utils.toArray('.about-info__inner');
+
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 2.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 80%',
+					end: 'top 40%',
+					scrub: 1,
+				}
+			});
+		});
+	});
+
+	//About-map
+	document.addEventListener('DOMContentLoaded', () => {
+
+		const targets = gsap.utils.toArray('.about-map .section-top');
+
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 2.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 80%',
+					end: 'top 40%',
+					scrub: 1,
+				}
+			});
+		});
+	});
+
+	//Area2
+	document.addEventListener('DOMContentLoaded', () => {
+
+		const targets = gsap.utils.toArray('.area2__inner');
+
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 2.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 100%',
+					end: 'top 60%',
+					scrub: 1,
+				}
+			});
+		});
+	});
 </script>
