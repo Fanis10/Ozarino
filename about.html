@@ -240,7 +240,105 @@
 					</div>
 				</div>
 			</section>
-
+			<section class="about-advantages">
+				<div class="container">
+					<div class="about-advantages__inner">
+						<div class="section-top">
+							<div class="section-top__subtitle">и об этом подумали</div>
+							<h2 class="section-top__title h2">Все уже готово <br> для жизни</h2>
+						</div>
+						<div class="about-advantages__items">
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Система безопасности</div>
+							</div>
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon2.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Освещение</div>
+							</div>
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon3.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Водоснабжение</div>
+							</div>
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon4.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Электроснабжение</div>
+							</div>
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon5.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Газоснабжение</div>
+							</div>
+							<div class="about-advantages__item">
+								<div class="about-advantages__item-icon">
+									<img src="img/about-advantages__icon6.svg" alt="">
+								</div>
+								<div class="about-advantages__item-text">Дороги</div>
+							</div>
+						</div>
+						<div class="about-advantages__slider">
+							<div class="swiper mySwiper">
+								<div class="swiper-wrapper">
+									<div class="swiper-slide">
+										<div class="about-advantages__card">
+											<div class="about-advantages__card-img">
+												<img src="img/about-advantages__img.webp" alt="">
+											</div>
+											<div class="about-advantages__card-title">Мини-маркет <br> с продуктами</div>
+										</div>
+									</div>
+									<div class="swiper-slide">
+										<div class="about-advantages__card">
+											<div class="about-advantages__card-img">
+												<img src="img/about-advantages__img2.webp" alt="">
+											</div>
+											<div class="about-advantages__card-title">Воркаут-зона (турники, тренажеры)</div>
+										</div>
+									</div>
+									<div class="swiper-slide">
+										<div class="about-advantages__card">
+											<div class="about-advantages__card-img">
+												<img src="img/about-advantages__img3.webp" alt="">
+											</div>
+											<div class="about-advantages__card-title">Спортивная <br> площадка</div>
+										</div>
+									</div>
+									<div class="swiper-slide">
+										<div class="about-advantages__card">
+											<div class="about-advantages__card-img">
+												<img src="img/about-advantages__img4.webp" alt="">
+											</div>
+											<div class="about-advantages__card-title">Уютное кафе <br> с летней террасой</div>
+										</div>
+									</div>
+									<div class="swiper-slide">
+										<div class="about-advantages__card">
+											<div class="about-advantages__card-img">
+												<img src="img/about-advantages__img5.webp" alt="">
+											</div>
+											<div class="about-advantages__card-title">Оборудованные детские площадки </div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div class="about-advantages__text">
+							Мы уделили внимание каждой детали — от безупречной работы коммуникаций до развитой инфраструктуры, чтобы
+							ваша
+							загородная жизнь была по-настоящему удобной и беззаботной
+						</div>
+					</div>
+				</div>
+			</section>
 			<section class="area2" style="background-image: url(img/area2-img2.webp)">
 				<div class="container">
 					<div class="area2__inner">
@@ -637,6 +735,29 @@
 		});
 	});
 
+	//About-advantages
+	document.addEventListener('DOMContentLoaded', () => {
+
+		const targets = gsap.utils.toArray('.about-advantages .section-top, .about-advantages__text');
+
+		targets.forEach(el => {
+			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
+
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 2.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 80%',
+					end: 'top 40%',
+					scrub: 1,
+				}
+			});
+		});
+	});
+
 	//Area2
 	document.addEventListener('DOMContentLoaded', () => {
 
@@ -659,4 +780,46 @@
 			});
 		});
 	});
+
+	// ScrollTop
+	(function () {
+		try {
+			if ('scrollRestoration' in history) {
+				history.scrollRestoration = 'manual';
+				console.log('scroll-reset: history.scrollRestoration = manual');
+			}
+		} catch (e) {
+			console.warn('scroll-reset: cannot set history.scrollRestoration', e);
+		}
+
+		function forceScrollTop() {
+			const docEl = document.documentElement;
+			const prev = docEl.style.scrollBehavior;
+			docEl.style.scrollBehavior = 'auto';
+			window.scrollTo(0, 0);
+			setTimeout(() => {
+				docEl.style.scrollBehavior = prev || '';
+			}, 0);
+			console.log('scroll-reset: forced scrollTop');
+		}
+
+		window.addEventListener('load', function () {
+			setTimeout(forceScrollTop, 50);
+		}, { passive: true });
+
+		window.addEventListener('pageshow', function (event) {
+			console.log('scroll-reset: pageshow', event && event.persisted);
+			if (event && event.persisted) {
+				requestAnimationFrame(() => requestAnimationFrame(forceScrollTop));
+			} else {
+				setTimeout(forceScrollTop, 0);
+			}
+		}, { passive: true });
+
+		document.addEventListener('DOMContentLoaded', function () {
+			if (window.pageYOffset !== 0) {
+				forceScrollTop();
+			}
+		}, { passive: true });
+	})();
 </script>
