@@ -9,7 +9,6 @@
 	<link rel="stylesheet" href="css/libs.min.css">
 	<link rel="stylesheet" href="css/style.min.css">
 	<title>О поселке</title>
-	<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
 </head>
 
 <body style="background: #637057; color: #FFF1DA">
@@ -327,30 +326,6 @@
 												<img src="img/about-advantages__img5.webp" alt="">
 											</div>
 											<div class="about-advantages__card-title">Оборудованные детские площадки </div>
-										</div>
-									</div>
-									<div class="swiper-slide">
-										<div class="about-advantages__card">
-											<div class="about-advantages__card-img">
-												<img src="img/about-advantages__img.webp" alt="">
-											</div>
-											<div class="about-advantages__card-title">Мини-маркет <br> с продуктами</div>
-										</div>
-									</div>
-									<div class="swiper-slide">
-										<div class="about-advantages__card">
-											<div class="about-advantages__card-img">
-												<img src="img/about-advantages__img2.webp" alt="">
-											</div>
-											<div class="about-advantages__card-title">Воркаут-зона (турники, тренажеры)</div>
-										</div>
-									</div>
-									<div class="swiper-slide">
-										<div class="about-advantages__card">
-											<div class="about-advantages__card-img">
-												<img src="img/about-advantages__img3.webp" alt="">
-											</div>
-											<div class="about-advantages__card-title">Спортивная <br> площадка</div>
 										</div>
 									</div>
 								</div>
@@ -783,108 +758,27 @@
 		});
 	});
 
-	if (window.innerWidth >= 993) {
-		(function setupAdvantagesScroll() {
-			const section = document.querySelector('.about-advantages');
-			if (!section) return;
-
-			const swiperEl = section.querySelector('.mySwiper');
-			const wrapper = swiperEl.querySelector('.swiper-wrapper');
-
-			let tween;
-
-			function createTrigger() {
-				if (tween) {
-					tween.scrollTrigger.kill();
-					tween.kill();
-					tween = null;
-				}
-
-				const visibleWidth = swiperEl.clientWidth;
-				const contentWidth = wrapper.scrollWidth;
-				const scrollLength = Math.max(0, contentWidth - visibleWidth);
-
-				if (scrollLength <= 0) {
-					gsap.set(wrapper, { x: 0 });
-					return;
-				}
-
-				tween = gsap.to(wrapper, {
-					x: () => -scrollLength,
-					ease: 'none',
-					onUpdate: () => {
-					},
-					scrollTrigger: {
-						trigger: section,
-						start: 'top top',
-						end: () => `+=${scrollLength}`,
-						scrub: 4,
-						pin: section,
-						anticipatePin: 1,
-						invalidateOnRefresh: true
-					}
-				});
-			}
-
-			let resizeTO;
-			function onResize() {
-				clearTimeout(resizeTO);
-				resizeTO = setTimeout(() => {
-					createTrigger();
-					ScrollTrigger.refresh();
-				}, 120);
-			}
-
-			createTrigger();
-
-			window.addEventListener('resize', onResize);
-
-			const ro = new ResizeObserver(() => {
-				createTrigger();
-				ScrollTrigger.refresh();
-			});
-			ro.observe(wrapper);
-
-		})();
-	}
-
 	//Area2
 	document.addEventListener('DOMContentLoaded', () => {
+
 		const targets = gsap.utils.toArray('.area2__inner');
 
 		targets.forEach(el => {
 			gsap.set(el, { y: 60, scale: 0.6, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
 
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 100%',
-								end: 'top 60%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
+			gsap.to(el, {
+				y: 0,
+				scale: 1,
+				ease: 'power3.out',
+				duration: 2.5,
+				scrollTrigger: {
+					trigger: el,
+					start: 'top 100%',
+					end: 'top 60%',
+					scrub: 1,
 				}
 			});
-		}, {
-			threshold: 0.05
 		});
-
-		targets.forEach(el => io.observe(el));
 	});
 
 	// ScrollTop
