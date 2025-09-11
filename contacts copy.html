@@ -525,9 +525,27 @@
 </html>
 
 <script>
+	//Contacts
+	document.addEventListener('DOMContentLoaded', () => {
+
+		const targets = gsap.utils.toArray(
+			'.contacts__title'
+		);
+
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+
+		gsap.to(targets, {
+			opacity: 1,
+			y: 0,
+			duration: 1.5,
+			ease: 'power3.out',
+			stagger: 0.06,
+			overwrite: true
+		});
+	});
+
 	//Map
 	var map;
-
 	DG.then(function () {
 		var map;
 
