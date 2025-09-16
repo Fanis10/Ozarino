@@ -184,7 +184,25 @@
 				<div class="container">
 					<div class="main__inner">
 						<div class="main__title-wrap">
-							<h1 class="main__title">Озарино. <br> Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span>
+							<h1 class="main__title">
+								<span class="el">О</span><span class="el">з</span><span class="el">а</span><span
+									class="el">р</span><span class="el">и</span><span class="el">н</span><span class="el">о.</span> <br>
+								<span class="el">Н</span><span class="el">е</span><span class="el">в</span><span
+									class="el">и</span><span class="el">р</span><span class="el">т</span><span class="el">у</span><span
+									class="el">а</span><span class="el">л</span><span class="el">ь</span><span class="el">н</span><span
+									class="el">а</span><span class="el">я</span>
+								<span class="el">р</span><span class="el">е</span><span class="el">а</span><span
+									class="el">л</span><span class="el">ь</span><span class="el">н</span><span class="el">о</span><span
+									class="el">с</span><span class="el">т</span><span class="el">ь</span>
+								<br>
+								<span class="orange">
+									<span class="el">П</span><span class="el">р</span><span class="el">и</span><span
+										class="el">е</span><span class="el">з</span><span class="el">ж</span><span class="el">а</span><span
+										class="el">й</span><span class="el">т</span><span class="el">е.</span>
+									<span class="el">У</span><span class="el">б</span><span class="el">е</span><span
+										class="el">д</span><span class="el">и</span><span class="el">т</span><span class="el">е</span><span
+										class="el">с</span><span class="el">ь.</span>
+								</span>
 							</h1>
 						</div>
 						<div class="main__btn-wrap">
@@ -1625,22 +1643,31 @@
 		});
 
 		document.addEventListener('DOMContentLoaded', () => {
+			const title = document.querySelector('.main__title');
+			const letters = gsap.utils.toArray('.main__title .el');
 
-			const targets = gsap.utils.toArray(
-				'.main__title-wrap, .main__btn-wrap, .main__item'
-			);
+			// на всякий случай установим начальное состояние через JS (если нужно)
+			gsap.set(letters, { visibility: 'hidden' });
 
-			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
-
-			gsap.to(targets, {
-				opacity: 1,
-				y: 0,
-				duration: 1.5,
-				ease: 'power3.out',
-				stagger: 0.06,
-				overwrite: true
-			});
+			gsap.timeline({
+				scrollTrigger: {
+					trigger: title,
+					start: 'top 80%',            // можно подправить
+					toggleActions: 'play none none reverse',
+					// once: true,              // раскомментируйте, если нужно проигрывать только один раз
+					// markers: true,           // для отладки
+				}
+			})
+				.to(letters, {
+					visibility: 'visible',
+					duration: 1,                  // мгновенное появление каждой буквы
+					stagger: {
+						each: 0.06,                 // интервал между буквами — регулирует скорость "печати"
+						from: 'start'
+					}
+				});
 		});
+
 	}
 
 	// Main-mob
