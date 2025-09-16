@@ -184,7 +184,8 @@
 				<div class="container">
 					<div class="main__inner">
 						<div class="main__title-wrap">
-							<h1 class="main__title" id="title"></h1>
+							<h1 class="main__title">Озарино. <br> Невиртуальная реальность. <br> <span>Приезжайте. Убедитесь.</span>
+							</h1>
 						</div>
 						<div class="main__btn-wrap">
 							<button class="main__btn btn-animation btn btn-orange" data-modal="contactModal--video">
@@ -259,8 +260,8 @@
 			<section class="gallery">
 				<div class="gallery__inner">
 					<div class="section-top">
-						<div class="section-top__subtitle">Жизнь без суеты и спешки</div>
-						<h2 class="section-top__title h2">Здесь у каждого свой идеальный день</h2>
+						<div id="gallery__subtitle" class="section-top__subtitle">Жизнь без суеты и спешки</div>
+						<h2 id="gallery__title" class="section-top__title h2">Здесь у каждого свой идеальный день</h2>
 					</div>
 					<div class="gallery__images">
 						<div class="gallery__images-grid images-grid--1">
@@ -1624,44 +1625,22 @@
 		});
 
 		document.addEventListener('DOMContentLoaded', () => {
-			const text = `Озарино.\nНевиртуальная реальность\nПриезжайте. Убедитесь.`;
-			const orangeStart = text.length - 22;
-			const title = document.getElementById('title');
 
-			for (let i = 0; i < text.length; i++) {
-				const ch = text[i];
-				const span = document.createElement('span');
+			const targets = gsap.utils.toArray(
+				'.main__title-wrap, .main__btn-wrap, .main__item'
+			);
 
-				if (ch === '\n') {
-					span.innerHTML = '<br>';
-					title.appendChild(span);
-					continue;
-				}
+			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-				if (ch === ' ') {
-					span.className = 'space';
-					span.textContent = '\u00A0';
-				} else {
-					span.className = 'el';
-					span.textContent = ch;
-					if (i >= orangeStart) span.classList.add('orange');
-				}
-
-				title.appendChild(span);
-			}
-
-			const letters = title.querySelectorAll('.el');
-			let index = 0;
-			function showNextLetter() {
-				if (index < letters.length) {
-					letters[index].classList.add('visible');
-					index++;
-					setTimeout(showNextLetter, 120);
-				}
-			}
-			setTimeout(showNextLetter, 500);
+			gsap.to(targets, {
+				opacity: 1,
+				y: 0,
+				duration: 1.5,
+				ease: 'power3.out',
+				stagger: 0.06,
+				overwrite: true
+			});
 		});
-
 	}
 
 	// Main-mob
@@ -1811,26 +1790,76 @@
 	});
 
 	document.addEventListener('DOMContentLoaded', () => {
+		function animateText(elementId, callback) {
+			const title = document.getElementById(elementId);
+			title.style.visibility = 'visible';
+			const text = title.textContent.trim();
+			title.innerHTML = '';
 
-		const targets = gsap.utils.toArray('.gallery .section-top, .gallery__text');
+			for (let i = 0; i < text.length; i++) {
+				const ch = text[i];
+				const span = document.createElement('span');
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+				if (ch === '\n') {
+					span.innerHTML = '<br>';
+					title.appendChild(span);
+					continue;
 				}
+
+				if (ch === ' ') {
+					span.className = 'space';
+					span.textContent = '\u00A0';
+				} else {
+					span.className = 'el';
+					span.textContent = ch;
+				}
+
+				title.appendChild(span);
+			}
+
+			const letters = title.querySelectorAll('.el');
+			let index = 0;
+			function showNextLetter() {
+				if (index < letters.length) {
+					letters[index].classList.add('visible');
+					index++;
+					setTimeout(showNextLetter, 120);
+				} else {
+					if (callback) {
+						setTimeout(callback, 500);
+					}
+				}
+			}
+			setTimeout(showNextLetter, 500);
+		}
+
+		function createScrollTrigger(elementId, onIntersect) {
+			const element = document.getElementById(elementId);
+			const observer = new IntersectionObserver((entries) => {
+				entries.forEach(entry => {
+					if (entry.isIntersecting) {
+						onIntersect();
+						observer.unobserve(element);
+					}
+				});
+			}, {
+				threshold: 0,
+				rootMargin: '0px -40% 0px 0px'
+			});
+			observer.observe(element);
+		}
+
+		createScrollTrigger('gallery__subtitle', () => {
+			animateText('gallery__subtitle', () => {
+				createScrollTrigger('gallery__title', () => {
+					animateText('gallery__title');
+				});
 			});
 		});
 	});
+
+
+
 
 	// Area
 	(function () {
@@ -2462,43 +2491,7 @@
 	});
 
 	// Area2
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.area2__inner');
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
-
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 100%',
-								end: 'top 60%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
-				}
-			});
-		}, {
-			threshold: 0.05
-		});
-
-		targets.forEach(el => io.observe(el));
-	});
 
 	// ScrollTop
 	(function () {
