@@ -323,8 +323,9 @@
 				<div class="container">
 					<div class="house-plan__inner tabs-inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">Продуманная планировка</div>
-							<h2 class="section-top__title h2">Простая архитектура, приятные фасады, уют внутри</h2>
+							<div id="house-plan__subtitle" class="section-top__subtitle">Продуманная планировка</div>
+							<h2 id="house-plan__title" class="section-top__title h2">Простая архитектура, приятные фасады, уют внутри
+							</h2>
 						</div>
 						<div class="house-plan__tabs">
 							<div data-tab-path="1" class="house-plan__tab tab tab--active">1 этаж</div>
@@ -389,8 +390,9 @@
 					</div>
 					<div class="house-presentation__desc">
 						<div class="house-presentation__group">
-							<h2 class="house-presentation__title h2">Получите презентацию с планировками и ценами</h2>
-							<div class="house-presentation__text">
+							<h2 id="house-presentation__title" class="house-presentation__title h2">Получите презентацию с
+								планировками и ценами</h2>
+							<div id="house-presentation__text" class="house-presentation__text">
 								Оставьте контактные данные, и мы пришлем вам детализированный эскизный проект
 							</div>
 						</div>
@@ -437,8 +439,8 @@
 				<div class="container">
 					<div class="services__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">О, Еще подходящие варианты</div>
-							<h2 class="section-top__title h2">Вам так же могут <br> понравиться</h2>
+							<div id="services__subtitle" class="section-top__subtitle">О, Еще подходящие варианты</div>
+							<h2 id="services__title" class="section-top__title h2">Вам так же могут <br> понравиться</h2>
 						</div>
 						<div class="services__wrap">
 							<div class="services__slider">
@@ -616,8 +618,8 @@
 			<section class="area2" style="background-image: url(img/area2-img5.webp); color: #FFF1DA;">
 				<div class="container">
 					<div class="area2__inner">
-						<h2 class="area2__title h2">20 задач, с которыми <br> поможет сервисная <br> компания</h2>
-						<div class="area2__subtitle">
+						<h2 id="area2__title" class="area2__title h2">20 задач, с которыми <br> поможет сервисная <br> компания</h2>
+						<div id="area2__subtitle" class="area2__subtitle">
 							Следующий раздел <br>
 							«Сервисная компания»
 						</div>
@@ -1242,50 +1244,188 @@
 	});
 
 	//House-plan
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray('.house-plan .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
+
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
+
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
+
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('house-plan__subtitle', () => {
+				animateText2('house-plan__subtitle', () => {
+					createScrollTrigger2('house-plan__title', () => {
+						animateText2('house-plan__title');
+					});
+				});
 			});
 		});
-	});
+	})();
 
 	//House-presentation
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray('.house-presentation__group');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
+
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
+
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
+
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('house-presentation__title', () => {
+				animateText2('house-presentation__title', () => {
+					createScrollTrigger2('house-presentation__text', () => {
+						animateText2('house-presentation__text');
+					});
+				});
 			});
 		});
-	});
+	})();
 
 	//Services
 	const serviceTimeline = gsap.timeline({ paused: true });
@@ -1312,65 +1452,4 @@
 	if (servicesSection) {
 		observerServices.observe(servicesSection);
 	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray('.services .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
-				}
-			});
-		});
-	});
-
-	// Area2
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.area2__inner');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
-
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 100%',
-								end: 'top 60%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
-				}
-			});
-		}, {
-			threshold: 0.05
-		});
-
-		targets.forEach(el => io.observe(el));
-	});
 </script>

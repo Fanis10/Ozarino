@@ -416,8 +416,10 @@
 				<div class="container">
 					<div class="advantages__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">Следующий уровень жизни</div>
-							<h2 class="section-top__title h2">Становится понятно, когда начинаешь складывать</h2>
+							<div id="advantages__subtitle" class="section-top__subtitle">Следующий уровень жизни</div>
+							<h2 id="advantages__title" class="section-top__title h2">Становится понятно, когда начинаешь
+								складывать
+							</h2>
 						</div>
 						<div class="advantages__overflow">
 							<div class="advantages__items">
@@ -506,12 +508,12 @@
 				<div class="container">
 					<div class="map__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">
+							<div id="map__subtitle" class="section-top__subtitle">
 								Подберите свой участок
 							</div>
-							<h2 class="section-top__title h2">
-								Каждый участок в Озарино — с характером. Озеро, лес,  простор.
-								А ещё — выбор. Попробуйте найти свое место
+							<h2 id="map__title" class="section-top__title h2">
+								Каждый участок в Озарино — с характером.
+								Озеро, лес,  простор. А ещё — выбор. Попробуйте найти свое место
 							</h2>
 						</div>
 					</div>
@@ -579,8 +581,9 @@
 				<div class="container">
 					<div class="house__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">О, как будто построен для нас</div>
-							<h2 class="section-top__title h2">Каждый дом в Озарино с заботой о комфорте и чувством меры</h2>
+							<div id="house__subtitle" class="section-top__subtitle">О, как будто построен для нас</div>
+							<h2 id="house__title" class="section-top__title h2">Каждый дом в Озарино с заботой о комфорте и чувством
+								меры</h2>
 						</div>
 						<div class="house__group">
 							<div class="house__text">
@@ -604,8 +607,9 @@
 				<div class="container">
 					<div class="services__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">Все решается сердцем</div>
-							<h2 class="section-top__title h2">Хотите — берите готовый. <br> Хотите — строим вместе. Главное, чтобы вы
+							<div id="services__subtitle" class="section-top__subtitle">Все решается сердцем</div>
+							<h2 id="services__title" class="section-top__title h2">Хотите — берите готовый. <br> Хотите — строим
+								вместе. Главное, чтобы вы
 								чувствовали: «Да, это оно»</h2>
 						</div>
 						<div class="services__wrap">
@@ -784,8 +788,8 @@
 			<section class="area2" style="background-image: url(img/area2-img.webp)">
 				<div class="container">
 					<div class="area2__inner">
-						<h2 class="area2__title h2">Пора увидеть Озарино</h2>
-						<div class="area2__subtitle">
+						<h2 id="area2__title" class="area2__title h2">Пора увидеть Озарино</h2>
+						<div id="area2__subtitle" class="area2__subtitle">
 							Следующий раздел <br>
 							«О поселке»
 						</div>
@@ -1789,77 +1793,112 @@
 		}
 	});
 
-	document.addEventListener('DOMContentLoaded', () => {
-		function animateText(elementId, callback) {
-			const title = document.getElementById(elementId);
-			title.style.visibility = 'visible';
-			const text = title.textContent.trim();
-			title.innerHTML = '';
-
-			for (let i = 0; i < text.length; i++) {
-				const ch = text[i];
-				const span = document.createElement('span');
-
-				if (ch === '\n') {
-					span.innerHTML = '<br>';
-					title.appendChild(span);
-					continue;
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
 
-				if (ch === ' ') {
-					span.className = 'space';
-					span.textContent = '\u00A0';
-				} else {
-					span.className = 'el';
-					span.textContent = ch;
-				}
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
 
-				title.appendChild(span);
-			}
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
 
-			const letters = title.querySelectorAll('.el');
-			let index = 0;
-			function showNextLetter() {
-				if (index < letters.length) {
-					letters[index].classList.add('visible');
-					index++;
-					setTimeout(showNextLetter, 120);
-				} else {
-					if (callback) {
-						setTimeout(callback, 500);
-					}
-				}
-			}
-			setTimeout(showNextLetter, 500);
-		}
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
 
-		function createScrollTrigger(elementId, onIntersect) {
-			const element = document.getElementById(elementId);
-			const observer = new IntersectionObserver((entries) => {
-				entries.forEach(entry => {
-					if (entry.isIntersecting) {
-						onIntersect();
-						observer.unobserve(element);
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
 					}
 				});
-			}, {
-				threshold: 0,
-				rootMargin: '0px -40% 0px 0px'
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('gallery__subtitle', () => {
+				animateText2('gallery__subtitle', () => {
+					createScrollTrigger2('gallery__title', () => {
+						animateText2('gallery__title');
+					});
+				});
 			});
-			observer.observe(element);
-		}
 
-		createScrollTrigger('gallery__subtitle', () => {
-			animateText('gallery__subtitle', () => {
-				createScrollTrigger('gallery__title', () => {
-					animateText('gallery__title');
-				});
+			const targets = gsap.utils.toArray('.gallery__text');
+			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+			gsap.to(targets, {
+				opacity: 1,
+				y: 0,
+				duration: 1.5,
+				ease: 'power3.out',
+				stagger: 0.06,
+				overwrite: true,
+				scrollTrigger: {
+					trigger: '.gallery__text',
+					start: 'top 80%',
+					end: 'top 40%',
+				}
 			});
 		});
-	});
-
-
-
+	})();
 
 	// Area
 	(function () {
@@ -1909,165 +1948,24 @@
 	})();
 
 	document.addEventListener('DOMContentLoaded', () => {
-
 		const targets = gsap.utils.toArray('.area__desc');
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
 
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 1.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 100%',
-					end: 'top 60%',
-					scrub: 1,
-				}
-			});
+		gsap.to(targets, {
+			opacity: 1,
+			y: 0,
+			duration: 1.5,
+			ease: 'power3.out',
+			stagger: 0.06,
+			overwrite: true,
+			scrollTrigger: {
+				trigger: '.area__desc',
+				start: 'top 100%',
+				end: 'top 40%',
+			}
 		});
 	});
-
-	// if (window.innerWidth >= 993) {
-	// 	(function () {
-	// 		'use strict';
-
-	// 		const area = document.querySelector('.area');
-	// 		if (!area) return;
-
-	// 		const allImgs = Array.from(area.querySelectorAll('.area-images img'));
-	// 		if (allImgs.length === 0) return;
-
-	// 		const fullscreenButton = area.querySelector('.fullscreen-button');
-	// 		let currentIndex = 0;
-	// 		let st = null;
-
-	// 		function preloadImages() {
-	// 			allImgs.forEach(img => {
-	// 				const src = img.getAttribute('src');
-	// 				if (src) {
-	// 					new Image().src = src;
-	// 				}
-	// 			});
-	// 		}
-
-	// 		function initImages() {
-	// 			allImgs.forEach((img, i) => {
-	// 				img.style.opacity = i === 0 ? '1' : '0';
-	// 				img.classList.toggle('active', i === 0);
-	// 			});
-	// 		}
-
-	// 		function showIndex(idx) {
-	// 			if (idx === currentIndex) return;
-
-	// 			currentIndex = idx;
-
-	// 			requestAnimationFrame(() => {
-	// 				allImgs.forEach((img, i) => {
-	// 					const isActive = i === idx;
-	// 					img.style.opacity = isActive ? '1' : '0';
-	// 					img.classList.toggle('active', isActive);
-	// 				});
-	// 			});
-	// 		}
-
-	// 		function createScrollTrigger() {
-	// 			if (st) {
-	// 				st.kill();
-	// 				st = null;
-	// 			}
-
-	// 			const pinLength = area.offsetHeight * allImgs.length;
-
-	// 			st = ScrollTrigger.create({
-	// 				trigger: area,
-	// 				start: "top top",
-	// 				end: `+=${pinLength / 1.8}`,
-	// 				pin: true,
-	// 				scrub: 0.1,
-	// 				markers: false,
-	// 				onEnter: () => {
-	// 					console.log('Entered area section');
-	// 				},
-	// 				onUpdate: (self) => {
-	// 					const progress = Math.min(1, Math.max(0, self.progress));
-	// 					const idx = Math.min(allImgs.length - 1, Math.floor(progress * allImgs.length));
-	// 					showIndex(idx);
-	// 				},
-	// 				onLeave: () => {
-	// 					console.log('Left area section');
-	// 				}
-	// 			});
-
-	// 			ScrollTrigger.refresh();
-	// 		}
-
-	// 		function setupFullscreen() {
-	// 			if (!fullscreenButton) return;
-
-	// 			fullscreenButton.addEventListener('click', function (e) {
-	// 				e.preventDefault();
-	// 				e.stopPropagation();
-
-	// 				if (document.fullscreenElement) {
-	// 					document.exitFullscreen().catch(err => {
-	// 						console.error('Error exiting fullscreen:', err);
-	// 					});
-	// 				} else {
-	// 					area.requestFullscreen().catch(err => {
-	// 						console.error('Error entering fullscreen:', err);
-	// 					});
-	// 				}
-	// 			});
-
-	// 			document.addEventListener('fullscreenchange', function () {
-	// 				if (document.fullscreenElement) {
-	// 					fullscreenButton.textContent = 'Выйти из полноэкранного';
-	// 				} else {
-	// 					fullscreenButton.textContent = 'Полный экран';
-	// 				}
-	// 				setTimeout(() => ScrollTrigger.refresh(), 100);
-	// 			});
-	// 		}
-
-	// 		function setupResizeHandler() {
-	// 			let resizeTimeout;
-	// 			window.addEventListener('resize', function () {
-	// 				clearTimeout(resizeTimeout);
-	// 				resizeTimeout = setTimeout(() => {
-	// 					createScrollTrigger();
-	// 				}, 250);
-	// 			});
-	// 		}
-
-	// 		function init() {
-	// 			preloadImages();
-	// 			initImages();
-	// 			setupFullscreen();
-	// 			setupResizeHandler();
-
-	// 			window.addEventListener('load', function () {
-	// 				createScrollTrigger();
-
-	// 				setTimeout(() => ScrollTrigger.refresh(), 500);
-	// 			});
-
-	// 			if (document.readyState === 'complete') {
-	// 				createScrollTrigger();
-	// 			}
-	// 		}
-
-	// 		init();
-
-	// 	})();
-	// }
-
-	// if (window.innerWidth <= 992) {
-
-	// }
 
 	// Advantages
 	(() => {
@@ -2114,28 +2012,96 @@
 		}
 	})();
 
-	document.addEventListener('DOMContentLoaded', () => {
-		gsap.registerPlugin(ScrollTrigger);
-
-		const targets = gsap.utils.toArray('.advantages .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
+
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
+
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
+
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('advantages__subtitle', () => {
+				animateText2('advantages__subtitle', () => {
+					createScrollTrigger2('advantages__title', () => {
+						animateText2('advantages__title');
+					});
+				});
 			});
 		});
-	});
+	})();
 
 	// Map
 	if (window.innerWidth >= 993) {
@@ -2322,27 +2288,96 @@
 		window.addEventListener('resize', checkMapImgVisibility);
 	}
 
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray('.map .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
+
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
+
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
+
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('map__subtitle', () => {
+				animateText2('map__subtitle', () => {
+					createScrollTrigger2('map__title', () => {
+						animateText2('map__title');
+					});
+				});
 			});
 		});
-	});
+	})();
 
 	// House
 	const house = document.querySelector('.house');
@@ -2360,71 +2395,96 @@
 		observerHouse.observe(houseSection);
 	}
 
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.house .section-top');
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
+				}
+				title.style.visibility = 'visible';
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
 
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
 
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 80%',
-								end: 'top 40%',
-								scrub: 1,
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
 							}
 						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
 
-						obs.unobserve(el);
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
 					}
 				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('house__subtitle', () => {
+				animateText2('house__subtitle', () => {
+					createScrollTrigger2('house__title', () => {
+						animateText2('house__title');
+					});
+				});
 			});
-		}, {
-			threshold: 0.05
 		});
-
-		targets.forEach(el => io.observe(el));
-	});
-
-	// document.addEventListener('DOMContentLoaded', () => {
-	// 	const targets = gsap.utils.toArray('.house .section-top');
-
-	// 	gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
-
-	// 	const observer = new IntersectionObserver((entries) => {
-	// 		entries.forEach((entry, index) => {
-	// 			if (entry.isIntersecting) {
-	// 				gsap.to(entry.target, {
-	// 					opacity: 1,
-	// 					y: 0,
-	// 					duration: 1.5,
-	// 					ease: 'power3.out',
-	// 					overwrite: true,
-	// 					delay: index * 0.06
-	// 				});
-	// 				observer.unobserve(entry.target);
-	// 			}
-	// 		});
-	// 	}, {
-	// 		root: null,
-	// 		rootMargin: '0px',
-	// 		threshold: 1
-	// 	});
-
-	// 	targets.forEach(target => observer.observe(target));
-	// });
+	})();
 
 	// Services
 	const serviceTimeline = gsap.timeline({ paused: true });
@@ -2451,47 +2511,6 @@
 	if (servicesSection) {
 		observerServices.observe(servicesSection);
 	}
-
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.services .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
-
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 80%',
-								end: 'top 40%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
-				}
-			});
-		}, {
-			threshold: 0.05
-		});
-
-		targets.forEach(el => io.observe(el));
-	});
-
-	// Area2
-
 
 	// ScrollTop
 	(function () {

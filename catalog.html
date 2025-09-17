@@ -1011,8 +1011,8 @@
 			<section class="area2" style="background-image: url(img/area2-img4.webp); color: #FFF1DA;">
 				<div class="container">
 					<div class="area2__inner">
-						<h2 class="area2__title h2">Узнайте больше <br> о выгодной покупке</h2>
-						<div class="area2__subtitle">
+						<h2 id="area2__title" class="area2__title h2">Узнайте больше <br> о выгодной покупке</h2>
+						<div id="area2__subtitle" class="area2__subtitle">
 							Следующий раздел <br>
 							«Условия оплаты и акции»
 						</div>
@@ -1634,44 +1634,5 @@
 			stagger: 0.06,
 			overwrite: true
 		});
-	});
-
-	// Area2
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.area2__inner');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
-
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 100%',
-								end: 'top 60%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
-				}
-			});
-		}, {
-			threshold: 0.05
-		});
-
-		targets.forEach(el => io.observe(el));
 	});
 </script>

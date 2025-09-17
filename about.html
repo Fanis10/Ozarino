@@ -196,8 +196,8 @@
 				<div class="container">
 					<div class="about-info__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">Баланс найден</div>
-							<h2 class="section-top__title h2">Место, где комфорт обретает новые грани</h2>
+							<div id="about-info__subtitle" class="section-top__subtitle">Баланс найден</div>
+							<h2 id="about-info__title" class="section-top__title h2">Место, где комфорт обретает новые грани</h2>
 						</div>
 						<div class="about-info__text">
 							<p>
@@ -218,8 +218,8 @@
 				<div class="container">
 					<div class="about-map__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">О удачная локация</div>
-							<h2 class="section-top__title h2">Все, что нужно, в 22 минутах от центра Казани</h2>
+							<div id="about-map__subtitle" class="section-top__subtitle">О удачная локация</div>
+							<h2 id="about-map__title" class="section-top__title h2">Все, что нужно, в 22 минутах от центра Казани</h2>
 						</div>
 						<div class="twogis-wrap">
 							<div id="twogis">
@@ -259,8 +259,8 @@
 				<div class="container">
 					<div class="about-advantages__inner">
 						<div class="section-top">
-							<div class="section-top__subtitle">и об этом подумали</div>
-							<h2 class="section-top__title h2">Все уже готово <br> для жизни</h2>
+							<div id="about-advantages__subtitle" class="section-top__subtitle">и об этом подумали</div>
+							<h2 id="about-advantages__title" class="section-top__title h2">Все уже готово <br> для жизни</h2>
 						</div>
 						<div class="about-advantages__items">
 							<div class="about-advantages__item">
@@ -357,8 +357,8 @@
 			<section class="area2" style="background-image: url(img/area2-img2.webp)">
 				<div class="container">
 					<div class="area2__inner">
-						<h2 class="area2__title h2">Посмотрите, <br> как мы меняемся</h2>
-						<div class="area2__subtitle">
+						<h2 id="area2__title" class="area2__title h2">Посмотрите, <br> как мы меняемся</h2>
+						<div id="area2__subtitle" class="area2__subtitle">
 							Следующий раздел <br>
 							«Этапы развития поселка»
 						</div>
@@ -983,73 +983,312 @@
 	});
 
 	//About-info
-	document.addEventListener('DOMContentLoaded', () => {
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
+				}
+				title.style.visibility = 'visible';
 
-		const targets = gsap.utils.toArray('.about-info__inner');
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
 
-			gsap.to(el, {
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('about-info__subtitle', () => {
+				animateText2('about-info__subtitle', () => {
+					createScrollTrigger2('about-info__title', () => {
+						animateText2('about-info__title');
+					});
+				});
+			});
+
+			const targets = gsap.utils.toArray('.about-info__text');
+			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+			gsap.to(targets, {
+				opacity: 1,
 				y: 0,
-				scale: 1,
+				duration: 1.5,
 				ease: 'power3.out',
-				duration: 2.5,
+				stagger: 0.06,
+				overwrite: true,
 				scrollTrigger: {
-					trigger: el,
+					trigger: '.about-info__text',
 					start: 'top 80%',
 					end: 'top 40%',
-					scrub: 1,
 				}
 			});
 		});
-	});
+	})();
 
 	//About-map
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray('.about-map .section-top');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-
-			gsap.to(el, {
-				y: 0,
-				scale: 1,
-				ease: 'power3.out',
-				duration: 2.5,
-				scrollTrigger: {
-					trigger: el,
-					start: 'top 80%',
-					end: 'top 40%',
-					scrub: 1,
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
 				}
+				title.style.visibility = 'visible';
+
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
+
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
+
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('about-map__subtitle', () => {
+				animateText2('about-map__subtitle', () => {
+					createScrollTrigger2('about-map__title', () => {
+						animateText2('about-map__title');
+					});
+				});
 			});
 		});
-	});
+	})();
 
 	//About-advantages
-	document.addEventListener('DOMContentLoaded', () => {
+	(function () {
+		document.addEventListener('DOMContentLoaded', () => {
+			function animateText2(elementId, callback) {
+				const title = document.getElementById(elementId);
+				if (!title) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+					return;
+				}
+				title.style.visibility = 'visible';
 
-		const targets = gsap.utils.toArray('.about-advantages .section-top, .about-advantages__text');
+				const childNodes = Array.from(title.childNodes);
+				title.innerHTML = '';
 
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
+				childNodes.forEach(node => {
+					if (node.nodeType === Node.TEXT_NODE) {
+						const text = node.textContent;
+						const parts = text.split(/(\s+)/);
 
-			gsap.to(el, {
+						parts.forEach(part => {
+							if (part.trim() === '') {
+								const spaceSpan = document.createElement('span');
+								spaceSpan.className = 'space';
+								spaceSpan.textContent = part;
+								title.appendChild(spaceSpan);
+							} else {
+								const wordSpan = document.createElement('span');
+								wordSpan.className = 'word';
+								wordSpan.style.whiteSpace = 'nowrap';
+
+								for (let char of part) {
+									const letterSpan = document.createElement('span');
+									letterSpan.className = 'el';
+									letterSpan.textContent = char;
+									wordSpan.appendChild(letterSpan);
+								}
+
+								title.appendChild(wordSpan);
+							}
+						});
+					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+						const br = document.createElement('br');
+						title.appendChild(br);
+					}
+				});
+
+				const letters = title.querySelectorAll('.el');
+				let index = 0;
+				function showNextLetter() {
+					if (index < letters.length) {
+						letters[index].classList.add('visible');
+						index++;
+						setTimeout(showNextLetter, 120);
+					} else {
+						if (callback) {
+							setTimeout(callback, 500);
+						}
+					}
+				}
+				setTimeout(showNextLetter, 500);
+			}
+
+			function createScrollTrigger2(elementId, onIntersect) {
+				const element = document.getElementById(elementId);
+				if (!element) {
+					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+					return;
+				}
+				const observer = new IntersectionObserver((entries) => {
+					entries.forEach(entry => {
+						if (entry.isIntersecting) {
+							onIntersect();
+							observer.unobserve(element);
+						}
+					});
+				}, {
+					threshold: 0,
+					rootMargin: '0px 0px -10% 0px'
+				});
+				observer.observe(element);
+			}
+
+			createScrollTrigger2('about-advantages__subtitle', () => {
+				animateText2('about-advantages__subtitle', () => {
+					createScrollTrigger2('about-advantages__title', () => {
+						animateText2('about-advantages__title');
+					});
+				});
+			});
+
+			const targets = gsap.utils.toArray('.about-advantages__text');
+			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+			gsap.to(targets, {
+				opacity: 1,
 				y: 0,
-				scale: 1,
+				duration: 1.5,
 				ease: 'power3.out',
-				duration: 2.5,
+				stagger: 0.06,
+				overwrite: true,
 				scrollTrigger: {
-					trigger: el,
+					trigger: '.about-advantages__text',
 					start: 'top 80%',
 					end: 'top 40%',
-					scrub: 1,
 				}
 			});
 		});
-	});
+	})();
 
 	if (window.innerWidth >= 993) {
 		(function setupAdvantagesScroll() {
@@ -1115,45 +1354,6 @@
 
 		})();
 	}
-
-	//Area2
-	document.addEventListener('DOMContentLoaded', () => {
-		const targets = gsap.utils.toArray('.area2__inner');
-
-		targets.forEach(el => {
-			gsap.set(el, { y: 60, scale: 0.7, transformOrigin: 'center center', willChange: 'transform, opacity' });
-		});
-
-		const io = new IntersectionObserver((entries, obs) => {
-			entries.forEach(entry => {
-				const el = entry.target;
-				if (entry.isIntersecting) {
-					if (!el._gsapTriggered) {
-						el._gsapTriggered = true;
-
-						gsap.to(el, {
-							y: 0,
-							scale: 1,
-							ease: 'power3.out',
-							duration: 2.5,
-							scrollTrigger: {
-								trigger: el,
-								start: 'top 100%',
-								end: 'top 60%',
-								scrub: 1,
-							}
-						});
-
-						obs.unobserve(el);
-					}
-				}
-			});
-		}, {
-			threshold: 0.05
-		});
-
-		targets.forEach(el => io.observe(el));
-	});
 
 	// ScrollTop
 	(function () {
