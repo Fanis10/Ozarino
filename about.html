@@ -1,14 +1,16 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="@@lang">
 
 <head>
 	<meta charset="UTF-8">
+	<meta name="description"
+		content="Озарино — коттеджный посёлок, где природа сочетается с близостью к городу. Современные коммуникации и инфраструктура, отдых и комфорт для всей семьи.">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta name="keywords" content="">
+	<meta name="keywords" content="@@keywords">
 	<link rel="icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="css/libs.min.css">
 	<link rel="stylesheet" href="css/style.min.css">
-	<title>О поселке</title>
+	<title>О коттеджном посёлке Озарино</title>
 	<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
 </head>
 
@@ -1034,10 +1036,10 @@
 					if (index < letters.length) {
 						letters[index].classList.add('visible');
 						index++;
-						setTimeout(showNextLetter, 120);
+						setTimeout(showNextLetter, 60);
 					} else {
 						if (callback) {
-							setTimeout(callback, 500);
+							setTimeout(callback, 200);
 						}
 					}
 				}
@@ -1070,22 +1072,6 @@
 						animateText2('about-info__title');
 					});
 				});
-			});
-
-			const targets = gsap.utils.toArray('.about-info__text');
-			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
-			gsap.to(targets, {
-				opacity: 1,
-				y: 0,
-				duration: 1.5,
-				ease: 'power3.out',
-				stagger: 0.06,
-				overwrite: true,
-				scrollTrigger: {
-					trigger: '.about-info__text',
-					start: 'top 80%',
-					end: 'top 40%',
-				}
 			});
 		});
 	})();
@@ -1142,10 +1128,10 @@
 					if (index < letters.length) {
 						letters[index].classList.add('visible');
 						index++;
-						setTimeout(showNextLetter, 120);
+						setTimeout(showNextLetter, 60);
 					} else {
 						if (callback) {
-							setTimeout(callback, 500);
+							setTimeout(callback, 200);
 						}
 					}
 				}
@@ -1234,10 +1220,10 @@
 					if (index < letters.length) {
 						letters[index].classList.add('visible');
 						index++;
-						setTimeout(showNextLetter, 120);
+						setTimeout(showNextLetter, 60);
 					} else {
 						if (callback) {
-							setTimeout(callback, 500);
+							setTimeout(callback, 200);
 						}
 					}
 				}
