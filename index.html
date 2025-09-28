@@ -36,7 +36,7 @@
                     <span class="btn-text">генплан</span>
                     <span class="circle"></span>
                 </a>
-                <a class="header__phone" href="tel:79274226021">+7 927 422-60-21</a>
+                <a class="header__phone" href="tel:+79274226021">+7 927 422-60-21</a>
                 <div class="burger">
                     <span></span>
                     <span></span>
@@ -62,7 +62,7 @@
                         </a>
                         <form class="form">
                             <div class="form-group">
-                                <input type="text" placeholder="Ваше имя">
+                                <input name="name" type="text" placeholder="Ваше имя">
                                 <span class="input-info">
                                     <span class="input-info__icon">
                                         <img src="img/info.svg" alt="">
@@ -71,7 +71,7 @@
                                 </span>
                             </div>
                             <div class="form-group">
-                                <input type="tel" placeholder="Номер телефона">
+                                <input name="phone" type="tel" placeholder="Номер телефона">
                                 <span class="input-info">
                                     <span class="input-info__icon">
                                         <img src="img/info.svg" alt="">
@@ -83,7 +83,7 @@
                                 <span class="btn-text">записаться на экскурсию</span>
                                 <span class="circle"></span>
                             </button>
-                            <div class="form-check">
+                            <div class="form-check" data-required-consent="">
                                 <input type="checkbox">
                                 <label>
                                     Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -97,7 +97,7 @@
                                         данных.</a>
                                 </label>
                             </div>
-                            <div class="form-check">
+                            <div class="form-check" data-required-consent="">
                                 <input type="checkbox">
                                 <label>
                                     Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -151,7 +151,7 @@
                         <div class="menu__group2">
                             <div class="menu__phone-wrap">
                                 <div class="menu__phone-text">Офис продаж</div>
-                                <a class="menu__phone" href="tel:79274226021">+7 927 422-60-21</a>
+                                <a class="menu__phone" href="tel:+79274226021">+7 927 422-60-21</a>
 
                             </div>
                             <div class="menu__time">
@@ -260,8 +260,8 @@
 			<section class="gallery">
 				<div class="gallery__inner">
 					<div class="section-top">
-						<div id="gallery__subtitle" class="section-top__subtitle">Жизнь без суеты и спешки</div>
-						<h2 id="gallery__title" class="section-top__title h2">Здесь у каждого свой идеальный день</h2>
+						<div class="section-top__subtitle">Жизнь без суеты и спешки</div>
+						<h2 class="section-top__title h2">Здесь у каждого свой идеальный день</h2>
 					</div>
 					<div class="gallery__images">
 						<div class="gallery__images-grid images-grid--1">
@@ -397,7 +397,9 @@
 					</div>
 				</div>
 				<div class="area__video">
-					<video id="myVideo" muted playsinline preload="auto" src="video/video2.mp4"
+					<video class="myVideo" muted playsinline preload="auto" src="video/video2.mp4"
+						poster="img/area-img.webp"></video>
+					<video class="myVideo" muted playsinline preload="auto" src="video/video-mob.mp4"
 						poster="img/area-img.webp"></video>
 				</div>
 				<!-- <div class="area-images" aria-hidden="true">
@@ -416,8 +418,8 @@
 				<div class="container">
 					<div class="advantages__inner">
 						<div class="section-top">
-							<div id="advantages__subtitle" class="section-top__subtitle">Следующий уровень жизни</div>
-							<h2 id="advantages__title" class="section-top__title h2">Становится понятно, когда начинаешь
+							<div class="section-top__subtitle">Следующий уровень жизни</div>
+							<h2 class="section-top__title h2">Становится понятно, когда начинаешь
 								складывать
 							</h2>
 						</div>
@@ -508,10 +510,10 @@
 				<div class="container">
 					<div class="map__inner">
 						<div class="section-top">
-							<div id="map__subtitle" class="section-top__subtitle">
+							<div class="section-top__subtitle">
 								Подберите свой участок
 							</div>
-							<h2 id="map__title" class="section-top__title h2">
+							<h2 class="section-top__title h2">
 								Каждый участок в Озарино — с характером.
 								Озеро, лес,  простор. А ещё — выбор. Попробуйте найти свое место
 							</h2>
@@ -603,12 +605,12 @@
 					<img src="img/house-img.webp" alt="">
 				</div>
 			</section>
-			<section class="services">
+			<section class="services services--main">
 				<div class="container">
 					<div class="services__inner">
 						<div class="section-top">
-							<div id="services__subtitle" class="section-top__subtitle">Все решается сердцем</div>
-							<h2 id="services__title" class="section-top__title h2">Хотите — берите готовый. <br> Хотите — строим
+							<div class="section-top__subtitle">Все решается сердцем</div>
+							<h2 class="section-top__title h2">Хотите — берите готовый. <br> Хотите — строим
 								вместе. Главное, чтобы вы
 								чувствовали: «Да, это оно»</h2>
 						</div>
@@ -810,7 +812,7 @@
                 <div class="footer__group">
                     <div class="footer__phone-wrap">
                         <div class="footer__phone-text">Офис продаж</div>
-                        <a class="footer__phone" href="tel:79274226021">+7 927 422-60-21</a>
+                        <a class="footer__phone" href="tel:+79274226021">+7 927 422-60-21</a>
                         <!-- <button class="footer__phone-btn">
                                                 <span>Заказать звонок</span>
                                             </button> -->
@@ -882,7 +884,7 @@
                     <div class="footer__form-subtitle">Мы с радостью расскажем больше</div>
                     <form class="form">
                         <div class="form-group">
-                            <input type="text" placeholder="Ваше имя">
+                            <input name="name" type="text" placeholder="Ваше имя">
                             <span class="input-info">
                                 <span class="input-info__icon">
                                     <img src="img/info2.svg" alt="">
@@ -891,7 +893,7 @@
                             </span>
                         </div>
                         <div class="form-group">
-                            <input type="tel" placeholder="Номер телефона">
+                            <input name="phone" type="tel" placeholder="Номер телефона">
                             <span class="input-info">
                                 <span class="input-info__icon">
                                     <img src="img/info2.svg" alt="">
@@ -903,7 +905,7 @@
                             <span class="btn-text">записаться на экскурсию</span>
                             <span class="circle"></span>
                         </button>
-                        <div class="form-check">
+                        <div class="form-check" data-required-consent="">
                             <input type="checkbox">
                             <label>
                                 Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -917,7 +919,7 @@
                                     данных.</a>
                             </label>
                         </div>
-                        <div class="form-check">
+                        <div class="form-check" data-required-consent="">
                             <input type="checkbox">
                             <label>
                                 Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -976,7 +978,7 @@
 						<form class="form">
 							<div class="form-grid">
 								<div class="form-group">
-									<input type="tel" placeholder="Номер телефона">
+									<input name="phone" type="tel" placeholder="Номер телефона">
 									<span class="input-info">
 										<span class="input-info__icon">
 											<img src="img/info.svg" alt="">
@@ -989,7 +991,7 @@
 									<span class="circle"></span>
 								</button>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -1003,7 +1005,7 @@
 										данных.</a>
 								</label>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -1040,7 +1042,7 @@
 						<form class="form">
 							<div class="form-grid">
 								<div class="form-group">
-									<input type="tel" placeholder="Номер телефона">
+									<input name="phone" type="tel" placeholder="Номер телефона">
 									<span class="input-info">
 										<span class="input-info__icon">
 											<img src="img/info.svg" alt="">
@@ -1053,7 +1055,7 @@
 									<span class="circle"></span>
 								</button>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -1067,7 +1069,7 @@
 										данных.</a>
 								</label>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -1104,7 +1106,7 @@
 						<form class="form">
 							<div class="form-grid">
 								<div class="form-group">
-									<input type="tel" placeholder="Номер телефона">
+									<input name="phone" type="tel" placeholder="Номер телефона">
 									<span class="input-info">
 										<span class="input-info__icon">
 											<img src="img/info.svg" alt="">
@@ -1117,7 +1119,7 @@
 									<span class="circle"></span>
 								</button>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -1131,7 +1133,7 @@
 										данных.</a>
 								</label>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -1168,7 +1170,7 @@
 						<form class="form">
 							<div class="form-grid">
 								<div class="form-group">
-									<input type="tel" placeholder="Номер телефона">
+									<input name="phone" type="tel" placeholder="Номер телефона">
 									<span class="input-info">
 										<span class="input-info__icon">
 											<img src="img/info.svg" alt="">
@@ -1181,7 +1183,7 @@
 									<span class="circle"></span>
 								</button>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=hy5jh2h3jd9"> согласие </a> на обработку
@@ -1195,7 +1197,7 @@
 										данных.</a>
 								</label>
 							</div>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
@@ -1337,7 +1339,7 @@
 						<div class="modal__text">Оставьте ваши контакты и наш менеджер свяжется с вами.</div>
 						<form class="form">
 							<div class="form-group">
-								<input type="text" placeholder="Ваше имя">
+								<input name="name" type="text" placeholder="Ваше имя">
 								<span class="input-info">
 									<span class="input-info__icon">
 										<img src="img/info.svg" alt="">
@@ -1346,7 +1348,7 @@
 								</span>
 							</div>
 							<div class="form-group">
-								<input type="tel" placeholder="Ваш номер телефона">
+								<input name="phone" type="tel" placeholder="Ваш номер телефона">
 								<span class="input-info">
 									<span class="input-info__icon">
 										<img src="img/info.svg" alt="">
@@ -1358,13 +1360,21 @@
 								<span class="btn-text">записаться на экскурсию</span>
 								<span class="circle"></span>
 							</button>
-							<div class="form-check">
+							<div class="form-check" data-required-consent="">
 								<input type="checkbox">
 								<label>
 									Согласно <a href="">Политике АО «Таргет»</a> я даю согласие на обработку моих
 									персональных данных, <a href="">получение рекламно-информационных материалов</a>
 									и <a href="">обработку заявок</a>, в том числе <a href="">в целях продвижения
 										товаров, работ и услуг</a>.
+								</label>
+							</div>
+							<div class="form-check" data-required-consent="">
+								<input type="checkbox">
+								<label>
+									Даю <a target="_blank" href="view/?token=ijrii1jrj24">согласие </a> на получение
+									рекламно-информационных
+									материалов.
 								</label>
 							</div>
 						</form>
@@ -1634,7 +1644,7 @@
 				'.main__title-wrap, .main__btn-wrap, .main__item'
 			);
 
-			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
+			gsap.set(targets, { opacity: 0, y: 80, willChange: 'transform, opacity' });
 
 			gsap.to(targets, {
 				opacity: 1,
@@ -1793,147 +1803,77 @@
 		}
 	});
 
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
+	document.addEventListener('DOMContentLoaded', () => {
+		const targets = gsap.utils.toArray('.gallery .section-top, .gallery__text');
 
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
+		targets.forEach(el => {
+			gsap.set(el, { opacity: 0, y: 80, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+						gsap.to(el, {
+							opacity: 1,
+							y: 0,
+							ease: 'power3.out',
+							duration: 1,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 40%',
 							}
 						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
 
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
+						obs.unobserve(el);
 					}
 				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('gallery__subtitle', () => {
-				animateText2('gallery__subtitle', () => {
-					createScrollTrigger2('gallery__title', () => {
-						animateText2('gallery__title');
-					});
-				});
 			});
-
-			const targets = gsap.utils.toArray('.gallery__text');
-			gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
-			gsap.to(targets, {
-				opacity: 1,
-				y: 0,
-				duration: 1.5,
-				ease: 'power3.out',
-				stagger: 0.06,
-				overwrite: true,
-				scrollTrigger: {
-					trigger: '.gallery__text',
-					start: 'top 80%',
-					end: 'top 40%',
-				}
-			});
+		}, {
+			threshold: 0.05
 		});
-	})();
+
+		targets.forEach(el => io.observe(el));
+	});
 
 	// Area
-	(function () {
-		const video = document.getElementById('myVideo');
-		let played = false;
+	(() => {
+		const videos = Array.from(document.querySelectorAll('.myVideo'));
+		if (videos.length === 0) return;
+
+		const tried = new WeakSet();
 		let rafPending = false;
 
-		function checkAndPlay() {
+		function checkAndPlayAll() {
 			rafPending = false;
-			if (played) return;
-			const rect = video.getBoundingClientRect();
-			// Условие: низ видео находится не ниже низа окна
-			if (rect.bottom <= window.innerHeight) {
-				const playPromise = video.play();
-				if (playPromise !== undefined) {
-					playPromise.then(() => {
-						played = true;
-						cleanup();
-					}).catch((err) => {
-						// Если автозапуск запрещён — отметим как сработавшее, чтобы не пытаться снова
-						console.warn('Автовоспроизведение не удалось:', err);
-						played = true;
-						cleanup();
-					});
-				} else {
-					played = true;
-					cleanup();
+
+			for (const video of videos) {
+				if (tried.has(video)) continue;
+
+				const rect = video.getBoundingClientRect();
+				if (rect.bottom <= window.innerHeight) {
+					tried.add(video);
+					const promise = video.play();
+					if (promise !== undefined) {
+						promise.then(() => {
+						}).catch(err => {
+							console.warn('Автовоспроизведение не удалось:', err);
+						});
+					}
 				}
 			}
+
+			const remaining = videos.some(v => !tried.has(v));
+			if (!remaining) cleanup();
 		}
 
 		function scheduleCheck() {
-			if (rafPending || played) return;
+			if (rafPending) return;
 			rafPending = true;
-			requestAnimationFrame(checkAndPlay);
+			requestAnimationFrame(checkAndPlayAll);
 		}
 
 		function cleanup() {
@@ -1941,11 +1881,11 @@
 			window.removeEventListener('resize', scheduleCheck);
 		}
 
-		// Первичная проверка (на случай, если элемент уже в нужной позиции)
 		scheduleCheck();
 		window.addEventListener('scroll', scheduleCheck, { passive: true });
 		window.addEventListener('resize', scheduleCheck);
 	})();
+
 
 	document.addEventListener('DOMContentLoaded', () => {
 		const targets = gsap.utils.toArray('.area__desc');
@@ -2012,96 +1952,41 @@
 		}
 	})();
 
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
+	document.addEventListener('DOMContentLoaded', () => {
+		const targets = gsap.utils.toArray('.advantages .section-top');
 
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
+		targets.forEach(el => {
+			gsap.set(el, { opacity: 0, y: 80, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+						gsap.to(el, {
+							opacity: 1,
+							y: 0,
+							ease: 'power3.out',
+							duration: 1,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 40%',
 							}
 						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
 
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
+						obs.unobserve(el);
 					}
 				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('advantages__subtitle', () => {
-				animateText2('advantages__subtitle', () => {
-					createScrollTrigger2('advantages__title', () => {
-						animateText2('advantages__title');
-					});
-				});
 			});
+		}, {
+			threshold: 0.05
 		});
-	})();
+
+		targets.forEach(el => io.observe(el));
+	});
 
 	// Map
 	if (window.innerWidth >= 993) {
@@ -2288,96 +2173,41 @@
 		window.addEventListener('resize', checkMapImgVisibility);
 	}
 
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
+	document.addEventListener('DOMContentLoaded', () => {
+		const targets = gsap.utils.toArray('.map .section-top');
 
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
+		targets.forEach(el => {
+			gsap.set(el, { opacity: 0, y: 80, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+						gsap.to(el, {
+							opacity: 1,
+							y: 0,
+							ease: 'power3.out',
+							duration: 1,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 40%',
 							}
 						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
 
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
+						obs.unobserve(el);
 					}
 				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('map__subtitle', () => {
-				animateText2('map__subtitle', () => {
-					createScrollTrigger2('map__title', () => {
-						animateText2('map__title');
-					});
-				});
 			});
+		}, {
+			threshold: 0.05
 		});
-	})();
+
+		targets.forEach(el => io.observe(el));
+	});
 
 	// House
 	const house = document.querySelector('.house');
@@ -2395,96 +2225,41 @@
 		observerHouse.observe(houseSection);
 	}
 
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
+	document.addEventListener('DOMContentLoaded', () => {
+		const targets = gsap.utils.toArray('.house .section-top');
 
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
+		targets.forEach(el => {
+			gsap.set(el, { opacity: 0, y: 80, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+						gsap.to(el, {
+							opacity: 1,
+							y: 0,
+							ease: 'power3.out',
+							duration: 1,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 40%',
 							}
 						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
 
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
+						obs.unobserve(el);
 					}
 				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('house__subtitle', () => {
-				animateText2('house__subtitle', () => {
-					createScrollTrigger2('house__title', () => {
-						animateText2('house__title');
-					});
-				});
 			});
+		}, {
+			threshold: 0.05
 		});
-	})();
+
+		targets.forEach(el => io.observe(el));
+	});
 
 	// Services
 	const serviceTimeline = gsap.timeline({ paused: true });
