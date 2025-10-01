@@ -186,8 +186,8 @@
 						<h1 class="stages__title h2">Этапы развития поселка</h1>
 						<div class="stages__group">
 							<div class="years">
-								<div data-tab-path="1" class="year tab tab--active">2025</div>
-								<div data-tab-path="2" class="year tab">2024</div>
+								<div data-year="2025" class="year year--active">2025</div>
+								<div data-year="2024" class="year">2024</div>
 							</div>
 							<button class="stages__btn btn">
 								<i>
@@ -198,13 +198,19 @@
 						</div>
 						<div class="stages__wrap">
 							<div class="months">
-								<div class="month month--active">Июль</div>
-								<div class="month">Август</div>
-								<div class="month">Сентябрь</div>
-								<div class="month">Октябрь</div>
+								<div thumbsslider="" class="swiper mySwiper">
+									<div class="swiper-wrapper">
+										<div data-month="2025" class="swiper-slide month">Июль</div>
+										<div data-month="2025" class="swiper-slide month">Август</div>
+										<div data-month="2025" class="swiper-slide month">Сентябрь</div>
+										<div data-month="2025" class="swiper-slide month">Октябрь</div>
+										<div data-month="2024" class="swiper-slide month">март</div>
+										<div data-month="2024" class="swiper-slide month">апрель</div>
+									</div>
+								</div>
 							</div>
 							<div class="stages__slider">
-								<div class="swiper mySwiper">
+								<div class="swiper mySwiper2">
 									<div class="swiper-wrapper">
 										<div class="swiper-slide">
 											<div class="month-card">
@@ -217,20 +223,32 @@
 												</ul>
 												<div class="hover__slide">
 													<div class="hover__images">
-														<a href="house.html" class="hover__img hover__img--active" data-tab-path="1">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery">
 															<img src="img/month-card__img.webp" alt="">
 														</a>
-														<a href="house.html" class="hover__img" data-tab-path="2">
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery">
 															<img src="img/month-card__img2.webp" alt="">
 														</a>
-														<a href="house.html" class="hover__img" data-tab-path="3">
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery">
 															<img src="img/month-card__img.webp" alt="">
 														</a>
 													</div>
 													<div class="hover__pag">
-														<a href="" class="hover__pag-item hover__pag-item--active" data-tab-path="1"></a>
-														<a href="" class="hover__pag-item" data-tab-path="2"></a>
-														<a href="" class="hover__pag-item" data-tab-path="3"></a>
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery1.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery1.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery1.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
 													</div>
 													<div class="hover__pagination">
 														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
@@ -241,12 +259,21 @@
 												<button class="month-card__btn btn-animation btn btn-orange">
 													<span class="btn-text">открыть галерею</span>
 													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
 												</button>
 											</div>
 										</div>
 										<div class="swiper-slide">
 											<div class="month-card">
-												<div class="month-card__title">июль 2025</div>
+												<div class="month-card__title">Август 2025</div>
 												<div class="month-card__subtitle">Проделанная работа:</div>
 												<ul class="month-card__list">
 													<li>Построены первые 10 домов</li>
@@ -255,20 +282,32 @@
 												</ul>
 												<div class="hover__slide">
 													<div class="hover__images">
-														<a href="house.html" class="hover__img hover__img--active" data-tab-path="1">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery2">
 															<img src="img/month-card__img.webp" alt="">
 														</a>
-														<a href="house.html" class="hover__img" data-tab-path="2">
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery2">
 															<img src="img/month-card__img2.webp" alt="">
 														</a>
-														<a href="house.html" class="hover__img" data-tab-path="3">
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery2">
 															<img src="img/month-card__img.webp" alt="">
 														</a>
 													</div>
 													<div class="hover__pag">
-														<a href="" class="hover__pag-item hover__pag-item--active" data-tab-path="1"></a>
-														<a href="" class="hover__pag-item" data-tab-path="2"></a>
-														<a href="" class="hover__pag-item" data-tab-path="3"></a>
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery2.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery2.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery2.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
 													</div>
 													<div class="hover__pagination">
 														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
@@ -279,12 +318,257 @@
 												<button class="month-card__btn btn-animation btn btn-orange">
 													<span class="btn-text">открыть галерею</span>
 													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+												</button>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="month-card">
+												<div class="month-card__title">Сентябрь 2025</div>
+												<div class="month-card__subtitle">Проделанная работа:</div>
+												<ul class="month-card__list">
+													<li>Построены первые 10 домов</li>
+													<li>Завершен первый этап строительства двух спортивных площадок</li>
+													<li>Заложен фундамент для экотропы от пляжной зоны</li>
+												</ul>
+												<div class="hover__slide">
+													<div class="hover__images">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery3">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery3">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery3">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pag">
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery3.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery3.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery3.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pagination">
+														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
+														<span class="pagination-bullet" data-tab-path="2"></span>
+														<span class="pagination-bullet" data-tab-path="3"></span>
+													</div>
+												</div>
+												<button class="month-card__btn btn-animation btn btn-orange">
+													<span class="btn-text">открыть галерею</span>
+													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery3.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery3.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery3.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+												</button>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="month-card">
+												<div class="month-card__title">Октябрь 2025</div>
+												<div class="month-card__subtitle">Проделанная работа:</div>
+												<ul class="month-card__list">
+													<li>Построены первые 10 домов</li>
+													<li>Завершен первый этап строительства двух спортивных площадок</li>
+													<li>Заложен фундамент для экотропы от пляжной зоны</li>
+												</ul>
+												<div class="hover__slide">
+													<div class="hover__images">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery4">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery4">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery4">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pag">
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery4.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery4.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery4.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pagination">
+														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
+														<span class="pagination-bullet" data-tab-path="2"></span>
+														<span class="pagination-bullet" data-tab-path="3"></span>
+													</div>
+												</div>
+												<button class="month-card__btn btn-animation btn btn-orange">
+													<span class="btn-text">открыть галерею</span>
+													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery4.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery4.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery4.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+												</button>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="month-card">
+												<div class="month-card__title">март 2024</div>
+												<div class="month-card__subtitle">Проделанная работа:</div>
+												<ul class="month-card__list">
+													<li>Построены первые 10 домов</li>
+													<li>Завершен первый этап строительства двух спортивных площадок</li>
+													<li>Заложен фундамент для экотропы от пляжной зоны</li>
+												</ul>
+												<div class="hover__slide">
+													<div class="hover__images">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pag">
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery1.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery1.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery1.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pagination">
+														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
+														<span class="pagination-bullet" data-tab-path="2"></span>
+														<span class="pagination-bullet" data-tab-path="3"></span>
+													</div>
+												</div>
+												<button class="month-card__btn btn-animation btn btn-orange">
+													<span class="btn-text">открыть галерею</span>
+													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery1.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+												</button>
+											</div>
+										</div>
+										<div class="swiper-slide">
+											<div class="month-card">
+												<div class="month-card__title">апрель 2024</div>
+												<div class="month-card__subtitle">Проделанная работа:</div>
+												<ul class="month-card__list">
+													<li>Построены первые 10 домов</li>
+													<li>Завершен первый этап строительства двух спортивных площадок</li>
+													<li>Заложен фундамент для экотропы от пляжной зоны</li>
+												</ul>
+												<div class="hover__slide">
+													<div class="hover__images">
+														<a href="img/month-card__img.webp" class="hover__img hover__img--active" data-tab-path="1"
+															data-fancybox="gallery2">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__img" data-tab-path="2"
+															data-fancybox="gallery2">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__img" data-tab-path="3"
+															data-fancybox="gallery2">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pag">
+														<a href="img/month-card__img.webp" class="hover__pag-item hover__pag-item--active"
+															data-tab-path="1" data-fancybox="gallery2.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+														<a href="img/month-card__img2.webp" class="hover__pag-item" data-tab-path="2"
+															data-fancybox="gallery2.1">
+															<img src="img/month-card__img2.webp" alt="">
+														</a>
+														<a href="img/month-card__img.webp" class="hover__pag-item" data-tab-path="3"
+															data-fancybox="gallery2.1">
+															<img src="img/month-card__img.webp" alt="">
+														</a>
+													</div>
+													<div class="hover__pagination">
+														<span class="pagination-bullet pagination-bullet--active" data-tab-path="1"></span>
+														<span class="pagination-bullet" data-tab-path="2"></span>
+														<span class="pagination-bullet" data-tab-path="3"></span>
+													</div>
+												</div>
+												<button class="month-card__btn btn-animation btn btn-orange">
+													<span class="btn-text">открыть галерею</span>
+													<span class="circle"></span>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img2.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img2.webp" alt="">
+													</a>
+													<a class="month-card__btn-img" href="img/month-card__img.webp" data-fancybox="gallery2.2">
+														<img src="img/month-card__img.webp" alt="">
+													</a>
 												</button>
 											</div>
 										</div>
 									</div>
 								</div>
-								<div class="swiper-pagination"></div>
+								<div class="swiper-pagination stages__pagination"></div>
 							</div>
 						</div>
 					</div>
