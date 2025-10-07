@@ -2,13 +2,14 @@
 
 <head>
 	<meta charset="UTF-8">
-	<meta name="description" content="">
+	<meta name="description" content="В Озарино работает управляющая компания,
+	которая заботится о жителях: следит за порядком, удобством и уютом в посёлке.">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<meta name="keywords" content="@@keywords">
 	<link rel="icon" href="img/favicon.ico">
 	<link rel="stylesheet" href="css/libs.min.css">
 	<link rel="stylesheet" href="css/style.min.css">
-	<title>Сервисная компания</title>
+	<title>Коттеджный посёлок с управляющей компанией</title>
 	<script src="https://maps.api.2gis.ru/2.0/loader.js?pkg=full"></script>
 </head>
 
@@ -207,56 +208,49 @@
 									<div class="service-advantages__item-icon">
 										<img src="img/service-advantages__icon.svg" alt="">
 									</div>
-									<div class="service-advantages__item-text">
-										<p>
-											<strong>Ремонт дорог <br> и инфраструктуры:</strong>
-											Текст описания опции
-										</p>
-									</div>
+									<div class="service-advantages__item-text">Безопасность</div>
 								</div>
 								<div class="service-advantages__item">
 									<div class="service-advantages__item-icon">
 										<img src="img/service-advantages__icon2.svg" alt="">
 									</div>
-									<div class="service-advantages__item-text">
-										<p>
-											<strong>Ремонт дорог <br> и инфраструктуры:</strong>
-											Текст описания опции
-										</p>
-									</div>
+									<div class="service-advantages__item-text">Вывоз мусора</div>
 								</div>
 								<div class="service-advantages__item">
 									<div class="service-advantages__item-icon">
 										<img src="img/service-advantages__icon3.svg" alt="">
 									</div>
-									<div class="service-advantages__item-text">
-										<p>
-											<strong>Ремонт дорог <br> и инфраструктуры:</strong>
-											Текст описания опции
-										</p>
-									</div>
+									<div class="service-advantages__item-text">Ремонт дорог</div>
 								</div>
 								<div class="service-advantages__item">
 									<div class="service-advantages__item-icon">
 										<img src="img/service-advantages__icon4.svg" alt="">
 									</div>
-									<div class="service-advantages__item-text">
-										<p>
-											<strong>Ремонт дорог <br> и инфраструктуры:</strong>
-											Текст описания опции
-										</p>
-									</div>
+									<div class="service-advantages__item-text">Благоустройство территории</div>
 								</div>
 								<div class="service-advantages__item">
 									<div class="service-advantages__item-icon">
 										<img src="img/service-advantages__icon5.svg" alt="">
 									</div>
-									<div class="service-advantages__item-text">
-										<p>
-											<strong>Ремонт дорог <br> и инфраструктуры:</strong>
-											Текст описания опции
-										</p>
+									<div class="service-advantages__item-text">Обратная связь</div>
+								</div>
+								<div class="service-advantages__item">
+									<div class="service-advantages__item-icon">
+										<img src="img/service-advantages__icon.svg" alt="">
 									</div>
+									<div class="service-advantages__item-text">Культурные <br> мероприятия</div>
+								</div>
+								<div class="service-advantages__item">
+									<div class="service-advantages__item-icon">
+										<img src="img/service-advantages__icon2.svg" alt="">
+									</div>
+									<div class="service-advantages__item-text">Уборка снега</div>
+								</div>
+								<div class="service-advantages__item">
+									<div class="service-advantages__item-icon">
+										<img src="img/service-advantages__icon3.svg" alt="">
+									</div>
+									<div class="service-advantages__item-text">Организационные <br> вопросы</div>
 								</div>
 							</div>
 						</div>
@@ -661,7 +655,7 @@
 									</span>
 								</div>
 								<button class="form-btn btn-animation btn btn-orange">
-									<span class="btn-text">Получить презентацию с ценами</span>
+									<span class="btn-text">Записаться на экскурсию</span>
 									<span class="circle"></span>
 								</button>
 							</div>
@@ -906,95 +900,39 @@
 	});
 
 	//Service-advantages
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
+	document.addEventListener('DOMContentLoaded', () => {
+		const targets = gsap.utils.toArray('.service-advantages .section-top');
 
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
+		targets.forEach(el => {
+			gsap.set(el, { opacity: 0, y: 80, transformOrigin: 'center center', willChange: 'transform, opacity' });
+		});
 
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
+		const io = new IntersectionObserver((entries, obs) => {
+			entries.forEach(entry => {
+				const el = entry.target;
+				if (entry.isIntersecting) {
+					if (!el._gsapTriggered) {
+						el._gsapTriggered = true;
+						gsap.to(el, {
+							opacity: 1,
+							y: 0,
+							ease: 'power3.out',
+							duration: 1.5,
+							scrollTrigger: {
+								trigger: el,
+								start: 'top 80%',
+								end: 'top 40%',
 							}
 						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
 
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
+						obs.unobserve(el);
 					}
 				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('service-advantages__subtitle', () => {
-				animateText2('service-advantages__subtitle', () => {
-					createScrollTrigger2('service-advantages__title', () => {
-						animateText2('service-advantages__title');
-					});
-				});
 			});
+		}, {
+			threshold: 0.05
 		});
-	})();
 
+		targets.forEach(el => io.observe(el));
+	});
 </script>

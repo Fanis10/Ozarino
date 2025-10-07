@@ -1179,7 +1179,7 @@
 									</span>
 								</div>
 								<button class="form-btn btn-animation btn btn-orange">
-									<span class="btn-text">Получить презентацию с ценами</span>
+									<span class="btn-text">Записаться на экскурсию</span>
 									<span class="circle"></span>
 								</button>
 							</div>
@@ -2260,32 +2260,6 @@
 
 		targets.forEach(el => io.observe(el));
 	});
-
-	// Services
-	const serviceTimeline = gsap.timeline({ paused: true });
-	const observerServices = new IntersectionObserver((entries, observer) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-				serviceTimeline.clear();
-
-				document.querySelectorAll('.services__slider .swiper-slide').forEach((item, index) => {
-					serviceTimeline.to(item, {
-						opacity: 1,
-						y: 0,
-						duration: 0.6,
-						ease: 'power2.out'
-					});
-				});
-
-				serviceTimeline.play();
-				observer.disconnect();
-			}
-		});
-	}, { threshold: 0.5 });
-	const servicesSection = document.querySelector('.services__slider');
-	if (servicesSection) {
-		observerServices.observe(servicesSection);
-	}
 
 	// ScrollTop
 	(function () {

@@ -462,7 +462,7 @@
 									<div class="swiper-wrapper">
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house.html" class="service-card__img">
 													<img src="img/services-img.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -487,7 +487,7 @@
 										</div>
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house2.html" class="service-card__img">
 													<img src="img/services-img2.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -512,7 +512,7 @@
 										</div>
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house3.html" class="service-card__img">
 													<img src="img/services-img3.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -537,7 +537,7 @@
 										</div>
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house4.html" class="service-card__img">
 													<img src="img/services-img4.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -562,7 +562,7 @@
 										</div>
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house5.html" class="service-card__img">
 													<img src="img/services-img5.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -587,7 +587,7 @@
 										</div>
 										<div class="swiper-slide">
 											<div class="service-card">
-												<a href="" class="service-card__img">
+												<a href="house6.html" class="service-card__img">
 													<img src="img/services-img6.webp" alt="">
 												</a>
 												<div class="service-card__desc">
@@ -1022,7 +1022,7 @@
 									</span>
 								</div>
 								<button class="form-btn btn-animation btn btn-orange">
-									<span class="btn-text">Получить презентацию с ценами</span>
+									<span class="btn-text">Записаться на экскурсию</span>
 									<span class="circle"></span>
 								</button>
 							</div>
@@ -1242,237 +1242,3 @@
 </body>
 
 </html>
-
-<script>
-	//Animation
-	gsap.registerPlugin(ScrollTrigger);
-
-	//House-main
-	document.addEventListener('DOMContentLoaded', () => {
-
-		const targets = gsap.utils.toArray(
-			'.house-main__group'
-		);
-
-		gsap.set(targets, { opacity: 0, y: 60, willChange: 'transform, opacity' });
-
-		gsap.to(targets, {
-			opacity: 1,
-			y: 0,
-			duration: 1.5,
-			ease: 'power3.out',
-			stagger: 0.06,
-			overwrite: true
-		});
-	});
-
-	//House-plan
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
-
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
-
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
-							}
-						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
-
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
-					}
-				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('house-plan__subtitle', () => {
-				animateText2('house-plan__subtitle', () => {
-					createScrollTrigger2('house-plan__title', () => {
-						animateText2('house-plan__title');
-					});
-				});
-			});
-		});
-	})();
-
-	//House-presentation
-	(function () {
-		document.addEventListener('DOMContentLoaded', () => {
-			function animateText2(elementId, callback) {
-				const title = document.getElementById(elementId);
-				if (!title) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
-					return;
-				}
-				title.style.visibility = 'visible';
-
-				const childNodes = Array.from(title.childNodes);
-				title.innerHTML = '';
-
-				childNodes.forEach(node => {
-					if (node.nodeType === Node.TEXT_NODE) {
-						const text = node.textContent;
-						const parts = text.split(/(\s+)/);
-
-						parts.forEach(part => {
-							if (part.trim() === '') {
-								const spaceSpan = document.createElement('span');
-								spaceSpan.className = 'space';
-								spaceSpan.textContent = part;
-								title.appendChild(spaceSpan);
-							} else {
-								const wordSpan = document.createElement('span');
-								wordSpan.className = 'word';
-								wordSpan.style.whiteSpace = 'nowrap';
-
-								for (let char of part) {
-									const letterSpan = document.createElement('span');
-									letterSpan.className = 'el';
-									letterSpan.textContent = char;
-									wordSpan.appendChild(letterSpan);
-								}
-
-								title.appendChild(wordSpan);
-							}
-						});
-					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
-						const br = document.createElement('br');
-						title.appendChild(br);
-					}
-				});
-
-				const letters = title.querySelectorAll('.el');
-				let index = 0;
-				function showNextLetter() {
-					if (index < letters.length) {
-						letters[index].classList.add('visible');
-						index++;
-						setTimeout(showNextLetter, 60);
-					} else {
-						if (callback) {
-							setTimeout(callback, 200);
-						}
-					}
-				}
-				setTimeout(showNextLetter, 500);
-			}
-
-			function createScrollTrigger2(elementId, onIntersect) {
-				const element = document.getElementById(elementId);
-				if (!element) {
-					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
-					return;
-				}
-				const observer = new IntersectionObserver((entries) => {
-					entries.forEach(entry => {
-						if (entry.isIntersecting) {
-							onIntersect();
-							observer.unobserve(element);
-						}
-					});
-				}, {
-					threshold: 0,
-					rootMargin: '0px 0px -10% 0px'
-				});
-				observer.observe(element);
-			}
-
-			createScrollTrigger2('house-presentation__title', () => {
-				animateText2('house-presentation__title', () => {
-					createScrollTrigger2('house-presentation__text', () => {
-						animateText2('house-presentation__text');
-					});
-				});
-			});
-		});
-	})();
-
-	//Services
-	const serviceTimeline = gsap.timeline({ paused: true });
-	const observerServices = new IntersectionObserver((entries, observer) => {
-		entries.forEach(entry => {
-			if (entry.isIntersecting) {
-				serviceTimeline.clear();
-
-				document.querySelectorAll('.services__slider .swiper-slide').forEach((item, index) => {
-					serviceTimeline.to(item, {
-						opacity: 1,
-						y: 0,
-						duration: 0.6,
-						ease: 'power2.out'
-					});
-				});
-
-				serviceTimeline.play();
-				observer.disconnect();
-			}
-		});
-	}, { threshold: 0.5 });
-	const servicesSection = document.querySelector('.services__slider');
-	if (servicesSection) {
-		observerServices.observe(servicesSection);
-	}
-</script>

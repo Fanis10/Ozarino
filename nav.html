@@ -321,7 +321,7 @@
 									</span>
 								</div>
 								<button class="form-btn btn-animation btn btn-orange">
-									<span class="btn-text">Получить презентацию с ценами</span>
+									<span class="btn-text">Записаться на экскурсию</span>
 									<span class="circle"></span>
 								</button>
 							</div>
@@ -809,4 +809,97 @@
 
 	// 		targets.forEach(el => io.observe(el));
 	// 	});
+
+
+	//Service-advantages
+	// (function () {
+	// 		document.addEventListener('DOMContentLoaded', () => {
+	// 			function animateText2(elementId, callback) {
+	// 				const title = document.getElementById(elementId);
+	// 				if (!title) {
+	// 					console.warn(`Element with ID '${elementId}' not found. Skipping animation.`);
+	// 					return;
+	// 				}
+	// 				title.style.visibility = 'visible';
+
+	// 				const childNodes = Array.from(title.childNodes);
+	// 				title.innerHTML = '';
+
+	// 				childNodes.forEach(node => {
+	// 					if (node.nodeType === Node.TEXT_NODE) {
+	// 						const text = node.textContent;
+	// 						const parts = text.split(/(\s+)/);
+
+	// 						parts.forEach(part => {
+	// 							if (part.trim() === '') {
+	// 								const spaceSpan = document.createElement('span');
+	// 								spaceSpan.className = 'space';
+	// 								spaceSpan.textContent = part;
+	// 								title.appendChild(spaceSpan);
+	// 							} else {
+	// 								const wordSpan = document.createElement('span');
+	// 								wordSpan.className = 'word';
+	// 								wordSpan.style.whiteSpace = 'nowrap';
+
+	// 								for (let char of part) {
+	// 									const letterSpan = document.createElement('span');
+	// 									letterSpan.className = 'el';
+	// 									letterSpan.textContent = char;
+	// 									wordSpan.appendChild(letterSpan);
+	// 								}
+
+	// 								title.appendChild(wordSpan);
+	// 							}
+	// 						});
+	// 					} else if (node.nodeType === Node.ELEMENT_NODE && node.tagName === 'BR') {
+	// 						const br = document.createElement('br');
+	// 						title.appendChild(br);
+	// 					}
+	// 				});
+
+	// 				const letters = title.querySelectorAll('.el');
+	// 				let index = 0;
+	// 				function showNextLetter() {
+	// 					if (index < letters.length) {
+	// 						letters[index].classList.add('visible');
+	// 						index++;
+	// 						setTimeout(showNextLetter, 60);
+	// 					} else {
+	// 						if (callback) {
+	// 							setTimeout(callback, 200);
+	// 						}
+	// 					}
+	// 				}
+	// 				setTimeout(showNextLetter, 500);
+	// 			}
+
+	// 			function createScrollTrigger2(elementId, onIntersect) {
+	// 				const element = document.getElementById(elementId);
+	// 				if (!element) {
+	// 					console.warn(`Element with ID '${elementId}' not found. Skipping scroll trigger.`);
+	// 					return;
+	// 				}
+	// 				const observer = new IntersectionObserver((entries) => {
+	// 					entries.forEach(entry => {
+	// 						if (entry.isIntersecting) {
+	// 							onIntersect();
+	// 							observer.unobserve(element);
+	// 						}
+	// 					});
+	// 				}, {
+	// 					threshold: 0,
+	// 					rootMargin: '0px 0px -10% 0px'
+	// 				});
+	// 				observer.observe(element);
+	// 			}
+
+	// 			createScrollTrigger2('service-advantages__subtitle', () => {
+	// 				animateText2('service-advantages__subtitle', () => {
+	// 					createScrollTrigger2('service-advantages__title', () => {
+	// 						animateText2('service-advantages__title');
+	// 					});
+	// 				});
+	// 			});
+	// 		});
+	// 	})();
 </script>
