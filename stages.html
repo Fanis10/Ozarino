@@ -1436,4 +1436,31 @@
 			overwrite: true
 		});
 	});
+
+	// ScrollTop
+	(function () {
+		try {
+			if ('scrollRestoration' in history) history.scrollRestoration = 'manual';
+		} catch (e) { }
+
+		document.documentElement.classList.add('scroll-lock');
+		document.body && document.body.classList.add('scroll-lock');
+
+		try { window.scrollTo(0, 0); } catch (e) { }
+
+		function unlock() {
+			document.documentElement.classList.remove('scroll-lock');
+			document.body && document.body.classList.remove('scroll-lock');
+			setTimeout(function () { if (window.ScrollTrigger) try { ScrollTrigger.refresh(); } catch (e) { } }, 50);
+		}
+
+		window.addEventListener('load', unlock, { once: true, passive: true });
+		window.addEventListener('pageshow', function (ev) {
+			if (ev && ev.persisted) {
+				requestAnimationFrame(function () { requestAnimationFrame(unlock); });
+			} else {
+				unlock();
+			}
+		}, { once: true, passive: true });
+	})();
 </script>
